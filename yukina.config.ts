@@ -3,14 +3,14 @@ import type { Configuration } from "./src/types/config";
 
 const YukinaConfig: Configuration = {
   title: "Yukina",
-  subTitle: "Yukina Template Demo Site",
+  subTitle: " A Minimalist Blog Theme for Astro",
   brandTitle: "Yukina",
 
   description: "Demo Site",
 
   site: "https://yukina-blog.vercel.app",
 
-  locale: "en", // set for website language and date format
+  locale: "zh-CN", // set for website language and date format
 
   navigators: [
     {
@@ -27,26 +27,26 @@ const YukinaConfig: Configuration = {
     },
     {
       nameKey: I18nKeys.nav_bar_github,
-      href: "https://github.com/WhitePaper233/yukina",
+      href: "https://github.com/biscuit0613/biscuit0613.github.io",
     },
   ],
 
-  username: "WhitePaper 白芷",
-  sign: "Ad Astra Per Aspera.",
+  username: "biscuit",
+  sign: "null",
   avatarUrl: "https://s2.loli.net/2025/01/25/FPpTrQSezM8ivbl.webp",
   socialLinks: [
-    {
-      icon: "line-md:github-loop",
-      link: "https://github.com/WhitePaper233",
-    },
-    {
-      icon: "mingcute:bilibili-line",
-      link: "https://space.bilibili.com/22433608",
-    },
-    {
-      icon: "mingcute:netease-music-line",
-      link: "https://music.163.com/#/user/home?id=125291648",
-    },
+    // {
+    //   icon: "line-md:github-loop",
+    //   link: "https://github.com/WhitePaper233",
+    // },
+    // {
+    //   icon: "mingcute:bilibili-line",
+    //   link: "https://space.bilibili.com/22433608",
+    // },
+    // {
+    //   icon: "mingcute:netease-music-line",
+    //   link: "https://music.163.com/#/user/home?id=125291648",
+    // },
   ],
   maxSidebarCategoryChip: 6, // It is recommended to set it to a common multiple of 2 and 3
   maxSidebarTagChip: 12,
