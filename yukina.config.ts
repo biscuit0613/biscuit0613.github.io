@@ -3,12 +3,12 @@ import type { Configuration } from "./src/types/config";
 
 const YukinaConfig: Configuration = {
   title: "Yukina",
-  subTitle: " A Minimalist Blog Theme for Astro",
+  subTitle: " A personal blog powered by Astro and Svelte",
   brandTitle: "Yukina",
 
-  description: "Demo Site",
+  description: "哈基米听我说，你从这里出去之后只可去南北，不能往东西。东有钉东寄，西有阿西噶，而南北路多",
 
-  site: "https://yukina-blog.vercel.app",
+  site: "https://biscuit0613.github.io/",
 
   locale: "zh-CN", // set for website language and date format
 
@@ -32,7 +32,7 @@ const YukinaConfig: Configuration = {
   ],
 
   username: "biscuit",
-  sign: "null",
+  sign: "————哈基米，你要大步大步地走下去啊\\ 不行，要悠达悠达才能欣赏沿途的风景",
   avatarUrl: "https://s2.loli.net/2025/01/25/FPpTrQSezM8ivbl.webp",
   socialLinks: [
     // {
