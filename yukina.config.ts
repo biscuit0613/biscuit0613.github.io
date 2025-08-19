@@ -3,10 +3,10 @@ import type { Configuration } from "./src/types/config";
 
 const YukinaConfig: Configuration = {
   title: "Yukina",
-  subTitle: " A personal blog powered by Astro and Svelte",
+  subTitle: " 哈基米听我说，你从这里出去之后只可去南北，不能往东西。东有钉东寄，西有阿西噶，而南北路多",
   brandTitle: "Yukina",
 
-  description: "哈基米听我说，你从这里出去之后只可去南北，不能往东西。东有钉东寄，西有阿西噶，而南北路多",
+  description: "null",
 
   site: "https://biscuit0613.github.io/",
 
