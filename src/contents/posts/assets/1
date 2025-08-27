@@ -1,0 +1,170 @@
+### 均匀分布
+
+若连续型随机变量 $X$ 具有**概率密度**  
+
+$$
+f(x) = \left\{
+  \begin{matrix}
+  \begin{align*}
+    &\frac{1}{b - a} , a < x < b\\
+    &0 \ , else\\
+  \end{align*}
+  \end{matrix}\right.
+​$$
+
+则称 $X$ 在区间 $(a,b)$ 上服从均匀分布,记作 $X\sim U(a,b)$ 。期望 $E=\frac{a+b}{2}$ ，方差 $D=\frac{(b-a)^2}{12}$ 
+
++ 均匀意思是等可能，落在 $[a,b]$中长度相等的子区间 $[x_1,x_2]$是等可能的
+
+$X$ 的**分布函数**为
+
+$$
+\left\{\begin{matrix}
+  \begin{align*}
+    &0&x<a\\
+    &\frac{x-a}{b-a}&a\leq x<b\\
+    &1&x>b
+  \end{align*}
+\end{matrix}
+\right.
+$$
+
+### 指数分布
+
+若连续型随机变量$X$具有**概率密度**
+
+$$
+f(x)=\left\{\begin{matrix}
+\begin{align*}
+  &\lambda e^{-\lambda x} &x>0\\
+  &0 &x\leq0
+\end{align*} &&\lambda>0
+\end{matrix}\right.  
+\text{}
+​$$
+
+则称X 服从参数为 $\lambda$ 的指数分布，记作 $X\sim E(\lambda)$ ，期望 $E=\lambda$ ，方差 $D=\lambda^2$ 
+
++ 指数分布常用来描述寿命，比如说持续无故障的工作时间，平均寿命就是参数 $\lambda$
++ 指数分布的无记忆： $P(x>t+s|x>s)=P(x>t)$ ，已工作8小时再无故障工作10小时的概率=工作十小时无故障的概率
+
+**分布函数**为
+
+$$
+F(x)=\left\{\begin{matrix}
+\begin{align*}
+  &1-e^{-\lambda x} &x>0\\
+  &0 &x\leq0
+\end{align*} &&\lambda>0
+\end{matrix}\right.
+$$
+
+### 正态分布
+
+若连续型随机变量 $X$ 具有**概率密度**
+
+$$
+f(x)=\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}  ,\sigma>0,-\infin<x<\infin  
+​$$
+
+则称 $X$ 服从参数为 $\mu,\sigma$ 的正态分布，记作 $X\sim N(\mu,\sigma^2)$ ，期望 $E=\mu$ ，方差 $D=\sigma^2$  
+
+$$
+\int_{-\infin}^{\infin}\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}dx=1\\[10bp]
+\text{换元}t=\frac{x-\mu}{\sigma}\\[10bp]
+\int_{-\infin}^{\infin}\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}dx=\frac{1}{\sqrt{2\pi}}\int_{-\infin}^{\infin}e^{-\frac{t^2}{2}}dt\\[10bp]
+\text{剩下证法参考微积分}
+$$
+
+正态分布**密度函数**曲线性质：
+
++  $x=\mu$ 是对称轴， $\mu$ 决定对称轴的位置，也被称为位置参数
+
++ 当 $x=\mu$ 时， $f(x)_{max}=\frac{1}{\sigma \sqrt{2\pi}},\sigma$决定离散程度，$\sigma$ 越大，最大值越小，图形越矮胖。
++  $x\to\pm\infin,f(x)\to 0$
++ 两个拐点：$\mu\pm\sigma$
+
+正态分布的**分布函数**:
+
+$$
+F(x)=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infin}^{x}e^{-\frac{(t-\mu)^2}{2\sigma^2}}dt
+$$
+
+正态分布**分布函数**的曲线性质:
+
++ 密度函数关于$x=\mu$对称，左右两遍面积各0.5，故 $F(\mu)=1/2$
++ $x\to\infin,F(x)\to1,x\to-\infin,f(x)\to0$
+  
+### 标准正态分布
+X~$N(\mu=0,\sigma^2=1)$
+
+概率密度：$\phi(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}$
+
+对称轴是 $x=0$，偶函数
+
+分布函数：$\Phi(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infin}^{x}e^{-\frac{t^2}{2}}dt$
+
+对称中心是（0，0.5）， $\Phi(x)+\Phi(-x)=1$
+
+一般的正态分布 $N(\mu,\sigma^2)$的分布函数与标准正态分布的**分布函数**满足如下关系：
+
+$$
+F(x)=\Phi(\frac{x-\mu}{\sigma})
+X\sim N(\mu,\sigma^2)\Leftrightarrow\frac{X-\mu}{\sigma}\sim N(0,1)
+$$
+
+推导：
+
+$$
+\begin{align*}
+F(x)&=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infin}^{x}e^{-\frac{(t-\mu)^2}{2\sigma^2}}dt\\
+\text{换元,令}v&=\frac{t-\mu}{\sigma}\\
+F(x)&=\frac{1}{\sqrt{2\pi}}\int_{-\infin}^{\frac{x-\mu}{\sigma}}e^{-\frac{v^2}{2}}dv\\
+\text{与标准正态分布比较一下：}\Phi(x)&=\frac{1}{\sqrt{2\pi}}\int_{-\infin}^{x}e^{-\frac{t^2}{2}}dt\\
+x\to \frac{x-\mu}{\sigma}
+\end{align*}\\
+\text{所以一般正态分布的分布函数有如下变形}\\
+P(x_1< X< x_2)=F(x_2)-F(x_1)=\int_{x_1}^{x_2}f(t)dt\\
+=\Phi(\frac{x_1-\mu}{\sigma})-\Phi(\frac{x_2-\mu}{\sigma})
+ $$
+
+## 随机变量函数Y=g(X)的概率密度和分布函数
+
++ 核心思想：**变量代换**
+
+一个核心问题是，如何通过X的概率密度 $f_X(x)$ 和分布函数 $F_X(X)$ ，来获得 $Y=g(X)$的概率密度 $f_Y(y)$ 和分布函数 $F_Y(y)$ 。
+
+使用如下方法来获得Y的概率分布。对于函数关系 $Y\{y_1,y_2,y_3...y_n\}=g(X_1,X_2,...,X_n)$
+
+1. 通过 $Y=g(X_1,X_2,...,X_n)$ ，找到对应 $\{Y≤y\}$ 的 $(x_1,x_2,...,x_n)$ 区间$I$。
+
+1. 在区间 $I$ 上， $\int_I f(x_1,x_2,...,x_n)$ ，获得 $P(Y≤y)$ ，也就是  $F_Y(y)$
+
+2. 通过微分 $F_Y(y)$，获得密度函数f(y)。
+
+$$
+F_Y(y)=P(Y\leq y)=P(g(X)\leq y)\\
+\text{解出来$x$的范围（含$y$），假设是$y_1\leq x\leq y_2$}\\
+\begin{align*}
+  F_Y(y)&=F_X(y_2)-F_X(y_1)\\
+  \text{或}
+F_Y(y)&=\int_{y_1}^{y_2}f_X(x)\\
+f_Y(y)&=F_Y^\prime(y)\\
+\end{align*}
+$$
+
+对于连续型随机变量，直接公式法：
+
+若 $y=g(x)$是严格**单调**的且**反函数$h(y)$可导**时, 则随机变量 Y 仍为连续型随机变量, 且有概率密度函数
+
+$$
+f_Y(y)=\left\{\begin{matrix}
+  \begin{align*}
+    &f_X(h(y))\cdot|h^\prime(y)|&&A <y<B\\
+    &0 &&others
+  \end{align*}
+\end{matrix}\right.\\
+\text{其中}A=\min\{g(a),g(b)\},B=\max\{g(a),g(b)\}
+ $$
+
++ 推论：正态变量的线性变换依然是正态变量，若 $Y=aX+b,X\sim N(\mu,\sigma^2)$，则 $Y\sim N(a\mu+b,a^2\sigma^2)$ 
