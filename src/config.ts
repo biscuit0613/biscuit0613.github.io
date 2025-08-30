@@ -76,9 +76,9 @@ export const siteConfig: SiteConfig = {
 
 			subtitle: [
 				"哈基米听我说，你从这里出去之后只可去南北，不能往东西。东有钉东寄，西有阿西噶，而南北路多",
-				"Carousel Highlight: Innovation",
-				"Carousel Focus: User Experience",
-				"Carousel Spot: Core Advantages",
+				"最是人间留不住，朱颜辞镜花辞树。",
+				"哈？",
+				"楼上的下来搞搞核蒜哈基米哈基米丁↓咚↑鸡",
 			],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
@@ -155,7 +155,7 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/biscuit0613.github.io",
+					url: "https://github.com/biscuit0613/biscuit0613.github.io",
 					external: true,
 					icon: "fa6-brands:github",
 				},
@@ -220,7 +220,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.gif", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "Mizuki",
+	name: "Biscuit",
 	bio: "哈基米，你要大步大步地走下去啊，不行，要悠哒悠哒才能欣赏到沿途的风景。",
 	links: [
 		{
@@ -405,7 +405,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 export const sakuraConfig: SakuraConfig = {
 	enable: true, // 默认关闭樱花特效
-	sakuraNum: 21, // 樱花数量
+	sakuraNum: 10, // 樱花数量
 	limitTimes: -1, // 樱花越界限制次数，-1为无限循环
 	size: {
 		min: 0.5, // 樱花最小尺寸倍数
