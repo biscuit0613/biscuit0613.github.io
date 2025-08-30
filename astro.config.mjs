@@ -16,27 +16,22 @@ import YukinaConfig from "./yukina.config";
 
 import pagefind from "astro-pagefind";
 
+import expressiveCode from "astro-expressive-code";
+
 // https://astro.build/config
 export default defineConfig({
   site:YukinaConfig.site,
-  integrations: [
-    tailwind(),
-    svelte(),
-    icon(),
-    swup({
-      theme: false,
-      containers: ["main", "footer", ".banner-inner"],
-      smoothScrolling: true,
-      progress: true,
-      cache: true,
-      preload: true,
-      updateHead: true,
-      updateBodyClass: false,
-      globalInstance: true,
-    }),
-    sitemap(),
-    pagefind(),
-  ],
+  integrations: [tailwind(), svelte(), icon(), swup({
+    theme: false,
+    containers: ["main", "footer", ".banner-inner"],
+    smoothScrolling: true,
+    progress: true,
+    cache: true,
+    preload: true,
+    updateHead: true,
+    updateBodyClass: false,
+    globalInstance: true,
+  }), sitemap(), pagefind(), expressiveCode()],
   markdown: {
     shikiConfig: {
       theme: "github-dark-default",
