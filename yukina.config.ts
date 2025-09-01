@@ -35,18 +35,18 @@ const YukinaConfig: Configuration = {
   sign: "————哈基米，你要大步大步地走下去啊\\ 不行，要悠达悠达才能欣赏沿途的风景",
   avatarUrl: "https://s2.loli.net/2025/01/25/FPpTrQSezM8ivbl.webp",
   socialLinks: [
-    // {
-    //   icon: "line-md:github-loop",
-    //   link: "https://github.com/WhitePaper233",
-    // },
-    // {
-    //   icon: "mingcute:bilibili-line",
-    //   link: "https://space.bilibili.com/22433608",
-    // },
-    // {
-    //   icon: "mingcute:netease-music-line",
-    //   link: "https://music.163.com/#/user/home?id=125291648",
-    // },
+    {
+      icon: "line-md:github-loop",
+      link: "https://github.com/WhitePaper233",
+    },
+    {
+      icon: "mingcute:bilibili-line",
+      link: "https://space.bilibili.com/22433608",
+    },
+    {
+      icon: "mingcute:netease-music-line",
+      link: "https://music.163.com/#/user/home?id=125291648",
+    },
   ],
   maxSidebarCategoryChip: 6, // It is recommended to set it to a common multiple of 2 and 3
   maxSidebarTagChip: 12,
