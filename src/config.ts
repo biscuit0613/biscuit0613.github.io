@@ -21,8 +21,8 @@ import { getTranslateLanguageFromConfig } from "./utils/language-utils";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "Mizuki",
-	subtitle: "One demo website",
+	title: "Biscuitの赛博小窝",
+	subtitle: "还没想好喵",
 
 	lang: SITE_LANG,
 
@@ -72,12 +72,17 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "biscuitの学习笔记", // 主页横幅主标题
+			title: "biscuitの博客", // 主页横幅主标题
 
 			subtitle: [
 				"哈基米听我说，你从这里出去之后只可去南北，不能往东西。东有钉东寄，西有阿西噶，而南北路多",
 				"最是人间留不住，朱颜辞镜花辞树。",
 				"哈？",
+				"在美国叫超人在中国叫电棍",
+				"人生自是有情痴，此恨不关风与月",
+				"人生不相见，动如参与商，今夕复何夕，共此灯烛光。",
+				"雨夜剪春韭，新炊间黄粱，主称会面难，一举累十觞。",
+				"十觞亦不醉，感子故意长。明日隔山岳，世事两茫茫。",
 				"楼上的下来搞搞核蒜哈基米哈基米丁↓咚↑鸡",
 			],
 			typewriter: {

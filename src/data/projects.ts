@@ -19,70 +19,84 @@ export interface Project {
 
 export const projectsData: Project[] = [
 	{
-		id: 'mizuki-blog',
-		title: 'Mizuki Blog Theme',
-		description: '基于Astro框架开发的现代化博客主题，支持多语言、暗黑模式、响应式设计等功能。',
-		image: '',
-		category: 'web',
-		techStack: ['Astro', 'TypeScript', 'Tailwind CSS', 'Svelte'],
+		id: 'desktopPet',
+		title: '桌面宠物',
+		description: '一个桌宠应用，使用python开发，支持多种宠物形象和互动功能。',
+		image: '/projects/desktop-pet.png',
+		category: 'desktop',
+		techStack: ['Python', 'PyQt', 'Pillow'],
 		status: 'completed',
-		liveDemo: 'https://blog.example.com',
-		sourceCode: 'https://github.com/example/mizuki',
-		startDate: '2024-01-01',
-		endDate: '2024-06-01',
+		sourceCode: 'https://github.com/biscuit0613/desktopet',
+		startDate: '2025-8-20',
+		endDate: '2023-9-03',
 		featured: true,
-		tags: ['Blog', 'Theme', 'Open Source']
+		tags: ['Python']
 	},
-	{
-		id: 'portfolio-website',
-		title: 'Personal Portfolio',
-		description: '个人作品集网站，展示项目经验和技术技能。',
-		image: '',
-		category: 'web',
-		techStack: ['React', 'Next.js', 'TypeScript', 'Framer Motion'],
-		status: 'completed',
-		liveDemo: 'https://portfolio.example.com',
-		sourceCode: 'https://github.com/example/portfolio',
-		startDate: '2023-09-01',
-		endDate: '2023-12-01',
-		featured: true,
-		tags: ['Portfolio', 'React', 'Animation']
-	},
-	{
-		id: 'task-manager-app',
-		title: 'Task Manager App',
-		description: '跨平台任务管理应用，支持团队协作和项目管理。',
-		image: '',
-		category: 'mobile',
-		techStack: ['React Native', 'TypeScript', 'Redux', 'Firebase'],
-		status: 'in-progress',
-		startDate: '2024-03-01',
-		tags: ['Mobile', 'Productivity', 'Team Collaboration']
-	},
-	{
-		id: 'data-visualization-tool',
-		title: 'Data Visualization Tool',
-		description: '数据可视化工具，支持多种图表类型和交互式分析。',
-		image: '',
-		category: 'web',
-		techStack: ['Vue.js', 'D3.js', 'TypeScript', 'Node.js'],
-		status: 'completed',
-		liveDemo: 'https://dataviz.example.com',
-		startDate: '2023-06-01',
-		endDate: '2023-11-01',
-		tags: ['Data Visualization', 'Analytics', 'Charts']
-	},
-	{
-		id: 'e-commerce-platform',
-		title: 'E-commerce Platform',
-		description: '全栈电商平台，包含用户管理、商品管理、订单处理等功能。',
-		image: '',
-		category: 'web',
-		techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
-		status: 'planned',
-		startDate: '2024-07-01',
-		tags: ['E-commerce', 'Full Stack', 'Payment Integration']
-	}
+	// {
+	// 	id: 'mizuki-blog',
+	// 	title: 'Mizuki Blog Theme',
+	// 	description: '基于Astro框架开发的现代化博客主题，支持多语言、暗黑模式、响应式设计等功能。',
+	// 	image: '',
+	// 	category: 'web',
+	// 	techStack: ['Astro', 'TypeScript', 'Tailwind CSS', 'Svelte'],
+	// 	status: 'completed',
+	// 	liveDemo: 'https://blog.example.com',
+	// 	sourceCode: 'https://github.com/example/mizuki',
+	// 	startDate: '2024-01-01',
+	// 	endDate: '2024-06-01',
+	// 	featured: true,
+	// 	tags: ['Blog', 'Theme', 'Open Source']
+	// },
+	// {
+	// 	id: 'portfolio-website',
+	// 	title: 'Personal Portfolio',
+	// 	description: '个人作品集网站，展示项目经验和技术技能。',
+	// 	image: '',
+	// 	category: 'web',
+	// 	techStack: ['React', 'Next.js', 'TypeScript', 'Framer Motion'],
+	// 	status: 'completed',
+	// 	liveDemo: 'https://portfolio.example.com',
+	// 	sourceCode: 'https://github.com/example/portfolio',
+	// 	startDate: '2023-09-01',
+	// 	endDate: '2023-12-01',
+	// 	featured: true,
+	// 	tags: ['Portfolio', 'React', 'Animation']
+	// },
+	// {
+	// 	id: 'task-manager-app',
+	// 	title: 'Task Manager App',
+	// 	description: '跨平台任务管理应用，支持团队协作和项目管理。',
+	// 	image: '',
+	// 	category: 'mobile',
+	// 	techStack: ['React Native', 'TypeScript', 'Redux', 'Firebase'],
+	// 	status: 'in-progress',
+	// 	startDate: '2024-03-01',
+	// 	tags: ['Mobile', 'Productivity', 'Team Collaboration']
+	// },
+	// {
+	// 	id: 'data-visualization-tool',
+	// 	title: 'Data Visualization Tool',
+	// 	description: '数据可视化工具，支持多种图表类型和交互式分析。',
+	// 	image: '',
+	// 	category: 'web',
+	// 	techStack: ['Vue.js', 'D3.js', 'TypeScript', 'Node.js'],
+	// 	status: 'completed',
+	// 	liveDemo: 'https://dataviz.example.com',
+	// 	startDate: '2023-06-01',
+	// 	endDate: '2023-11-01',
+	// 	tags: ['Data Visualization', 'Analytics', 'Charts']
+	// },
+	// {
+	// 	id: 'e-commerce-platform',
+	// 	title: 'E-commerce Platform',
+	// 	description: '全栈电商平台，包含用户管理、商品管理、订单处理等功能。',
+	// 	image: '',
+	// 	category: 'web',
+	// 	techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
+	// 	status: 'planned',
+	// 	startDate: '2024-07-01',
+	// 	tags: ['E-commerce', 'Full Stack', 'Payment Integration']
+	// }
 ];
 
 // 获取项目统计信息

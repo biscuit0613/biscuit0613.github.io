@@ -9,9 +9,9 @@ draft: false
 lang: ''
 ---
 
-## 2025.9.4 &
+## &的用法
 
-### &作为取地址运算符
+### 作为取地址运算符
 
 ```cpp
 int x = 10;
@@ -65,7 +65,7 @@ int *p = &x;  // &x 获取变量x的地址
     Eigen::MatrixXd& KF::getResult() { return m_statePost; }
     ```
 
-### virtual虚函数和纯虚函数
+## virtual虚函数和纯虚函数
 
 1. 虚函数（无=0结尾）
    
@@ -131,13 +131,13 @@ int *p = &x;  // &x 获取变量x的地址
     ```
 
 
-### 关于类和结构体的区别
+## 类和结构体的区别
 
 在 C++ 中，结构体和类几乎完全相同，唯一的区别是结构体默认的成员访问权限是 public（可以直接访问），而类默认的成员访问权限是 private（只能通过类的公共函数接口来访问）。
 
 从语法角度来说，结构体是类的一种特殊形式，可以把它看作是没有封装（默认 public）的类
 
-### 关于类的构造函数参数列表
+## 类的构造函数参数列表
 
 const关键字修饰的变量必须在参数列表内初始化。例如KF.h中两个常量测量空间维度和状态空间维度：
 
@@ -152,3 +152,65 @@ const关键字修饰的变量必须在参数列表内初始化。例如KF.h中�
     const int m_measureDimension;  // 测量向量的维度
     const int m_stateDimension;  // 状态向量的维度
 ```
+
+## 头文件引用
+
+```cpp
+#include  "项目内.h"
+#include <标准库.h>
+```
+
+## template<>，模板
+
+c++中的模板：
+
+模板允许我们编写**通用函数**和**通用类**，使得同一段代码可以用于不同的**数据类型**。也就是说通过模板，可以编写能够操作任意数据类型的函数或类
+
++ 函数模板：
+
+```cpp
+    template <typename T>
+    T add(T a, T b) {
+    return a + b;
+    }
+    int main() {
+    cout << add(3, 4) << endl;        // 用于 int 类型
+    cout << add(3.5, 4.5) << endl;    // 用于 double 类型
+    cout << add("Hello ", "World!") << endl; // 用于 const char* 类型（字符串拼接）
+    return 0;
+    }
+```
+
++ 类模板
+  
+类模板如果没有指定默认类型，在实例化时：
+
+```cpp
+类名<类型名> 实例化的类名()
+```
+如果指定了默认类型，<>内空着就是使用默认类型实例化
+
+```cpp
+    #include <iostream>
+    using namespace std;
+    // 类模板
+    template <typename T=int>//类模板可以设置默认参数
+    class Box {
+    private:
+        T value;
+    public:
+        Box(T v) : value(v) {}
+        T getValue() { return value; }
+    };
+
+    int main() {
+        Box<int> intBox(10);          // 使用 int 类型
+        Box<double> doubleBox(5.5);   // 使用 double 类型
+
+        cout << intBox.getValue() << endl;      // 输出 10
+        cout << doubleBox.getValue() << endl;   // 输出 5.5
+    return 0;
+    }
+```
+
+模板并不会立即生成代码，只有在特定的**类型**被提供时，模板才会被**实例化**。
