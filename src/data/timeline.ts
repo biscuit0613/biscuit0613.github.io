@@ -32,6 +32,9 @@ export const timelineData: TimelineItem[] = [
 		type: "education",
 		startDate: "2024-09-01",
 		location: "哈夫克航天学院",
+		icon: "material-symbols:school",
+		color: "#059669",
+		featured: true,
 	},
 	// {
 	// 	id: "current-study",
