@@ -119,22 +119,22 @@ project(<projectName> <LANGUAGE> )  #定义工程名和语言,语言可以有多
 
 >A target is an executable or library to be built, or a custom entity representing an output of the build system.
 
-浏览器翻译说“target”是构建系统要生成的“产物”或“构建对象”，它可以是：
+:::
 
-+ 可执行文件 target：由 add_executable 定义
+“target”是构建系统要生成的“产物”或“构建对象”，它可以是：
 
-+ 库文件 target：由 add_library 定义（静态库 / 动态库 / 模块库）
++ `可执行文件 target`：由`add_executable` 定义
 
-+ 自定义 target：由 add_custom_target 定义（本文未介绍）
++ `库文件 target`：由 `add_library` 定义（静态库 / 动态库 / 模块库）
 
-+ 接口 target：由 add_library(... INTERFACE) 定义，仅用来传递编译参数/头文件路径，不会生成文件
++ `自定义 target`：由 `add_custom_target` 定义（本文未介绍）
+
++ `接口 target`：由 `add_library(... INTERFACE)` 定义，仅用来传递编译参数/头文件路径，不会生成文件
 
 所以 target = 构建单位的抽象。
 CMake 一切围绕 target 进行管理
 
-:::
-
-1. 声明（一组）可执行文件为可执行文件target
+1. 声明（一组）源文件为`可执行文件target`
 
     ```cmake
     add_executable(<target> <source_file1> <source_file2>...)
@@ -142,7 +142,7 @@ CMake 一切围绕 target 进行管理
 
     `<source_file1>...`是源文件列表，用空格隔开，这个语句生成**可执行文件target**。其中`<target>`参数是**可执行文件target**的名称。
 
-2. 把（一组）源文件编译成库target（静态库或动态库）
+2. 把（一组）源文件编译成`库target`（静态库或动态库）
 
     ```cmake
     add_library(<target> <修饰符> <source_file1> <source_file2>...)
@@ -170,9 +170,9 @@ CMake 一切围绕 target 进行管理
     find_package(OpenCV REQUIRED)
     ```
 
-    `<packagename>`就是外部库的包名。理想情况下，find_package()能把一整个依赖包的头文件包含路径、库路径、库名字、版本号等情况都获取到
+    `<packagename>`就是外部库的包名。理想情况下，`find_package()`能把一整个依赖包的头文件包含路径、库路径、库名字、版本号等情况都获取到
 
-    find_package找到包后，会生成一些包含**头文件路径**（比如`#include <opencv2/opencv.hpp>`里openCV的路径）的变量，例如：
+    `find_package()`找到包后，会生成一些包含**头文件路径**（比如`#include <opencv2/opencv.hpp>`里openCV的路径）的变量，例如：
 
     ```cmake
     find_package(OpenCV REQUIRED)
