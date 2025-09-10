@@ -1,5 +1,5 @@
 ---
-title: 数据结构与算法
+title: 数据结构与算法-复杂度分析
 published: 2025-09-05
 description: '数据结构与算法课程笔记：算法效率的分析方法'
 image: ''
@@ -165,11 +165,13 @@ void bubblesort(int arr[], int n) {
 ```
 
 :::note[solution]
+
 主要是两层嵌套循环，外层i从0到n-2，内层j从0到n-i-2，外层执行n-1次，内层执行
 $$
 (n-1)+(n-2)+\dotsb+1 = \frac{(n-1)n}{2}
 $$
 次，所以时间复杂度为$O(n^2)$
+
 :::
 
 例二：求阶乘的时间复杂度
@@ -184,7 +186,35 @@ int factorial(int n) {
 ```
 
 :::note[solution]
+
 递归调用n次，所以时间复杂度为$O(n)$
+
+:::
+
+例三：二分法查找的复杂度
+
+```cpp
+int binarySearch(int arr[], int size, int target) {
+    int left = 0;
+    int right = size - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+:::note[solution]
+
+每次循环将查找范围缩小一半，假设初始范围为n,经过k次循环后，范围变为$\frac{n}{2^k}$,当范围缩小到1时，停止循环，即$\frac{n}{2^k}=1$,解得$k=\log_2 n$，所以时间复杂度为$O(\log n)这种“每次操作都将问题规模缩小一半”的算法，复杂度通常都是$O(log n)$。
+
 :::
 
 ## 空间复杂性

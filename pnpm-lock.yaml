@@ -92,6 +92,9 @@ importers:
       photoswipe:
         specifier: ^5.4.4
         version: 5.4.4
+      pnpm:
+        specifier: ^10.15.1
+        version: 10.15.1
       reading-time:
         specifier: ^1.5.0
         version: 1.5.0
@@ -3705,6 +3708,11 @@ packages:
 
   pkg-types@2.3.0:
     resolution: {integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==}
+
+  pnpm@10.15.1:
+    resolution: {integrity: sha512-NOU4wym1VTAUyo6PRTWZf5YYCh0PYUM5NXRJk1NQ2STiL4YUaCGRJk7DPRRirCFWGv+X9rsYBlNRwWLH6PbeZw==}
+    engines: {node: '>=18.12'}
+    hasBin: true
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -9335,6 +9343,8 @@ snapshots:
       confbox: 0.2.2
       exsolve: 1.0.7
       pathe: 2.0.3
+
+  pnpm@10.15.1: {}
 
   possible-typed-array-names@1.1.0: {}
 
