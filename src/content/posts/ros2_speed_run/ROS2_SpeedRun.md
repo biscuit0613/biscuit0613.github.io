@@ -15,7 +15,7 @@ lang: ''
 
 ## 安装
 
-ROS2 Humble的安装参考这篇文章：[UbuntuCondaRos](./UbuntuCondaRos)
+ROS2 Humble的安装参考这篇文章：[UbuntuCondaRos](../UbuntuCondaRos)
 
 ## 基本概念
 
