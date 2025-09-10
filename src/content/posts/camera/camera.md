@@ -1,4 +1,12 @@
-# 相机模型
+---
+title: 相机模型
+published: 2025-09-10
+description: 相机模型的介绍，内参和外参在坐标变换中的作用。
+tags: [相机, 计算机视觉，RM]
+category: 计算机视觉
+author: biscuit
+draft: false
+---
 
 ## 1 针孔相机模型
 
