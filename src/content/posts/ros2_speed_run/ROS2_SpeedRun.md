@@ -37,38 +37,24 @@ mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws
 ```
 
-## 新建包
-
-```bash
-cd ~/ros2_ws/src
-#创建python发布包
-ros2 pkg create yolo_ball_pub --build-type ament_python --dependencies rclpy geometry_msgs std_msgs
-# yolo_ball_pub是包名，可以自己改
-#创建C++订阅包
-ros2 pkg create yolo_ball_sub --build-type ament_cmake --dependencies rclcpp geometry_msgs std_msgs
-```
+这里采用最简单的结构，所有包都放在`src`目录下。不用命令行构建
 
 得到一个这样的目录结构：
 
 ```bash
 ros2_ws/
 └── src/
-    ├── yolo_ball_pub/
-    │   ├── package.xml
-    │   ├── setup.cfg
-    │   ├── setup.py
-    │   └── yolo_ball_pub/
-    │       └── __init__.py
-    └── yolo_ball_sub/
+    ├── publisher.py
+    └── ball_coord_sub/
+        ├──  src/
+        │      └──subscriber.cpp
         ├── CMakeLists.txt
         └── package.xml
 ```
 
-![项目结构](xmjg.png)
-
 ## 编写发布节点
 
-编辑`yolo_ball_pub/yolo_ball_pub/__init__.py`(init.py文件的名字可以随便改，节点代码主体在这里面)：
+编辑`publisher.py`(init.py文件的名字可以随便改，节点代码主体在这里面)：
 
 ```python
 import rclpy
@@ -77,67 +63,101 @@ from geometry_msgs.msg import Point32
 from std_msgs.msg import Float32
 from ultralytics import YOLO
 import cv2
+import os
 
 class YoloBallPublisher(Node):
     def __init__(self):
         super().__init__('yolo_ball_publisher')
-        self.declare_parameter('video_path', 'yolo_ball_pub/rgb.mp4')
+
+        # 声明 ROS 参数（可在 launch 或命令行中覆盖）
+        self.declare_parameter('video_path', 'rgb.mp4')
         self.declare_parameter('model_path', 'v1.pt')
         self.declare_parameter('ball_class_id', 0)
         self.declare_parameter('conf_thresh', 0.7)
 
+        # 创建 ROS 发布器：中心点和宽度
         self.pub_center = self.create_publisher(Point32, '/ball/center_px', 10)
+        #这里面参数的意义：Point32是消息类型，'/ball/center_px'是话题（topic）名称，10是队列大小
         self.pub_width  = self.create_publisher(Float32, '/ball/width_px', 10)
 
+        # 获取参数值
         video_path = self.get_parameter('video_path').get_parameter_value().string_value
+        video_path = os.path.abspath(video_path)
+        print(f"[DEBUG] Try to open video: {video_path}")
         model_path = self.get_parameter('model_path').get_parameter_value().string_value
         self.ball_cls = self.get_parameter('ball_class_id').get_parameter_value().integer_value
         self.conf = self.get_parameter('conf_thresh').get_parameter_value().double_value
 
+        # 加载 YOLO 模型
         self.model = YOLO(model_path)
-        self.cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)  # 使用 FFMPEG 后端打开视频
 
-        fps = self.cap.get(cv2.CAP_PROP_FPS)
-        period = 1.0 / fps if fps and fps > 0 else 0.03
-        self.timer = self.create_timer(period, self.loop)
-        
+        # 打开视频文件
+        self.cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
         if not self.cap.isOpened():
             self.get_logger().error(f"Failed to open video: {video_path}")
             self.destroy_node()
-        return
+            return
+
+        # 设置定时器周期（根据视频帧率）
+        fps = self.cap.get(cv2.CAP_PROP_FPS)
+        period = 1.0 / fps if fps and fps > 0 else 0.03
+        self.timer = self.create_timer(period, self.loop)
+
+        # 初始化轨迹字典：每个 obj_id 对应一个点序列
+        self.trajectories = {}
 
     def loop(self):
         ok, frame = self.cap.read()
         if not ok:
             self.get_logger().info('Video ended.')
-            self.destroy_node()  # 改为销毁节点，不直接 shutdown
+            cv2.destroyAllWindows()
+            self.destroy_node()
             return
 
+        # YOLO 跟踪推理
         results = self.model.track(frame, persist=True, conf=self.conf)
+
         if len(results) and results[0].boxes is not None:
             boxes = results[0].boxes
             xyxy = boxes.xyxy.cpu().numpy()
             clss = boxes.cls.cpu().numpy()
-            confs = boxes.conf.cpu().numpy()
 
-            # 取第一个篮球（简单起见）
+            # 遍历所有检测框
             for i, box in enumerate(xyxy):
                 if int(clss[i]) != self.ball_cls:
                     continue
+
                 x1, y1, x2, y2 = map(float, box)
                 cx = (x1 + x2) * 0.5
                 cy = (y1 + y2) * 0.5
                 w  = max(1.0, x2 - x1)
 
+                # 获取目标 ID（如果模型支持 ID 跟踪）
+                obj_id = i  # 如果你用的是 YOLOv8 + tracker，可以改为 boxes.id[i]
+
+                # 记录轨迹
+                if obj_id not in self.trajectories:
+                    self.trajectories[obj_id] = []
+                self.trajectories[obj_id].append((cx, cy))
+
+                # 发布当前中心点和宽度
                 msg_center = Point32(x=cx, y=cy, z=0.0)
                 msg_width  = Float32(data=w)
                 self.pub_center.publish(msg_center)
                 self.pub_width.publish(msg_width)
-                break  # 只发一个，保持简单
-            # 可视化框
+
+                # 可视化检测框和中心点
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0,255,0), 2)
                 cv2.circle(frame, (int(cx), int(cy)), 5, (0,0,255), -1)
-                break
+
+                # 可视化轨迹线
+                pts = self.trajectories[obj_id]
+                for j in range(1, len(pts)):
+                    pt1 = (int(pts[j - 1][0]), int(pts[j - 1][1]))
+                    pt2 = (int(pts[j][0]), int(pts[j][1]))
+                    cv2.line(frame, pt1, pt2, (255, 0, 0), 2)
+
+                break  # 只处理一个目标，保持简单
 
         # 显示图像窗口
         cv2.imshow("YOLO Tracking", frame)
@@ -146,30 +166,20 @@ class YoloBallPublisher(Node):
 def main():
     rclpy.init()
     node = YoloBallPublisher()
-    rclpy.spin(node)         # 等待节点运行直到被销毁
-    rclpy.shutdown()         # 现在可以安全关闭 ROS
-    cv2.destroyAllWindows()  # 关闭所有 OpenCV 窗口
+    rclpy.spin(node)
+    rclpy.shutdown()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
 ```
 
 这个节点会打开一个视频文件，使用YOLO模型检测篮球，并发布篮球的中心坐标和宽度。
-
-默认生成的`setup.py`文件还没有配置好，需要修改，主要是`entry_points`部分：
-
-```python
-entry_points={
-        'console_scripts': [
-            'publisher = yolo_ball_pub.publisher:main',
-        ],
-    },
-```
-
-+ `publisher` 是运行节点时的命令名（可以改）
-
-+ `yolo_ball_pub.publisher:main` 是 Python 模块路径 + 函数名，告诉 ROS 2 去哪里找入口
+这个节点运行的时候直接打开对应的虚拟环境然后运行python脚本即可：
 
 ## 编写订阅节点
 
-编辑`yolo_ball_sub/src/yolo_ball_sub.cpp`(注意文件位置)：
+编辑`subscriber.cpp`(注意文件位置)：
 
 ```cpp
 #include <rclcpp/rclcpp.hpp>
@@ -255,4 +265,8 @@ python直接运行，cpp用cmake编译
 
 运行（开两个终端，一个运行发布节点，一个运行订阅节点）：
 
-看到 C++ 终端打印像素中心与宽度，说明通信打通。这里主包还没成功喵TAT
+看到 C++ 终端打印像素中心与宽度，说明通信打通。
+
+```bash
+[INFO] [1757568208.860369488] [ball_coord_sub]: Pixel center=(78.3, 561.8), width=49.9
+```
