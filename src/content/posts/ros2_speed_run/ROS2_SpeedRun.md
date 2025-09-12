@@ -101,24 +101,28 @@ class YoloBallPublisher(Node):
         super().__init__('yolo_ball_publisher')  
 ```
 
-`super()` 表示调用 **父类**（这里是 `Node`）的方法。`__init__('publisher_node')` 是在调用 `Node` 的构造函数，并给节点设置名字 `"publisher_node"`。
+`super()` 表示调用 **父类**（这里是 `Node`）的方法。
+
+`__init__('publisher_node')` 是在调用 `Node` 的构造函数，并给节点设置名字 `"publisher_node"`。
 
 ### 2. 构建发布器publisher
 
 ```python
-    qos = QoSProfile(depth=100,
-                     reliability=QoSReliabilityPolicy.RELIABLE)
-    self.pub_center = self.create_publisher(PointStamped, 
-                    '/ball/center_px', qos)
+qos = QoSProfile(depth=100,
+                  reliability=QoSReliabilityPolicy.RELIABLE)
+self.pub_center = self.create_publisher(PointStamped, 
+                  '/ball/center_px', qos)
 ```
 
 在 Python 中，发布器是通过 `create_publisher` 方法创建的：
 
 ```python
-publisher = self.create_publisher(消息类型, '话题名', 队列大小)
+publisher = self.create_publisher(消息类型, '话题名', 队列大小（或者QoS配置）)
 ```
 
 其中**消息类型**有很多种，这里用的是 `PointStamped`，表示带时间戳的三维点。
+
+qos是质量服务（Quality of Service）的缩写，用于配置消息传递的可靠性、延迟等属性。这里设置了深度为100和可靠性为RELIABLE，表示消息传递要等到接收方确认收到后再继续。
 
 #### 2.1. 定时器
 
@@ -153,7 +157,7 @@ def loop(self):
 
 消息是通过topic传递的内容，其内容是由消息类型决定的。这里的消息类型是`PointStamped`，它有两个主要部分：`header`(包含时间戳`stamp`和坐标系信息`frame_id`)和`point`(表示三维坐标)。
 
-构建好消息内容（`msg_center`）之后，调用发布器(`pub_center`)的 `publish` 方法发送消息：
+构建好消息内容（`msg_center`）之后，调用发布器(`pub_center`)的 `publish` 方法发送消息。
 
 ### 3. 节点启动与定时器的触发
 
@@ -212,8 +216,6 @@ public:
 private:
   double last_cx_{0}, last_cy_{0}, last_w_{0};
   bool have_center_{false}, have_width_{false};
-  std::vector<cv::Point3d> raw_points_;
-  std::vector<cv::Point3d> kf_points_;
   rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr sub_center_;// 订阅器,采用shared_ptr智能指针
   rclcpp::Publisher<geometry_msgs::msg::PointStamped>::SharedPtr kf_pub_;// 发布器，采用shared_ptr智能指针
   rclcpp::Time last_stamp_;
@@ -242,10 +244,6 @@ private:
       have_center_ = have_width_ = false;
     }
   }
-
-
-  cv::Mat camera_matrix_, dist_coeffs_;
-
 
 int main(int argc, char** argv) {
   rclcpp::init(argc, argv);
