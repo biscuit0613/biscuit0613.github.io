@@ -54,7 +54,7 @@ ros2_ws/
 
 ## 编写节点
 
-无论是python还是cpp,其核心功能都源自继承
+无论是python还是cpp,其核心功能都源自继承。实际上cpp可以类和实现代码分开的但我懒得分了。
 
 ```python
 import rclpy
@@ -112,13 +112,13 @@ class YoloBallPublisher(Node):
                     '/ball/center_px', qos)
 ```
 
-在 Python 中，发布器是通过 create_publisher 方法创建的：
+在 Python 中，发布器是通过 `create_publisher` 方法创建的：
 
 ```python
 publisher = self.create_publisher(消息类型, '话题名', 队列大小)
 ```
 
-其中消息类型有很多种，这里用的是 `PointStamped`，表示带时间戳的三维点。
+其中**消息类型**有很多种，这里用的是 `PointStamped`，表示带时间戳的三维点。
 
 #### 2.1. 定时器
 
@@ -130,7 +130,7 @@ period = 1.0 / fps if fps and fps > 0 else 0.03
 self.timer = self.create_timer(period, self.loop) 
 ```
 
-`create_timer` 用于创建一个定时器，定时（`period`参数）调用指定的回调函数（`self.loop`代表的参数）。定时器让节点启动后周期性执行 回调函数（这里是`self.loop`）。节点发送消息的功能都在**回调函数**里实现。
+`create_timer` 用于创建一个**定时器**，定时（`period`参数）调用指定的回调函数（`self.loop`代表的参数）。定时器让节点启动后**周期性执行回调函数**（这里是`self.loop`）。节点发送消息的功能都在**回调函数**里实现。
 
 #### 2.2. 回调函数
 
@@ -153,17 +153,24 @@ def loop(self):
 
 消息是通过topic传递的内容，其内容是由消息类型决定的。这里的消息类型是`PointStamped`，它有两个主要部分：`header`(包含时间戳`stamp`和坐标系信息`frame_id`)和`point`(表示三维坐标)。
 
+构建好消息内容（`msg_center`）之后，调用发布器(`pub_center`)的 `publish` 方法发送消息：
+
 ### 3. 节点启动与定时器的触发
 
 ```python
 def main():
     rclpy.init()  
-    node = YoloBallPublisher()# 创建节点实例，python里面实例化的写法
+    node = YoloBallPublisher()
     rclpy.spin(node)  
     rclpy.shutdown()  
 ```
 
+`rclpy.init()` 用于初始化 ROS2。
+
+`node = YoloBallPublisher()` 创建节点实例。
+
 `rclpy.spin(node)` 会让节点开始工作，进入循环，等待并处理回调函数（比如定时器触发的`self.loop`）。
+
 `rclpy.shutdown()` 用于关闭 ROS2，释放资源。
 
 ### cpp版本的节点
@@ -191,7 +198,7 @@ public:
         last_w_ = msg->point.z; 
         last_stamp_ = msg->header.stamp;
         have_center_ = true;
-        have_width_ = true;
+        have_width_ = true;//这两个布尔值用来判定是否收到了消息
         printIfReady(msg);//回调函数里调用printIfReady(msg);
       });
     // 构建发布器publisher
