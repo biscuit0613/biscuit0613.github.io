@@ -84,7 +84,7 @@ $$
 
 对于二维函数 $f:\mathbb{R}^2\to\mathbb{R},\mathbf{x}=(x,y),\mathbf{F}=f$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial f}{\partial (x,y)}=(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})^T$ 就是梯度。(这里应该是列向量，写成行向量的转置)
 
-对于二维函数的线性组合： $\mathbf{F}:\mathbb{R}^2\to\mathbb{R}^2,\mathbf{x}=(x,y),\mathbf{F}=(u,v)$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial (u,v)}{\partial (x,y)}$ 就是二维函数线性组合的雅各比矩阵。
+对于二维函数的线性组合： $\mathbf{F}:\mathbb{R}^2\to\mathbb{R}^2,\mathbf{x}=(x,y),\mathbf{F}=(u,v)$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial (u,v)}{\partial (x,y)}$ 就是二维函数线性组合的导数（雅各比矩阵）。
 
 ## 雅各布行列式
 
@@ -107,3 +107,68 @@ $$
 
 - 在三维中，$|\mathbf{J}|$就是小立方体变成平行六面体时的体积比。
 - 符号决定了方向是否保持（正：方向保持；负：方向翻转），这点和一元函数的导数类似。
+
+## 在复变函数中的应用
+
+在复变函数中，设有一个从复数域到复数域的函数：
+$$\begin{align*}
+f:\mathbb{C} &\rightarrow \mathbb{C} \\
+z &\mapsto f(z)
+\end{align*}$$
+其中 $z=x+iy$，这个函数 $f$ 可以表示为两个实分量函数的组合，即 $f(z)=u(x,y)+iv(x,y)$。
+
+将复数域视为二维实数域，函数 $f$ 可以看作从 $\mathbb{R}^2$ 到 $\mathbb{R}^2$ 的映射：
+$$\begin{align*}
+F:\mathbb{R}^2 &\rightarrow \mathbb{R}^2 \\
+(x,y) &\mapsto (u,v)
+\end{align*}$$
+
+
+对于复变函数，如果 $f$ 在 $z_0 = x_0 + i y_0$ 可导，那么柯西–黎曼条件成立：
+
+$$
+\frac{\partial u}{\partial x} = \frac{\partial v}{\partial y}, \quad
+\frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}.
+$$
+
+这时雅各比矩阵就变为
+
+$$
+J_F(x_0,y_0) =
+\begin{bmatrix}
+a & -b \\
+b & \;\;a
+\end{bmatrix},\\[10bp]
+a = \frac{\partial u}{\partial x}，b = \frac{\partial v}{\partial x}
+$$
+这里我们用 $\Delta \mathbf{x} = (\Delta x, \Delta y)^T$，定义 $\Delta z=\Delta x + i \Delta y=(\Delta x, \Delta y)^T$。
+而 $J_F$ 正好对应复数乘法 $a+ib = f'(z_0)$ 的作用。也就是说，
+
+$$
+F(\mathbf{x}_0 + \Delta \mathbf{x}) \approx F(\mathbf{x}_0) + J_F(\mathbf{x}_0)\, \Delta \mathbf{x}
+$$
+
+在复变函数下等价于
+
+$$
+\begin{bmatrix}
+    u(x+\Delta x,y+\Delta y)\\ v(x+\Delta x,y+\Delta y)
+\end{bmatrix}
+\approx
+\begin{bmatrix}
+    u(x,y)\\ v(x,y)
+\end{bmatrix}
++
+\begin{bmatrix}
+    a&-b\\
+    b& a
+\end{bmatrix}
+\begin{bmatrix}
+    \Delta x \\
+    \Delta y
+\end{bmatrix}\\[10bp]
+f(z_0 + \Delta z) \approx f(z_0) + f'(z_0) \, \Delta z.
+$$
+此时，雅各比行列式为：
+$$\det(\mathbf{J})=a^2+b^2$$
+这个结果表明，复变函数在可微点处的雅各比行列式总是非负的，并且与复数导数的模平方相等。这反映了复变函数在可微点处的局部线性近似具有旋转和平移的性质。 

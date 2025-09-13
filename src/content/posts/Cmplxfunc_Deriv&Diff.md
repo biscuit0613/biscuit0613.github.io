@@ -162,7 +162,7 @@ $$
 + 从点的角度出发，解析比可导（可微）更严格，$z_0$处解析$\Rightarrow$$z_0$的某个邻域内处处可导，$z_0$处可导$\nRightarrow$解析
 + 从**区域**角度出发，解析和可导（可微）**等价**。区域$D$可导$\Leftrightarrow$区域$D$解析
 
-### 解析的性质
+### 解析性的继承
 
 四则运算保留函数的解析性
 
@@ -175,7 +175,7 @@ $$
 柯西黎曼条件的推导：
 $$
 \begin{align*}
-\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+&\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
 &=\lim_{\begin{matrix}\Delta x\to 0\\\Delta y\to 0\end{matrix}}{\frac{u(x+\Delta x,y+\Delta y)+iv(x+\Delta x,y+\Delta y)-(u(x,y)+iv(x,y))}{\Delta x+i\Delta y}}\\[20bp]
 &\text{结合之前说的在可导的情况下$\Delta x\to 0,\Delta y\to 0$有很多路径，选取最特殊的\textbf{实轴虚轴}}\\
 &=\lim_{\begin{matrix}\Delta x= 0\\\Delta y\to 0\end{matrix}}{\frac{u(x,y+\Delta y)+iv(x,y+\Delta y)-(u(x,y)+iv(x,y))}{i\Delta y}}\\[20bp]
@@ -188,7 +188,7 @@ $$
 &\text{ab两式相等，一一对应得}\\
 &\left\{\begin{matrix}
 \begin{align*}
-\frac{\partial u}{\partial x}&=\frac{\partial v}{\partial y}\\[20bp]
+\frac{\partial u}{\partial x}&=\frac{\partial v}{\partial y}\\[10bp]
 \frac{\partial u}{\partial y}&=-\frac{\partial v}{\partial x}
 \end{align*}
 \end{matrix}\right.
