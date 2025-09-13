@@ -213,3 +213,84 @@ c++中的模板：
 ```
 
 模板并不会立即生成代码，只有在特定的**类型**被提供时，模板才会被**实例化**。
+
+## `->`和`.`的区别
+
+`.`用于访问对象的成员，而`->`用于访问指针所指向对象的成员。
+
+`a->b` 等价于 `(*a).b`
+
+即：先解引用指针 `*a` 得到对象，再用 `.` 访问其成员。
+
+这里用单向链表举例：
+
+```lua
+ head           second        nullptr
+  ↓               ↓
++-------+      +-------+ 
+| data:10| ->  | data:20| 
+| next  ------>| next  -------> nullptr
++-------+      +-------+    
+```
+
+```cpp
+struct Node {
+    int data;// 节点数据
+    Node* next; // 指向下一个节点的指针
+};
+```
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 创建两个结点
+    Node* head = new Node;   // 创建一个指针head 是 Node* 类型
+    head->data = 10;         // 用 -> 设置数据，相当于 (*head).data = 10;
+    head->next = nullptr;
+
+    Node* second = new Node;
+    second->data = 20;
+    second->next = nullptr;
+
+    // 链接两个结点
+    head->next = second;     // head -> second
+
+    // 遍历链表
+    Node* p = head;
+    while (p != nullptr) {
+        cout << p->data << " ";  // 访问结点数据
+        p = p->next;             // 移动到下一个结点
+    }
+
+    // 释放内存
+    delete head;
+    delete second;
+
+    return 0;
+}
+```
+
+或者说
+
+```cpp
+Node n{5, nullptr};
+Node* p = &n;
+
+cout << n.data;   // ✅ 用 . 输出5
+cout << p->data;  // ✅ 用 -> 输出5
+// cout << p.data; // ❌ 错误，p 是指针不是对象
+```
+
+```rust
+head -> [10 | next] -> [20 | null]
+          ↑
+        head->data
+```
+
+:::warning
+
+`->`用于指针类型时需要确保指针不是空指针，否则会导致运行时错误（解引用空指针）。
+`.`用于对象类型时需要确保对象已经被正确初始化，否则可能会访问未定义的内存。
+:::

@@ -1,7 +1,7 @@
 ---
-title: ROS2_SpeedRun
+title: ROS2学习笔记
 published: 2025-09-10
-description: 'ROS2快速入门指南'
+description: 'ROS2～～快速～～入门指南'
 image: ''
 tags: [ROS2]
 category: 'ROS2'
@@ -52,211 +52,207 @@ ros2_ws/
         └── package.xml
 ```
 
-## 编写发布节点
+## 编写节点
 
-编辑`publisher.py`(init.py文件的名字可以随便改，节点代码主体在这里面)：
+无论是python还是cpp,其核心功能都源自继承。实际上cpp可以类和实现代码分开的但我懒得分了。
 
 ```python
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Point32
-from std_msgs.msg import Float32
-from ultralytics import YOLO
-import cv2
-import os
+from geometry_msgs.msg import PointStamped
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 
 class YoloBallPublisher(Node):
     def __init__(self):
-        super().__init__('yolo_ball_publisher')
-
-        # 声明 ROS 参数（可在 launch 或命令行中覆盖）
-        self.declare_parameter('video_path', 'rgb.mp4')
+        super().__init__('yolo_ball_publisher')  
+        self.declare_parameter('video_path', 'test4/rgb.mp4')
         self.declare_parameter('model_path', 'v1.pt')
-        self.declare_parameter('ball_class_id', 0)
         self.declare_parameter('conf_thresh', 0.7)
-
-        # 创建 ROS 发布器：中心点和宽度
-        self.pub_center = self.create_publisher(Point32, '/ball/center_px', 10)
-        #这里面参数的意义：Point32是消息类型，'/ball/center_px'是话题（topic）名称，10是队列大小
-        self.pub_width  = self.create_publisher(Float32, '/ball/width_px', 10)
-
-        # 获取参数值
         video_path = self.get_parameter('video_path').get_parameter_value().string_value
-        video_path = os.path.abspath(video_path)
-        print(f"[DEBUG] Try to open video: {video_path}")
-        model_path = self.get_parameter('model_path').get_parameter_value().string_value
-        self.ball_cls = self.get_parameter('ball_class_id').get_parameter_value().integer_value
-        self.conf = self.get_parameter('conf_thresh').get_parameter_value().double_value
-
-        # 加载 YOLO 模型
-        self.model = YOLO(model_path)
-
-        # 打开视频文件
-        self.cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
-        if not self.cap.isOpened():
-            self.get_logger().error(f"Failed to open video: {video_path}")
-            self.destroy_node()
-            return
-
-        # 设置定时器周期（根据视频帧率）
+        qos = QoSProfile(depth=100, reliability=QoSReliabilityPolicy.RELIABLE)
+        self.pub_center = self.create_publisher(PointStamped, '/ball/center_px', qos)
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         period = 1.0 / fps if fps and fps > 0 else 0.03
-        self.timer = self.create_timer(period, self.loop)
-
-        # 初始化轨迹字典：每个 obj_id 对应一个点序列
-        self.trajectories = {}
-
-    def loop(self):
-        ok, frame = self.cap.read()
-        if not ok:
-            self.get_logger().info('Video ended.')
-            cv2.destroyAllWindows()
-            self.destroy_node()
-            return
-
-        # YOLO 跟踪推理
-        results = self.model.track(frame, persist=True, conf=self.conf)
-
-        if len(results) and results[0].boxes is not None:
-            boxes = results[0].boxes
-            xyxy = boxes.xyxy.cpu().numpy()
-            clss = boxes.cls.cpu().numpy()
-
-            # 遍历所有检测框
-            for i, box in enumerate(xyxy):
-                if int(clss[i]) != self.ball_cls:
-                    continue
-
-                x1, y1, x2, y2 = map(float, box)
-                cx = (x1 + x2) * 0.5
-                cy = (y1 + y2) * 0.5
-                w  = max(1.0, x2 - x1)
-
-                # 获取目标 ID（如果模型支持 ID 跟踪）
-                obj_id = i  # 如果你用的是 YOLOv8 + tracker，可以改为 boxes.id[i]
-
-                # 记录轨迹
-                if obj_id not in self.trajectories:
-                    self.trajectories[obj_id] = []
-                self.trajectories[obj_id].append((cx, cy))
-
-                # 发布当前中心点和宽度
-                msg_center = Point32(x=cx, y=cy, z=0.0)
-                msg_width  = Float32(data=w)
-                self.pub_center.publish(msg_center)
-                self.pub_width.publish(msg_width)
-
-                # 可视化检测框和中心点
-                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0,255,0), 2)
-                cv2.circle(frame, (int(cx), int(cy)), 5, (0,0,255), -1)
-
-                # 可视化轨迹线
-                pts = self.trajectories[obj_id]
-                for j in range(1, len(pts)):
-                    pt1 = (int(pts[j - 1][0]), int(pts[j - 1][1]))
-                    pt2 = (int(pts[j][0]), int(pts[j][1]))
-                    cv2.line(frame, pt1, pt2, (255, 0, 0), 2)
-
-                break  # 只处理一个目标，保持简单
-
-        # 显示图像窗口
-        cv2.imshow("YOLO Tracking", frame)
-        cv2.waitKey(1)
+        self.timer = self.create_timer(period, self.loop) 
+        msg_center = PointStamped()
+        msg_center.header.stamp = self.get_clock().now().to_msg()  
+        msg_center.header.frame_id = str(obj_id)  
+        msg_center.point.x = cx
+        msg_center.point.y = cy
+        msg_center.point.z = width
+        self.pub_center.publish(msg_center)  
+        self.get_logger().info('视频放完了')  
+        self.get_logger().error(f"打不开视频: {video_path}")  
 
 def main():
-    rclpy.init()
+    rclpy.init()  
     node = YoloBallPublisher()
-    rclpy.spin(node)
-    rclpy.shutdown()
-    cv2.destroyAllWindows()
-
-if __name__ == "__main__":
-    main()
+    rclpy.spin(node)  
+    rclpy.shutdown()  
 ```
 
-这个节点会打开一个视频文件，使用YOLO模型检测篮球，并发布篮球的中心坐标和宽度。
-这个节点运行的时候直接打开对应的虚拟环境然后运行python脚本即可：
+一点一点拆开来讲：
 
-## 编写订阅节点
+### 1. 节点的初始化与命名
 
-编辑`subscriber.cpp`(注意文件位置)：
+```python
+class YoloBallPublisher(Node):
+    def __init__(self):
+        super().__init__('yolo_ball_publisher')  
+```
+
+`super()` 表示调用 **父类**（这里是 `Node`）的方法。
+
+`__init__('publisher_node')` 是在调用 `Node` 的构造函数，并给节点设置名字 `"publisher_node"`。
+
+### 2. 构建发布器publisher
+
+```python
+qos = QoSProfile(depth=100,
+                  reliability=QoSReliabilityPolicy.RELIABLE)
+self.pub_center = self.create_publisher(PointStamped, 
+                  '/ball/center_px', qos)
+```
+
+在 Python 中，发布器是通过 `create_publisher` 方法创建的：
+
+```python
+publisher = self.create_publisher(消息类型, '话题名', 队列大小（或者QoS配置）)
+```
+
+其中**消息类型**有很多种，这里用的是 `PointStamped`，表示带时间戳的三维点。
+
+qos是质量服务（Quality of Service）的缩写，用于配置消息传递的可靠性、延迟等属性。这里设置了深度为100和可靠性为RELIABLE，表示消息传递要等到接收方确认收到后再继续。
+
+#### 2.1. 定时器
+
+定时器的创建
+
+```python
+fps = self.cap.get(cv2.CAP_PROP_FPS)
+period = 1.0 / fps if fps and fps > 0 else 0.03
+self.timer = self.create_timer(period, self.loop) 
+```
+
+`create_timer` 用于创建一个**定时器**，定时（`period`参数）调用指定的回调函数（`self.loop`代表的参数）。定时器让节点启动后**周期性执行回调函数**（这里是`self.loop`）。节点发送消息的功能都在**回调函数**里实现。
+
+#### 2.2. 回调函数
+
+```python
+def loop(self):
+    ret, frame = self.cap.read()
+    if not ret:
+        self.get_logger().info('视频放完了')  
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  
+        return
+    # 省略中间的YOLO检测代码
+    msg_center = PointStamped()
+    msg_center.header.stamp = self.get_clock().now().to_msg()  
+    msg_center.header.frame_id = str(obj_id)  
+    msg_center.point.x = cx
+    msg_center.point.y = cy
+    msg_center.point.z = width
+    self.pub_center.publish(msg_center)  
+```
+
+消息是通过topic传递的内容，其内容是由消息类型决定的。这里的消息类型是`PointStamped`，它有两个主要部分：`header`(包含时间戳`stamp`和坐标系信息`frame_id`)和`point`(表示三维坐标)。
+
+构建好消息内容（`msg_center`）之后，调用发布器(`pub_center`)的 `publish` 方法发送消息。
+
+### 3. 节点启动与定时器的触发
+
+```python
+def main():
+    rclpy.init()  
+    node = YoloBallPublisher()
+    rclpy.spin(node)  
+    rclpy.shutdown()  
+```
+
+`rclpy.init()` 用于初始化 ROS2。
+
+`node = YoloBallPublisher()` 创建节点实例。
+
+`rclpy.spin(node)` 会让节点开始工作，进入循环，等待并处理回调函数（比如定时器触发的`self.loop`）。
+
+`rclpy.shutdown()` 用于关闭 ROS2，释放资源。
+
+### cpp版本的节点
 
 ```cpp
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/point32.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 #include <std_msgs/msg/float32.hpp>
+#include <fstream>
 
 class BallCoordSub : public rclcpp::Node {
 public:
-  BallCoordSub() : Node("ball_coord_sub") {
-    sub_center_ = create_subscription<geometry_msgs::msg::Point32>(
-      "/ball/center_px", 10,
-      [this](const geometry_msgs::msg::Point32::SharedPtr msg){
-        last_cx_ = msg->x; last_cy_ = msg->y; have_center_ = true;
-        printIfReady();
+  BallCoordSub() : Node("ball_coord_sub") {//在这里声明节点名称
+    rclcpp::QoS qos_profile(100);
+    qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);
+    // 构建订阅器subscriber
+    sub_center_ =create_subscription<geometry_msgs::msg::PointStamped>(
+      "/ball/center_px", //topic的名称
+      qos_profile,//qos配置
+      //lambda表达式，回调函数
+      [this](const geometry_msgs::msg::PointStamped::SharedPtr msg){
+        last_cx_ = msg->point.x;
+        last_cy_ = msg->point.y;
+        last_w_ = msg->point.z; 
+        last_stamp_ = msg->header.stamp;
+        have_center_ = true;
+        have_width_ = true;//这两个布尔值用来判定是否收到了消息
+        printIfReady(msg);//回调函数里调用printIfReady(msg);
       });
+    // 构建发布器publisher
+    kf_pub_ = this->create_publisher<geometry_msgs::msg::PointStamped>("/ball/kf_pos", 100);
+  }
 
-    sub_width_ = create_subscription<std_msgs::msg::Float32>(
-      "/ball/width_px", 10,
-      [this](const std_msgs::msg::Float32::SharedPtr msg){
-        last_w_ = msg->data; have_width_ = true;
-        printIfReady();
-      });
+  ~BallCoordSub() {
+   
   }
 
 private:
-  void printIfReady() {
+  double last_cx_{0}, last_cy_{0}, last_w_{0};
+  bool have_center_{false}, have_width_{false};
+  rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr sub_center_;// 订阅器,采用shared_ptr智能指针
+  rclcpp::Publisher<geometry_msgs::msg::PointStamped>::SharedPtr kf_pub_;// 发布器，采用shared_ptr智能指针
+  rclcpp::Time last_stamp_;
+  // 这个函数在收到消息后调用
+  void printIfReady(const geometry_msgs::msg::PointStamped::SharedPtr& msg) {
     if (have_center_ && have_width_) {
-      RCLCPP_INFO(this->get_logger(), "Pixel center=(%.1f, %.1f), width=%.1f",
-                  last_cx_, last_cy_, last_w_);
-      have_center_ = have_width_ = false; // 本次打印后清一次（简单节流）
+      // 获取id的方法在这里，在publisher.py里面id被放在消息头header里面。
+      int ball_id = 0;
+      try {
+        ball_id = std::stoi(msg->header.frame_id);//注意header里面的是字符串，需要转int
+      } catch (...) {//如果获取不到或者说只有一个，id=0
+        ball_id = 0;
+      }
+      // 省略solvePnP方法，发布卡尔曼滤波结果，带时间戳和id
+      //打包要发出去的卡尔曼滤波结果
+        geometry_msgs::msg::PointStamped kf_msg;
+        kf_msg.header.stamp = last_stamp_;
+        kf_msg.header.frame_id = std::to_string(ball_id);
+        kf_msg.point.x = kf_map_[ball_id].getPosition()[0];
+        kf_msg.point.y = kf_map_[ball_id].getPosition()[1];
+        kf_msg.point.z = kf_map_[ball_id].getPosition()[2];
+        kf_pub_->publish(kf_msg);
+      } else {
+        RCLCPP_WARN(this->get_logger(), "solvePnP 没成功");
+      }
+      have_center_ = have_width_ = false;
     }
   }
 
-  rclcpp::Subscription<geometry_msgs::msg::Point32>::SharedPtr sub_center_;
-  rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr sub_width_;
-  double last_cx_{0}, last_cy_{0}, last_w_{0};
-  bool have_center_{false}, have_width_{false};
-};
-
 int main(int argc, char** argv) {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<BallCoordSub>());
+  auto node = std::make_shared<BallCoordSub>();
+  rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }
-```
 
-这个节点订阅两个话题，打印收到的篮球像素坐标和宽度。
-然后修改`yolo_ball_sub/CMakeLists.txt`，
-
-```cmake
-cmake_minimum_required(VERSION 3.8)
-project(ball_coord_sub)
-
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
-
-add_executable(subscriber src/subscriber.cpp)
-ament_target_dependencies(subscriber rclcpp geometry_msgs std_msgs)
-install(TARGETS subscriber DESTINATION lib/${PROJECT_NAME})
-
-ament_package()
-```
-
-+ `subscriber` 是运行节点时的命令名
-
-+ `src/subscriber.cpp` 是 C++ 源文件路径，告诉 ROS 2 去哪里找入口。
-
-最后在`yolo_ball_sub/package.xml`中添加依赖：
-
-```xml
-<buildtool_depend>ament_cmake</buildtool_depend>
-<depend>rclcpp</depend>
-<depend>geometry_msgs</depend>
-<depend>std_msgs</depend>
 ```
 
 ## 编译构建
@@ -270,3 +266,11 @@ python直接运行，cpp用cmake编译
 ```bash
 [INFO] [1757568208.860369488] [ball_coord_sub]: Pixel center=(78.3, 561.8), width=49.9
 ```
+
+## 信息传递流程（以id为例）
+
+1. **publisher.py**：YOLO `track` 获得 `boxes.id`，发布 `msg.header.frame_id = str(obj_id)`。
+
+2. **subscriber.cpp**：`ball_id = std::stoi(msg->header.frame_id)`，用 `kf_map_[ball_id]` 滤波，发布结果。
+
+3. **visualize.py**：`ball_id = int(msg.header.frame_id)`，存储到 `points_dict`。
