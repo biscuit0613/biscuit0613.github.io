@@ -8,45 +8,45 @@ author: biscuit
 draft: false
 ---
 
-
-
 # 基础知识
 
 ## 复数的表示
 
 1. 用实部和虚部：  
-  $$z=x+yi,Re_z=x,Im_z=y$$  
+  $$z=x+yi,Re_z=x,Im_z=y$$
+
 2. 极坐标形式：  
 
-$$z=x+yi=r(\cos\theta+i\cdot\sin\theta)\\[5bp]
-\text{其中}
-\left\{ \begin{matrix} x=r\cos\theta,y=r\sin\theta\\[5bp]r=|z|\end{matrix}\right.\\[5bp]
-$$
-$\theta$定义为z的辐角，记作$\theta = Argz$
+    $$
+      z=x+yi=r(\cos\theta+i\cdot\sin\theta)\\[5bp]
+      \text{其中}
+      \left\{ \begin{matrix} x=r\cos\theta,y=r\sin\theta\\[5bp]r=|z|\end{matrix}\right.\\[5bp]
+    $$
+    $\theta$定义为z的辐角，记作 $\theta = Argz$  
 
 3. 用欧拉公式：
 
-$$
-  e^{i\theta}=\cos\theta+i\sin\theta\\[5bp]
-  \text{这也是|z|=1时极坐标的形式}\\[5bp]
-  \therefore z=x+yi=r(\cos\theta+i\cdot\sin\theta)=re^{i\theta}\\[5bp]
-  z=re^{i\theta}\\
-$$
-简单推导一下欧拉公式：(用x替代$\theta$，~懒~)
+    $$
+      e^{i\theta}=\cos\theta+i\sin\theta\\[5bp]
+      \text{这也是|z|=1时极坐标的形式}\\[5bp]
+      \therefore z=x+yi=r(\cos\theta+i\cdot\sin\theta)=re^{i\theta}\\[5bp]
+      z=re^{i\theta}\\
+    $$
+    简单推导一下欧拉公式：(用x替代$\theta$，~懒~)
 
-$$
-  \begin{aligned}
-  e^{ix}&=1+ix+\frac{(ix)^2}{2!}+\frac{(ix)^3}{3!}+\frac{(ix)^4}{4!}+\frac{(ix)^5}{5!}+\frac{(ix)^6}{6!}...\\[10bp]
-  &=\underset{\text{偶交错是cos展开}}{\underset{}{(1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}...)}}+\underset{\text{奇交错是sin展开}}{\underset{}{i(x-\frac{x^3}{3!}+\frac{x^5}{5!}-...)}}\\[15bp]
-  &=\cos x+i\sin x
-  \end{aligned}
-$$
+    $$
+      \begin{aligned}
+      e^{ix}&=1+ix+\frac{(ix)^2}{2!}+\frac{(ix)^3}{3!}+\frac{(ix)^4}{4!}+\frac{(ix)^5}{5!}+\frac{(ix)^6}{6!}...\\[10bp]
+      &=\underset{\text{偶交错是cos展开}}{\underset{}{(1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}...)}}+\underset{\text{奇交错是sin展开}}{\underset{}{i(x-\frac{x^3}{3!}+\frac{x^5}{5!}-...)}}\\[15bp]
+      &=\cos x+i\sin x
+      \end{aligned}
+    $$
 
 4. 共轭复数  
 
-   $$\overline{z}=-z\\
-   \text{就是把$\theta$ 变成-$\theta$}
-   $$
+    $$\overline{z}=-z\\
+    \text{就是把$\theta$ 变成-$\theta$}
+    $$
 
 ## 复数的运算
 
@@ -57,7 +57,7 @@ $$
    + $\frac{z_1}{z_2}=\frac{r_1}{r_2}(\cos(\theta_1 -\theta_2)+i\sin(\theta_1-\theta_2))$
 
    + 棣莫弗定理：$z^{n}=r^{n}(\cos(n\theta)+i\sin (n\theta))$  
-    
+
    + 这个定理还可以定义复数的**开根**：给定$z=re^{i\theta},\theta=\arg z$，如果$\exist w=\rho e^{i\phi},w^n=z$则称$w$是$z$的n次方根,$\phi=\frac{\theta＋2k\pi}{n},k=0,1,2,3...n-1,\rho=\sqrt[n]{r}$。注意，开根函数是多值函数,值的个数＝开根次数n，**实数在复数域下开根也能开出来多值**。
 
 3. 欧拉公式
@@ -70,6 +70,7 @@ $$
    + $\frac{\overline{z}_1}{\overline{z_2}}=\overline{\frac{z_1}{z_2}}$(用欧拉公式证)
 
 例题1：求$\sqrt[3]{i}$
+
 :::note[solution]
 $$
 \theta=\pi/2+2k\pi\\
@@ -116,7 +117,7 @@ arg（z）=\left\{\begin{matrix}
   undefined & x=0,y=0
 \end{matrix}\right.
 $$
-复数的辐角函数是**多值函数**，辐角函数通常在复数的负实轴上具有**不连续性**。因为辐角函数的定义涉及到从 
+复数的辐角函数是**多值函数**，辐角函数通常在复数的负实轴上具有**不连续性**。因为辐角函数的定义涉及到从
 $-\pi$到$\pi$的区间，在复平面的负实轴$（x < 0, y = 0）$处，辐角函数会发生跳跃。辐角函数在**整个复平面上**是**非解析的**。特别是，它在复平面的负实轴上具有分支点，因此必须使用分支切割来使其成为一个良定义的单值函数。
 
 在复平面内，复数的**乘法**有**几何意义**：
