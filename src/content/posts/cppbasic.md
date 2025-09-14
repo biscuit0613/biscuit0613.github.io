@@ -20,9 +20,17 @@ int x = 10;
 
 ### &分别修饰返回值类型和传入参数
 
-&修饰的基本意义是引用
+&修饰的基本意义是**引用**，表示对变量的别名。他和被引用的变量公用同一块内存地址。引用必须在定义时初始化，且一旦绑定到一个变量，就不能再绑定到其他变量。
 
-修饰参数时，可以避免对象的复制，提高性能。如果不使用&的话，传递的是参数的副本，而不是原始变量本身。传入的变量对函数内的修改**不会**影响原始变量。
+```cpp
+int a = 10,c=60;
+int& b = a;  
+// b 是 a 的引用，即 b 和 a 共享同一块内存
+// 现在对 b 的任何修改都会影响 a
+b = c; // 这是“把 c 的值赋给 a”，而不是“让 b 改绑到 c”
+```
+
+修饰传入函数的参数时，可以避免对对象的复制，提高性能。如果不使用&的话，传递的是参数的副本，而不是原始变量本身，这样传入的变量在函数内的修改**不会**影响原始变量。
 
 不使用引用的情况：
 
@@ -35,13 +43,13 @@ void modifyValue(int x) {
 
 int main() {
     int a = 10;
-    modifyValue(a);  // 传入 a 的副本
+    modifyValue(a);  // 传入 a 的副本，副本在函数结束后被销毁，真正的 a 的值不会改变
     std::cout << a;   // 输出 10，原始变量 a 没有变化
     return 0;
 }
 ```
 
-使用引用的情况（以卡尔曼滤波中的为例）
+使用&修饰传入参数的情况（以卡尔曼滤波中的为例）
 
 ```cpp
 virtual void init(const std::vector<boost::any> &param) = 0;
@@ -49,21 +57,21 @@ virtual void init(const std::vector<boost::any> &param) = 0;
 
 其中const表示常量引用，表示参数在函数内部不会被修改
 
-修饰返回类型时，表示函数将返回一个 引用。这意味着函数将返回一个已经存在的对象的引用，而不是对象的副本。
+修饰返回类型时，表示函数将返回一个**引用**。常见的有返回**类的对象的引用**（常见于链式调用）；返回**传入参数的引用**（比如数组元素、容器元素）；返回**类的成员变量引用**。可以避免不必要的拷贝，同时函数的调用者可以**修改返回的对象**（如果没有const修饰）
 
-可以避免不必要的拷贝，同时函数的调用者**可以修改**返回的对象（如果没有const修饰）
-
-比如在KF.h头文件中定义了纯虚函数：
+比如在`KF.h`头文件中定义了纯虚函数：
 
 ```cpp
-    virtual Eigen::MatrixXd& getResult()
+virtual Eigen::MatrixXd& getResult() = 0;
 ```
 
-在KF.cpp中的实现：
+在`KF.cpp`中的实现：
 
 ```cpp
 Eigen::MatrixXd& KF::getResult() { return m_statePost; }
 ```
+
+这里返回的是成员变量`m_statePost`的引用，调用者可以修改`m_statePost`的值。
 
 ## virtual虚函数和纯虚函数
 
@@ -255,7 +263,7 @@ int main() {
     second->next = nullptr;
 
     // 链接两个结点
-    head->next = second;     // head -> second
+    head->next = second;     // 相当于 head -> second
 
     // 遍历链表
     Node* p = head;
@@ -276,7 +284,7 @@ int main() {
 
 ```cpp
 Node n{5, nullptr};
-Node* p = &n;
+Node* p = &n;//&取地址
 
 cout << n.data;   // ✅ 用 . 输出5
 cout << p->data;  // ✅ 用 -> 输出5
@@ -292,5 +300,85 @@ head -> [10 | next] -> [20 | null]
 :::warning
 
 `->`用于指针类型时需要确保指针不是空指针，否则会导致运行时错误（解引用空指针）。
+
 `.`用于对象类型时需要确保对象已经被正确初始化，否则可能会访问未定义的内存。
+
 :::
+
+## cpp中的this指针
+
+在 C++ 的类中，`this` 是一个隐含的指针，指向当前**对象**本身。它在类的非静态成员函数中可用，用于访问对象的成员变量和成员函数。
+
+类型：在普通成员函数里，`this` 的类型是指向当前类的指针。
+
+常量成员函数：在 `const` 成员函数里，`this` 的类型是 `const class*`，是**常量指针**，不能修改成员变量。
+
+静态成员函数没有 `this`：因为静态函数属于类，而不是某个对象。
+
+### this区分变量名和成员变量
+
+```cpp
+#include <iostream>
+using namespace std;
+class Demo {
+private:
+  int num;
+  char ch;
+public:
+  void setMyValues(int num, char ch){
+    this->num = num;
+    this->ch = ch;
+  }
+  void displayMyValues(){
+    cout << num << endl;
+    cout << ch;
+  }
+};
+int main(){
+  Demo obj;
+  obj.setMyValues(100, 'A');
+  obj.displayMyValues();
+  return 0;
+}
+```
+
+在 `setMyValues()` 函数中，使用 `this` 指针来引用当前对象的成员变量 `num` 和 `ch`，并将传入的值赋给它们，这样可以明确地告诉编译器想要访问当前对象的**成员变量**，而不是函数参数或局部变量。
+
+### this返回当前对象的引用（链式编程）
+
+```cpp
+#include <iostream>
+using namespace std;
+class Demo {
+public:
+  Demo& setMyValues(int num, char ch) {//返回当前对象的引用
+    this->num = num;
+    this->ch = ch;
+    return *this;
+  }
+  void displayMyValues() {
+    this->num = num++;//这里体现链式调用，对对象的数据成员所做的更改将保留以进一步链式调用。
+    cout << num << endl;
+    cout << ch;
+  }
+private:
+  int num;
+  char ch;
+};
+int main() {
+  Demo obj;
+  obj.setMyValues(100, 'A').displayMyValues(); // 链式调用
+  return 0;
+}
+```
+
+输出：
+
+```cpp
+101 //先setMyValues(100,'A')，然后displayMyValues()，num++，所以是101
+A
+```
+
+`setMyValues()`返回类型为 `Demo&`，这是一个引用类型， 函数返回 `*this`，即当前对象的**引用**（这里是 `obj`的引用），这样就可以在同一行代码中连续调用多个成员函数，实现链式编程。
+
+如果前面的函数返回的是 `Demo`，那么就无法进行链式调用，因为返回的是对象的副本，而不是对原始对象的引用。链式调用后副本改变，原始对象不变。
