@@ -131,4 +131,30 @@ $$
 \end{align*}
 $$
 
-(3)
+(3) $f(z)=\frac{x+y}{x^2+y^2}+i\frac{x-y}{x^2+y^2}$
+
+:::tip[solution]
+
+$$
+\begin{align*}
+&\frac{\partial u}{\partial x}=\frac{y^2-x^2-2xy}{(x^2+y^2)^2},\frac{\partial u}{\partial y}=\frac{x^2-y^2-2xy}{(x^2+y^2)^2}\\[10bp]
+&\frac{\partial v}{\partial x}=\frac{y^2-x^2+2xy}{(x^2+y^2)^2},\frac{\partial v}{\partial y}=\frac{y^2-x^2-2xy}{(x^2+y^2)^2}\text{显然一阶偏导连续}\\
+&\text{当满足柯西黎曼条件时：}x\neq 0,y\neq 0\\
+\end{align*}
+$$
+所以在复平面上除原点外处处解析
+:::
+
+(4) $f(z)=\Im z=y$
+
+:::tip[solution]
+$$
+\begin{align*}
+&\frac{\partial u}{\partial x}=0,\frac{\partial u}{\partial y}=1\\[10bp]
+&\frac{\partial v}{\partial x}=0,\frac{\partial v}{\partial y}=0\text{显然一阶偏导连续}\\
+&\text{当满足柯西黎曼条件时：}无解\\
+\end{align*}
+$$
+所以在复平面上处处不可导
+:::
+

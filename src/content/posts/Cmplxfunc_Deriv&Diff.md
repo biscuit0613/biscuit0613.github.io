@@ -117,10 +117,10 @@ e.g.2:f(z)=Re z处处不可导
 
 $$
 \begin{align*}
-f^\prime(z)=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
-=\lim_{\Delta z\to 0}{\frac{Re(z+\Delta z)-Re(z)}{\Delta z}}\\
-=\lim_{\Delta z\to 0}{\frac{Re\Delta z}{\Delta}}\\
-=\lim_{\begin{matrix}
+f^\prime(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+&=\lim_{\Delta z\to 0}{\frac{Re(z+\Delta z)-Re(z)}{\Delta z}}\\
+&=\lim_{\Delta z\to 0}{\frac{Re\Delta z}{\Delta}}\\
+&=\lim_{\begin{matrix}
   \Delta x\to 0\\\Delta y\to 0
 \end{matrix}}{\frac{\Delta x}{\Delta x+i\Delta y}}\\
 \end{align*}
@@ -134,13 +134,13 @@ e.g.3:讨论$f(z)=|z|^2$的可导性
 
 $$
 \begin{align*}
-  f^{\prime}(z)=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
-  =\lim_{\Delta z\to 0}\frac{(z+\Delta z)\overline{(z+\Delta z)}-z\overline{z}}{\Delta z}\\
-  \because \overline{(z+\Delta z)}=\overline{z}+\overline{\Delta z}\\
-  =\lim_{\Delta z\to 0}\frac{\overline{z}\cdot\Delta z+z\cdot\overline{\Delta z}+\Delta z\cdot\overline{\Delta z}}{\Delta z}\\
-  =\lim_{\Delta z\to 0}{z\frac{\overline{\Delta z}}{\Delta z}+\overline{z}+\overline{\Delta z}}\\
-  =\lim_{\Delta x\to 0,\Delta y\to 0}{z\frac{\Delta x-i\Delta y}{\Delta x+i\Delta y}+x-i y}\\
-  =\begin{cases}
+  f^{\prime}(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+  &=\lim_{\Delta z\to 0}\frac{(z+\Delta z)\overline{(z+\Delta z)}-z\overline{z}}{\Delta z}\\[10bp]
+  \because \overline{(z+\Delta z)}&=\overline{z}+\overline{\Delta z}\\
+  &=\lim_{\Delta z\to 0}\frac{\overline{z}\cdot\Delta z+z\cdot\overline{\Delta z}+\Delta z\cdot\overline{\Delta z}}{\Delta z}\\
+  &=\lim_{\Delta z\to 0}{z\frac{\overline{\Delta z}}{\Delta z}+\overline{z}+\overline{\Delta z}}\\
+  &=\lim_{\Delta x\to 0,\Delta y\to 0}{z\frac{\Delta x-i\Delta y}{\Delta x+i\Delta y}+x-i y}\\
+  &=\begin{cases}
     0\,z=0\\ no \;defined,z\neq0
   \end{cases}
 \end{align*}
