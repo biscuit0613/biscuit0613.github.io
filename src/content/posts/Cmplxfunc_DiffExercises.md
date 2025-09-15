@@ -23,9 +23,9 @@ lang: ''
 
 $$
 \begin{align*}
-\frac{\partial u}{\partial x}&=2x+ay\\[10bp]
+\frac{\partial u}{\partial x}&=2x+ay;&
 \frac{\partial u}{\partial y}&=ax+2by\\[10bp]
-\frac{\partial v}{\partial x}&=2cx+dy\\[10bp]
+\frac{\partial v}{\partial x}&=2cx+dy;&
 \frac{\partial v}{\partial y}&=dx+2y
 \end{align*}
 $$
@@ -112,8 +112,23 @@ $$
 
 :::tip[solution]
 $$
-\frac{\partial u}{\partial x}=2x,\frac{\partial u}{\partial y}=0
-\frac{\partial v}{\partial x}=0,\frac{\partial v}{\partial y}=-1,\text{显然一阶偏导连续}\\
-
+\begin{align*}
+&\frac{\partial u}{\partial x}=2x,\frac{\partial u}{\partial y}=0\\[10bp]
+&\frac{\partial v}{\partial x}=0,\frac{\partial v}{\partial y}=-1,\text{显然一阶偏导连续}\\
+&\text{当满足柯西黎曼条件时：}x=-\frac{1}{2},\forall y\\
+\end{align*}
 $$
 :::
+
+(2) $f(z)=xy^2+i x^2y$
+
+:::tip[solution]
+$$
+\begin{align*}
+&\frac{\partial u}{\partial x}=y^2,\frac{\partial u}{\partial y}=2xy\\[10bp]
+&\frac{\partial v}{\partial x}=2xy,\frac{\partial v}{\partial y}=x^2\text{显然一阶偏导连续}\\
+&\text{当满足柯西黎曼条件时：}y=x=0\\
+\end{align*}
+$$
+
+(3)
