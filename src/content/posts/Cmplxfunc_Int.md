@@ -14,7 +14,7 @@ draft: false
    -[参数化：转化为定积分](#2-参数化定积分)
 -[柯西古萨定理](#柯西古撒定理)
    -[背景](#背景)
-   -[定理内容](#柯西古撒定理基本内容)
+   -[定理内容](#柯西古撒定理内容)
       -[推论1：区域内推广到边界](#推论1区域内曲线推广到边界上)
       -[推论2:复合闭路定理](#推论2复合闭路定理有洞的柯西古撒定理)
       -[推论3：柯西积分公式](#推论3柯西积分公式)
@@ -75,7 +75,8 @@ $$
 如果C是有向的简单光滑曲线，$z=z(t)=x(t)+iy(t),t\in[t_0,T]$，且$t_0,T$分别对应曲线的起点和终点，如果$f(z)$在曲线$C$上**连续**，那么
 
 $$
-\int_Cf(z)dz=\int_{t_0}^Tf(z(t))z(t)^\prime dt
+\int_Cf(z)dz=\int_{t_0}^Tf(z(t))z(t)^\prime dt\\
+=\int_a^b [u(x(t),y(t))+iv(X(t)+y(t))][x^\prime(t)+iy^\prime(t)]dt
 $$
 证明：
 >$$
@@ -87,7 +88,21 @@ $$
 >\end{align*}
 >$$
 
-+ 就是实部定积分+i·虚部定积分
+### 复变函数积分的性质
+
+1. 有向性：$\int_C f(z)dz=-\int_{C^-} f(z)dz$
+2. $\int(kf(z)+lg(z))dz=k\int f(z)dz+l\int g(z)dz$
+3. 分段可加性：如果$C=C_1+C_2+\ddots+C_n$
+4. 模有界性：$|\int f(z)dz|\leq\int|f(z)|ds\leq ML$，这里$|f(z)\leq M,\forall z\in \mathbb{C}|$，积分路径的长度为 $L$
+
+简要证明一下：
+
+$$
+|\int f(z)dz|\\
+=|\lim_{\delta\to 0}\sum_{k=1}^{k=n}f(\zeta_k)\Delta z_k|\\
+=\lim_{\delta\to 0}|\sum_{k=1}^{k=n}f(\zeta_k)\Delta z_k|\\
+\text{这里用一步放缩}
+$$
 
 # 柯西古撒定理
 
@@ -100,7 +115,7 @@ $$
       >\int_Cf(z)dz=\int_C{udx-vdy}+i\int_C{vdx+udy}
    >$$
 
-## 柯西古撒定理基本内容
+## 柯西古撒定理内容
 
 ### 基本形式（回路在解析区域内，不含边界）
 
@@ -108,6 +123,8 @@ $$
 $$
       \oint_Cf(z)dz=\oint_C{udx-vdy}+i\oint_C{vdx+udy}=0
 $$
+
+:::tip[]
 推导：
 
 这两个第二型曲线积分如果满足**积分与路径无关**则有
@@ -121,7 +138,9 @@ $\oint Pdx+Qdy=\iint_D(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial 
 
 但是这样还不够，课本上给的前提是f在D 上解析，不是可微，为什么会给出一个更严格的条件呢？这是因为u，v在D内处处可微且处处满足柯西黎曼条件，这恰好是f在区域D解析的充要条件
 
-### 推论1：解析区域内的曲线推广到解析开区域+边界
+:::
+
+### 推论1：区域内曲线推广到边界上
 
 1. **闭区域内的柯西古撒定理**：如果**简单闭曲线**$C$为单连通区域$D$的边界，函数$f(z)$在**闭区域**$\overline{D}=D+C$上**解析**，那么
 
@@ -168,7 +187,7 @@ $$
 $$
 \oint_C \frac{f(z)}{z-z_0}dz=f(z_0)2\pi i
 $$
-其中的参数化是$z=z_0+re^{i\theta}$
+其中的参数化是 $z=z_0+re^{i\theta}$
 
 **柯西积分公式**：如果$f(z)$在区域$D$内处处解析，$C$为$D$内的任何一条正向简单闭曲线，它的内部完全包含于$D$，$z_0$为$C$内部的任一点（不能在C上），那么
 $$
@@ -184,49 +203,66 @@ $$
 1. **积分与路径无关**：
 若$f(z)$是区域$D$内的解析函数，那么曲线积分$\int_Cf(z)$在$D$内与路径无关，只与起始点有关。
 
+   :::tip
    证明：
 
-   >设$\Gamma,C$为$D$内任意同向的从$z_1\to z_2$的路径，由柯西古撒定理，
-   >$$
-   >\oint_{C^-+\Gamma}f(z)dz=0\\
-   >\int_{\Gamma}f(z)dz-\int_Cf(z)dz=0\\
-   >\int_{\Gamma}f(z)dz=\int_Cf(z)dz
+   设$\Gamma,C$为$D$内任意同向的从$z_1\to z_2$的路径，由柯西古撒定理，
+
+   $$
+   \oint_{C^-+\Gamma}f(z)dz=0\\
+   \int_{\Gamma}f(z)dz-\int_Cf(z)dz=0\\
+   \int_{\Gamma}f(z)dz=\int_Cf(z)dz
    $$
 
-2. **原函数存在定理**：设$f(z)$是区域$D$内的解析函数，那么存在变上限积分函数$F(z)$
+   :::
+
+   常见的全纯函数以及部分解析的函数：
+   指数函数 $e^z$ ,幂函数 $z^n$ 以及对应的多项式函数，三角函数与双曲函数
+
+   如 $\frac{1}{z}$ 这种在区域 $\mathbb{C}/{(0,0)}$ 内解析，若闭区域积分不是单连通则参考复合闭路定理
+
+   如 $\ln (z+1)$ 在 $(-1.+\infin)$ 内解析
+
+1. **原函数存在定理**：设$f(z)$是区域$D$内的解析函数，那么存在变上限积分函数$F(z)$
 
    $$
    F(z)=\int_{z_0}^zf(\zeta)d\zeta
    $$
-   $F(z)$也是**解析**函数，并且满足
+
+   $F(z)$ 也是**解析**函数，并且满足
    $$
    F^\prime(z)=f(z)
    $$
 
-   证明：
-   >$$
-   >\begin{align*}
-   >F^\prime(z)&=\lim_{\Delta z\to 0}\frac{F(z+\Delta z)-F(z)}{\Delta z}\\[10bp]
-   >&=\lim_{\Delta z\to 0}\frac{\int_{z_0}^{z+\Delta z}f(\zeta)d\zeta-\int_{z_0}^{z}f(z)d\zeta}{\Delta z}\\[10bp]
-   >&=\lim_{\Delta z\to 0}\frac{\int_z^{z+\Delta z}f(\zeta)d\zeta}{\Delta z}\\
-   >&\text{用一下积分中值定理}\\
-   >&=\lim_{\Delta z\to 0}f(\zeta_{\Delta z})\\
-   >&if \Delta z\to 0,then \zeta_{\Delta z}\to z\\
-   >&\therefore F^\prime(z)=f(z)
-   >\end{align*}\\
-   >$$
-   这证明了$F(z)$在$D$内可导，而且导数恰好是$f(z)$，又因为$f(z)$解析所以$f(z)$连续，所以$F(z)$一阶导连续，由解析的判定定理可知$F(z)$解析
+   :::tip证明：
+   $$
+   \begin{align*}
+   F^\prime(z)&=\lim_{\Delta z\to 0}\frac{F(z+\Delta z)-F(z)}{\Delta z}\\[10bp]
+   &=\lim_{\Delta z\to 0}\frac{\int_{z_0}^{z+\Delta z}f(\zeta)d\zeta-\int_{z_0}^{z}f(z)d\zeta}{\Delta z}\\[10bp]
+   &=\lim_{\Delta z\to 0}\frac{\int_z^{z+\Delta z}f(\zeta)d\zeta}{\Delta z}\\
+   &\forall \zeta>0,\exist \delta>0,when\,|\Delta z|<\delta\\
+   &|\frac{\int_z^{z+\Delta z}f(\zeta)d\zeta}{\Delta z}-f(z)|<\epsilon\\
+   as\,long\,as&\frac{|\int_z^{z+\Delta z}f(\zeta)d\zeta-\int_z^{z+\Delta z}f(z)d\zeta|}{|\Delta z|}<\epsilon\\
+   &\frac{|\int_z^{z+\Delta z}[f(\zeta)-f(z)]d\zeta|}{|\Delta z|}<\epsilon\\
+   &\frac{\int_z^{z+\Delta z}|f(\zeta)-f(z)|d\zeta}{|\Delta z|}<\epsilon\\
+   &\frac{\int_z^{z+\Delta z}|f(\zeta)|-|f(z)|d\zeta}{|\Delta z|}<\epsilon\\
+   &if \Delta z\to 0,then \zeta_{\Delta z}\to z\\
+   &\therefore F^\prime(z)=f(z)
+   \end{align*}\\
+   $$
+   注意这里不能用积分中值定理（微分中值定理在复变中不加条件不成立）。证明了$F(z)$在$D$内可导，而且导数恰好是$f(z)$，又因为$f(z)$解析所以$f(z)$连续，所以$F(z)$一阶导连续，由解析的判定定理可知$F(z)$解析
+   :::
 
-3. **原函数和不定积分**：$\Phi(z),f(z)$是区域$D$内确定的函数，其中$\Phi(z)$是解析函数。如果满足
+2. **原函数和不定积分**： $\Phi(z),f(z)$ 是区域$D$内确定的函数，其中 $\Phi(z)$ 是**解析函数**。如果满足
    $$
    \Phi^\prime(z)=f(z)
    $$
-   则称$\Phi(z)$是$f(z)$的一个**原函数**，$f(z)$所有的原函数构成它的**不定积分**，记作$\int f(z)dz$，满足
+   则称 $\Phi(z)$ 是 $f(z)$ 的一个**原函数**， $f(z)$ 所有的原函数构成它的**不定积分**，记作 $\int f(z)dz$ ，满足
    $$
    \int f(z)dz=\Phi(z)+C,C\text{为任意常数}
    $$
 
-4. **牛顿莱布尼兹公式**：设$f(z)$是单连通区域$D$上的解析函数，$\Phi(z)$是$f(z)$的一个原函数，则
+3. **牛顿莱布尼兹公式**：设 $f(z)$ 是单连通区域$D$上的解析函数， $\Phi(z)$ 是 $f(z)$ 的一个原函数，则
    $$
    \forall z_0,z_1\in D,\int_{z_0}^{z_1}f(z)dz=\Phi(z_1)-\Phi(z_0)
    $$
