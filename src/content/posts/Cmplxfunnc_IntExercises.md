@@ -64,3 +64,44 @@ $$
 =0-2\pi i+2\pi i-0=0
 $$
 :::
+
+
+利用柯西积分公式:
+
+$$
+\oint_C \frac{f(z)}{z-z_0}dz=f(z_0)2\pi i
+$$
+
+eg7 :$\oint_C\frac{sin(z\frac{\pi}{4})}{z^2-1}dz$ 其中C是包含$|z+1|=\frac{1}{2},|z-1|=\frac{1}{2},|z|=2$
+
+::: tip[solution]
+
+:::
+
+:::note
+无论是柯西积分公式还是高阶导数公式，遇到需要变形的情况，不要破坏分式原有的乘积结构，灵活选择包含奇点的式子与$f(z)$
+:::
+
+利用高阶导数公式:
+
+$$
+f^{(n)}(a) = \frac{n!}{2\pi i} \oint_{\Gamma} \frac{f(z)}{(z-a)^{n+1}} \, dz, \quad n = 0,1,2,\dots
+$$
+
+eg8: $\oint_C\frac{cos(\pi z)}{(z-1)^5}dz$ 其中C$|z|>1$
+
+:::tip[solution]
+
+:::
+
+eg9： $\oint_C\frac{e^z}{(z^2+1)^2}dz$ 其中C$|z|$>1
+
+:::tip[solution]
+
+:::
+
+eg10: $\oint_C\frac{z^3+1}{(z+1)^4}$
+
+:::tip[solution]
+
+:::
