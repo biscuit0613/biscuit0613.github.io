@@ -218,18 +218,23 @@ $$
 :::tip[tip:速记]
 复变函数实质上是二维函数的线性组合，并且映射是$\mathbf{F}:\mathbb{C}^2\to\mathbb{C}^2,\mathbf{x}=(x,y),\mathbf{F}(\mathbf{x})=(u(x,y),v(x,y))$
 
-所以柯西黎曼的这两个式子可以用雅各比行列式的形式速记：
+所以柯西黎曼的这两个式子可以用雅各比行列式的形式速记：(主对角线相等，副对角线相等添负号)，下面解释其雅各比矩阵的具体含义
 $$
 |J|=\begin{vmatrix}\frac{\partial( u\,, v)}{\partial( x\,,y)}\end{vmatrix}
 =\begin{vmatrix}
 \frac{\partial u}{\partial x}&\frac{\partial u}{\partial y}\\[10bp]
 \frac{\partial v}{\partial x}&\frac{\partial v}{\partial y}
-\end{vmatrix}=\begin{vmatrix}
+\end{vmatrix}
+\overset{\text{代入C-R}}{\underset{}{=}}\begin{vmatrix}
+\frac{\partial u}{\partial x}&-\frac{\partial v}{\partial x}\\[10bp]
+\frac{\partial v}{\partial x}&\frac{\partial u}{\partial x}
+\end{vmatrix}
+=\begin{vmatrix}
 a&-b\\[10bp]
 b&a
 \end{vmatrix}
 $$
-此时$|J|=a^2+b^2\neq0$（也是导数模的平方），说明雅各比行列式非零是可微（可导）的一个充分条件。
+此时对应了一个复数的矩阵表示。$|J|=a^2+b^2\neq0$（也是导数模的平方）
 :::
 
 此时
@@ -258,21 +263,20 @@ $$
 
 对于复变函数，
 
-可导$\rightarrow$连续，反之未必
+可导 $\rightarrow$ 连续，反之未必
 
 可导和可微本质上等价，微分就是导数·增量
 $$
 d\omega=f^{\prime}(z_0)\Delta z\Leftrightarrow f^{\prime}(z)=\frac{d\omega}{dz}\vert_{z=z_0}
 $$
 
-+ 欲证可导性，需要讨论重极限
-+ 欲证可微性，优先考虑导数是否存在，是否唯一（延实轴虚轴趋近导数是否相等）
++ 欲证可导性，需要讨论重极限。优先考虑导数是否存在，是否唯一（延实轴虚轴趋近导数是否相等）
 
 ## 解析函数与调和函数
 
 ### 调和函数的定义
 
-对于函数$\Phi(x,y)$,若在区域D内有二阶连续偏导数，且满足**拉普拉斯方程**
+对于函数 $\Phi(x,y)$ ,若在区域D内有二阶连续偏导数，且满足**拉普拉斯方程**
 
 $$
 \frac{\partial^2 \Phi}{\partial x^2}+\frac{\partial^2 \Phi}{\partial y^2}=0\\
@@ -281,19 +285,19 @@ $$
 \Delta \Phi=0
 $$
 
-则称函数$\Phi(x,y)$为区域D内的调和函数。
+则称函数 $\Phi(x,y)$ 为区域D内的调和函数。
 
 ### 解析函数与调和函数的关系
 
 **从解析到调和**:任何在区域D 内解析的函数，其实部函数和虚部函数均为区域D 内的调和函数。
 
-共轭调和函数：对于函数$f(z)=u(x,y)+iv(x,y)$，如果$f(z)$解析，则称其虚部函数v是实部函数u的**共轭调和函数**
+共轭调和函数：对于函数 $f(z)=u(x,y)+iv(x,y)$ ，如果 $f(z)$ 解析，则称其虚部函数v是实部函数u的**共轭调和函数**
 
-那么反过来，如果给定一个调和函数$u(x,y)$，能否找到一个共轭调和函数$v(x,y)$，使得$u(x,y)+iv(x,y)$成为解析函数呢？
+那么反过来，如果给定一个调和函数 $u(x,y)$，能否找到一个共轭调和函数 $v(x,y)$，使得 $u(x,y)+iv(x,y)$ 成为解析函数呢？
 
 **从调和到解析**:答案是肯定的。在单连通区域内，我们可以通过线积分的方式获得共轭调和函数。构造如下积分：
 $$
 v(x,y)=\int_{(x_0,y_0)}^{(x,y)}-\frac{\partial u}{\partial y}dx+\frac{\partial u}{\partial x}dy
 $$
 
-这样构造与路径无关(证明很简单， $\frac{\partial^2 u}{\partial x^2},\frac{\partial^2 u}{\partial y^2}$ 这两个偏导数因为复函数解析所以满足调和函数的条件，恰好又满足格林公式。)，且u,v满足柯西黎曼方程。而且这两个函数一阶偏导显然连续，由复变函数解析的充要条件，这两个函数构成的复变函数一定是解析的。
+这样构造与路径无关(证明很简单， $\frac{\partial^2 u}{\partial x^2},\frac{\partial^2 u}{\partial y^2}$ 这两个二阶偏导数因为复函数解析所以满足调和函数的条件 $\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}$ ，恰好又满足格林公式的条件 $\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=\frac{\partial^2 u}{\partial y^2}-(-\frac{\partial^2 u}{\partial x^2})＝0$。)，且u,v满足柯西黎曼方程。而且这两个函数一阶偏导显然连续，由复变函数解析的充要条件，这两个函数构成的复变函数一定是解析的。
