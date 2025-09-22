@@ -41,11 +41,81 @@ $$
 
 ### 收敛的充要条件
 
-充要条件1（**部分和**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff S_n=\sum_{k=1}^{n}k_n$存在极限。
+充要条件1（**部分和**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff S_n=\sum_{k=1}^{n}z_k$存在极限。
 
 充要条件2（**实虚部级数**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff\sum_{k=1}^{\infin}x_k\,,\sum_{k=1}^{\infin}y_k$ 均收敛。
 
-由充要条件2可推出充要条件1：$S=S^\prime+iS^{\prime\prime}$，其中 $S^\prime$ ,$S^{\prime\prime}$ 分别为实部虚部级数的部分和极限。
+充要条件3（**柯西收敛准则**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,\;\forall p\geq 1,|S_{n+p}-S_n|<\varepsilon\text{或}|z_{n+p}-z_n|<\varepsilon$，满足柯西收敛准则的数列称为**柯西列**。
+
++ 由充要条件2可推出充要条件1：$S=S^\prime+iS^{\prime\prime}$，其中 $S^\prime$ ,$S^{\prime\prime}$ 分别为实部虚部级数的部分和极限。
++ 充要条件3在复函数项级数中也成立
+
+:::note[柯西收敛准则的证明]
+
+先证必要性：
+$$
+\begin{align*}
+&\text{设}\sum_{k=1}^\infty z_k\text{收敛于}S\\
+&\iff\forall\varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,|S_n-S|<\frac{\varepsilon}{2}\dotsb(1)\\
+&\forall p\geq 1\\
+&|S_{n+p}-S|<\frac{\varepsilon}{2}\dotsb(2)\\
+&\therefore|S_{n+p}-S_n|\\
+&=|S_{n+p}-S+S-S_n|\\
+&<|S_{n+p}-S|+|S-S_n|\\
+&<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon
+\end{align*}
+$$
+再证充分性：
+
+设数列 $\{a_n\}$ 是一个柯西列，即：
+
+$$
+\forall \varepsilon > 0,\; \exists N,\; \text{使得当 } m,n > N \text{ 时，} |a_m - a_n| < \varepsilon\\
+
+\therefore - \varepsilon < a_m - a_n < \varepsilon \Rightarrow a_n - \varepsilon < a_m < a_n + \varepsilon\\
+$$
+
+由于 $n$ 是大于 $N$ 的任意正整数，是一个定值，所以对任意固定的 $n_0$，都有：
+$$
+a_n - \varepsilon < a_{n_0} < a_n + \varepsilon
+$$
+
+说明 $\{a_n\}$ 有上界和下界 ⇒ 是**有界数列**。
+
+又因为 $\{a_n\}$ 是柯西列 ⇒ 有界 ⇒ 根据**Bolzano-Weierstrass定理**，它存在一个收敛子列。
+
+设收敛子列为 $\{a_{n_k}\}$，其极限为 $a$，则：
+
+$$
+\forall \varepsilon > 0,\; \exists N_1,\; \text{使得当 } k > N_1 \text{ 时，} |a_{n_k} - a| < \varepsilon/2\dotsb(1)
+$$
+
+又因为原列是柯西列，存在 $N_2$，使得当 $m,n > N_2$ 时：
+
+$$
+|a_m - a_n| < \varepsilon/2\dotsb(2)
+$$
+
+令 $N = \max\{N_1, N_2\}$，当 $n > N$ 时，取 $m = n_k > N$，则有：
+
+$$
+|a_n - a| = |a_n - a_m + a_m - a| \leq |a_n - a_m| + |a_m - a| < \varepsilon/2 + \varepsilon/2 = \varepsilon
+$$
+
+因此：
+
+$$
+\forall \varepsilon > 0,\; \exists N,\; \text{使得当 } n > N \text{ 时，} |a_n - a| < \varepsilon
+$$
+
+即：
+
+$$
+\lim_{n \to \infty} a_n = a
+$$
+
+
+:::
 
 ### 收敛的必要条件
 
@@ -68,57 +138,69 @@ $$
 $$
 
 :::note[证明]
+
 利用柯西收敛准则
 $$
-\text{令}\tilde{S}=\sum_{n=1}^\infin|z_n|\\
-\sum_{n=1}^\infin|z_n|\text{收敛}\Leftrightarrow\forall\epsilon>0,\exist N,s.t\,n,m>N\\
-|\tilde{S_m}-\tilde{S_n}|<\epsilon\\
-\sum_{k=n}^m|z_k|<\epsilon\dotsb(1)\\
-\text{令}S＝\sum_{n=1}^\infin z_n\\
-\sum_{n=1}^\infin z_n\text{收敛}\Leftrightarrow\forall\epsilon>0,\exist N,s.t\,n,m>N\\
-|\tilde{S_m}-\tilde{S_n}|<\epsilon\\
-|\sum_{k=n}^m z_k|<\epsilon\dotsb(2)\\
+\begin{align*}
+&\text{令}\tilde{S}=\sum_{n=1}^\infty|z_n|\,,\sum_{n=1}^\infty|z_n|\text{收敛}\\
+&\iff\forall\varepsilon>0,\exist N,\;s.t.\;n,m>N,\;|\tilde{S_m}-\tilde{S_n}|<\varepsilon\\
+&\iff\sum_{k=n}^m|z_k|<\varepsilon\dotsb(1)\\
+&\text{令}S＝\sum_{n=1}^\infty z_n\,,\sum_{n=1}^\infty z_n\text{收敛}\\
+&\iff\forall\varepsilon>0,\exist N \,,s.t.\;\forall n,m>N,\;|S_m-S_n|<\varepsilon\\
+&\iff|\sum_{k=n}^m z_k|<\varepsilon\dotsb(2)\\
+&\text{根据复数模长的三角不等式：}(2)\leq(1)\\
+\therefore&\sum_{n=1}^\infty|z_n|\text{收敛}\Rightarrow\sum_{n=1}^\infty z_n\text{收敛}
+\end{align*}
 $$
 :::
 
 ### 敛散性判别法
 
-复级数的敛散性判别法和实级数差不多，但此时是通过取模 $|z_n|$ 转化成实级数来研究。
+:::warning
 
-1. 比较判别法
+除了**柯西收敛准则**是**充分必要条件**，其他判别法都是**充分条件**
+
+:::
+
+复级数的敛散性判别法和实级数差不多，但此时是通过**取模** $|z_n|$ 转化成实级数来研究。
+
+1. 比较判别法（充分条件）
 
     若 $|z_n|<a_n$ ,而 $\sum a_n$ 收敛，则 $z_n$ 绝对收敛。
 
-2. 比值判别法
+2. 比值判别法（充分条件）
 
     若 $\lim_{n\to\infin}\frac{|z_{n+1}|}{|z_n|}$ 存在，记为$L$，则
 
     $$
-    \begin{cases}
+    \lim_{n\to\infin}\frac{|z_{n+1}|}{|z_n|}=\begin{cases}
         L<1\;, z_n\text{绝对收敛}\\
         L>1\;,z_n\text{发散}\\
         L=1\;\text{无法判别}
     \end{cases}
     $$
 
-3. 根植判别法
+3. 根植判别法（充分条件）
 
     若 $\lim_{n\to\infin}\sqrt[n]{|z_n|}$ 存在，记为$L$，则
 
     $$
-    \begin{cases}
+    \lim_{n\to\infin}\sqrt[n]{|z_n|}=\begin{cases}
         L<1\;, z_n\text{绝对收敛}\\
         L>1\;,z_n\text{发散}\\
         L=1\;\text{无法判别}
     \end{cases}
     $$
 
-4. Dirichlet 判别法  
+4. Dirichlet 判别法 （充分条件）
 
     设有级数  $\sum_{n=1}^\infty a_n b_n,$  ，若满足以下条件：  
-   1. $\{a_n\}$ 单调趋于 $0$；  
-   2. $\{B_n\} = \left\{\sum_{k=1}^n b_k\right\}$ 有界；  
-
+    $$\begin{align*}
+   &1. \{a_n\}\text{单调趋于0}；\\
+   &2. \{B_n\} = \left\{\sum_{k=1}^n b_k\right\} \text{有界}  
+    \end{align*}
+ 
+    $$
     则 $\sum a_n b_n$ 收敛。  
 
     :::tip[例子]  
@@ -131,59 +213,159 @@ $$
     所以根据 Dirichlet 判别法，该级数收敛（条件收敛）。  
     :::
 
-5. Abel 判别法  
+5. Abel 判别法（充分条件）
 
     设有级数  $\sum_{n=1}^\infty a_n b_n,$  ，若满足：  
+    $$
+    \begin{align*}
+   &1. \sum a_n \text{收敛}\\
+   &2. \{b_n\} \text{单调有界}\\
+    \end{align*}
+    $$
+    则 $\sum a_n b_n$ 收敛。  
 
-   1. $\sum a_n$ 收敛；  
-   2. $\{b_n\}$ 单调有界；  
+6. 柯西收敛准则（充要条件）
 
-     $\sum a_n b_n$ 收敛。  
+    设有级数 $\sum_{n=1}^\infty z_n,$  ，若满足：  
+
+   $$
+   \begin{align*}
+   &\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\\
+   &\forall n>N,\;\forall p\geq 1,\\
+   &|S_{n+p}(z)-S_n(z)|<\varepsilon\;\text{或}\;|z_{n+p}-z_n|<\varepsilon
+    \end{align*}
+   $$
+
+    则 $\sum z_n$ 收敛。并称之为**柯西列**。
 
 :::tip
 
 + **Dirichlet 判别法**：要求 $a_n \to 0$ 且单调，$\sum b_n$ 的部分和有界。  
-+ **Abel 判别法**：要求 $\sum a_n$ 收敛，$\{b_n\}$ 单调有界。  
++ **Abel 判别法**：要求 $\sum a_n$ 收敛，$\{b_n\}$ 单调有界。
+  + 它们常用于处理三角函数形式的复数级数，例如傅里叶级数、$\sum \frac{1}{n} e^{in\theta}$。
++ **柯西收敛准则**：核心在于寻找**柯西列**，柯西列可以选择部分和列，也可以选择原级数列，取决于具体问题。在复函数项级数中同样适用。
 
-它们常用于处理三角函数形式的复数级数，例如傅里叶级数、$\sum \frac{1}{n} e^{in\theta}$。
 
+:::
+
+:::warning
+柯西判别法和柯西收敛准则不是一个东西。
 :::
 
 ## 复函数项级数
 
+### 复函数项级数的定义
+
+设 $\{f_n(z)\}$ 是定义在某区域 $\mathbb{D}$ 上的一列复函数，则称 $\sum_{n=1}^\infty f_n(z)$ 为复函数项级数。
+
+级数的部分和：$S_n(z)=\sum_{k=1}^n f_k(z)$
+
+级数的**和函数**：若 $\forall z\in\mathbb{D},\lim_{n\to\infin}S_n(z)=S(z)$ 存在，则称 $S(z)$ 为级数的**和函数**，记作 $S(z)=\sum_{n=1}^\infty f_n(z)$ ，称为级数 $\sum_{n=1}^\infty f_n(z)$ 收敛于 $S(z)$ 。
+
+### 复函数项级数的敛散性
+
+**单点收敛** ：如果对于 $\mathbb{D}$ 中的**某一点** $z_0$ ,部分和 $\lim_{n\to\infty}S_n(z_0)=S(z_0)$ 极限存在，则称级数在 $\mathbb{D}$ 上 **单点收敛** ，也就是在点 $z_0$ 处收敛。
+
+**逐点收敛** ：如果对于 $\mathbb{D}$ 中的**每一点** $z$ ,部分和 $\lim_{n\to\infty}S_n(z)=S(z)$ 极限均存在，则称级数在 $\mathbb{D}$ 上**逐点收敛** 。
+
+上述逐点收敛的形式化定义如下：
+$$
+\forall z\in\mathbb{D},\;\forall \varepsilon>0,\exist N=N(\varepsilon,z)\\[4pt]
+s.t.\;\forall n>N,\;|S_n(z)-S(z)|<\varepsilon
+$$
+
++ 这里的 $N$ 依赖于 $\varepsilon$ 和 $z$ 。
+
 ### 一致收敛
 
-复函数项级数的一致收敛：设有复函数项级数$\sum_{n=1}^\infin f_n(z)$,其前$n$项和记作$S_n(z)$，如果存在一个复函数$S(z)$满足：
+复函数项级数的一致收敛：设有复函数项级数 $\sum_{n=1}^\infty f_n(z)$ ,其前 $n$ 项和记作 $S_n(z)$ ，如果存在一个复函数 $S(z)$ 满足：
 $$
-\forall \epsilon>0\existN,s.t.n>N4|S_n(z)-S(z)|<\epsilon,\forall z\in\mathbb{D}
+\forall \varepsilon>0,\;\exist N=N(\varepsilon)\\
+s.t.\;\forall n>N,\;|S_n(z)-S(z)|<\varepsilon,\forall z\in\mathbb{D}
 $$
-则称级数$S_n(z)$在区域$D$上一致收敛于$S(z)$
+则称级数 $S_n(z)$ 在区域 $\mathbb{D}$ 上一致收敛于 $S(z)$
+
++ 这里的 $N$ 只依赖于 $\varepsilon$ ，与 $z$ 无关。这是一致收敛与逐点收敛的区别。
 
 ### 一致收敛的判定
 
-1. 柯西一致收敛准则：
+1. 柯西一致收敛准则：函数项级数 $\sum_{n=1}^\infty f_n(z)$ 在区域 $\mathbb{D}$ 上**一致收敛**的**充分必要条件**是 $\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,\;\forall p\geq 1,\;\forall z\in\mathbb{D}$
     $$
-     \left| \sum_{k=n+1}^{n+p} f_k(z) \right| < \varepsilon 
+     |S_{n+p}(z)-S_n(z)|=\left| \sum_{k=n+1}^{n+p} f_k(z) \right| < \varepsilon
     $$
-2. Weierstrass判别法：
+    :::tip[证明]
 
-### 一直收敛的性质
+    充分性：设 $S_n(z)$ 在 $\mathbb{D}$ 上一致收敛于 $S(z)$ ,则
+    $$
+    \begin{align*}
+    &\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,\;\forall z\in\mathbb{D}\\
+    &|S_n(z)-S(z)|<\frac{\varepsilon}{2}\dotsb(1)\\
+    &\forall p\geq 1\\
+    &|S_{n+p}(z)-S(z)|<\frac{\varepsilon}{2}\dotsb(2)\\
+    &|S_{n+p}(z)-S_n(z)| \\
+    &=|S_{n+p}(z)-S(z)+S(z)-S_n(z)|\\
+    &=|(2)-(1)|\\
+    &\text{根据三角不等式：}\\
+    &\leq|S_{n+p}(z)-S(z)|+|S_n(z)-S(z)|<\varepsilon  
+    \end{align*}
+    $$
+    必要性：由定理假设：
+    $$\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,\;\forall p\geq 1,\;\forall z\in\mathbb{D}\\
+    |S_{n+p}(z)-S_n(z)|=\left| \sum_{k=n+1}^{n+p} f_k(z) \right| < \varepsilon
+    $$
+    由柯西判别法，部分和函数 $S_n(z)=\sum_{k=1}^n f_k(z)$ 构成柯西列，故存在一个函数 $S(z)$ 使得 $S_n(z)=\sum_{k=1}^n f_k(z)$ 收敛于 $S(z)$
+
+    :::
+2. Weierstrass判别法：如果存在一系列实数 $M_n$ 使得 $\forall z\in\mathbb{D},|f_n(z)|\leq M_n$ ，且 $\sum M_n$ 收敛，则 $\sum f_n(z)$ 在 $\mathbb{D}$ 上一致收敛。
+
+   :::tip[证明]
+
+    由 $\sum M_n$ 收敛，$\sum M_n$ 满足柯西判定定理(这里取部分和形式)，
+    $$
+    \begin{align*}
+    &\forall \varepsilon>0,\;\exist N=N(\varepsilon),s.t.\;\forall n>N,\;\forall p\geq 1\\
+    &|M_{n+1}+M_{n+2}+\dotsb+M_{n+p}|=|\sum_{k=n+1}^{n+p} M_k|<\varepsilon\\
+    &\text{又由 $|f_n(z)|\leq M_n$ ,所以}\\
+    &|\sum_{k=n+1}^{n+p} f_k(z)|\leq\sum_{k=n+1}^{n+p}|f_k(z)|\leq\sum_{k=n+1}^{n+p}M_k<\varepsilon\\[4pt]
+    &\text{中间用了一步三角不等式}
+    \end{align*}
+    $$
+    再由柯西一致收敛准则，$\sum f_n(z)$ 在 $\mathbb{D}$ 上一致收敛。
+    :::
+
++ 柯西一致收敛准则其实是**柯西收敛准则**在复函数项级数上的推广，这里的柯西列取**部分和列**。
++ Weierstrass判别法是**比较判别法**在复函数项级数上的推广，比较的对象是实数级数。可以理解为**用一个收敛的实数级数去控制复函数项级数的每一项**，从而保证复函数项级数的一致收敛。
+
+### 一致收敛的性质
+
+1. 一致收敛与逐点收敛的关系：一致收敛 $\Rightarrow$ 逐点收敛，反之不成立
+2. 一致收敛与连续性：如果 $\{f_n(z)\}$ 在 $\mathbb{D}$ 上连续，且 $\sum f_n(z)$ 在 $\mathbb{D}$ 上一致收敛于 $S(z)$ ，则其和函数 $S_n(z)$（也是 $S(z)$ ） 在 $\mathbb{D}$ 上连续
+3. 一致收敛与积分：如果 $\{f_n(z)\}$ 在 $\mathbb{D}$ 上连续，且 $\sum f_n(z)$ 在 $\mathbb{D}$ 上一致收敛于 $S(z)$ ，则对 $\mathbb{D}$ 上的任意光滑曲线 $\gamma$ ，其和函数有
+    $$
+    \int_\gamma S(z)\,dz=\sum_{n=1}^\infty \int_\gamma f_n(z)\,dz
+    $$
+4. 一致收敛与解析：如果 $\{f_n(z)\}$ 在 $\mathbb{D}$ 上解析，且 $\sum f_n(z)$ 在 $\mathbb{D}$ 上一致收敛于 $S(z)$ ，则 $S(z)$ 在 $\mathbb{D}$ 上解析，且对 $\mathbb{D}$ 上的任意光滑曲线 $\gamma$ ，有
+    $$
+    S^{(m)}(z)=\sum_{n=1}^\infty f_n^{(m)}(z),\quad m=1,2,3,\ldots
+    $$
+
+简而言之，一致收敛可以保证**函数序列**与**和函数**的连续性、可积性、可微性（解析性）
 
 ## 幂级数
 
-定义：形如 $\sum_{n=0}^{\infin}a_n(z-z_0)^n$
+定义：形如 $\sum_{n=0}^{\infty}a_n(z-z_0)^n$
 
 ### 幂级数的收敛半径与敛散性
 
->abel定理：如果幂级数在 $z_0 \neq 0$ 处收敛，那么对满足 $|z|<|z_0|$ 的一切 $z$ ，该级数绝对收敛；如果在 $z_0$ 处发散，那么对满足 $|z|>|z_0|$ 的一切 $z$ ，级数一定发散
+>abel定理：如果幂级数在 $z_0 \neq 0$ 处收敛，那么对满足 $|z| < |z_0|$ 的一切 $z$ ，该级数绝对收敛；如果在 $z_0$ 处发散，那么对满足 $|z| > |z_0|$ 的一切 $z$ ，级数一定发散
 
-和实级数类似，阿贝尔定理也给出了收敛半径的概念，指出幂级数的收敛区域恰好是一个以z_0展开中心为圆心的圆盘。幂级数的敛散性只与 $|z-z_0|$ 和圆盘半径$R$有关。圆盘上的点需要单独考虑。
+和实级数类似，阿贝尔定理也给出了收敛半径的概念，指出幂级数的收敛区域恰好是一个以 $z_0$ 展开中心为圆心的圆盘。幂级数的敛散性只与 $|z-z_0|$ 和圆盘半径$R$有关。**圆盘上的点需要单独考虑**。
 
 ### 收敛半径的求法
 
 #### 根据定义
 
-由定义算比值判别法，根值判别法的值，然后和1比较。该方法最保险
+由收敛的判别法（比值，根值）算出 $L$ ，然后和1比较；必要时单独考虑圆周上的点。该方法最保险
 
 #### 公式法
 
@@ -193,7 +375,7 @@ $$
 
 对于实序列$\{x_n\}_{n=0}^\infin$，定义其上极限为
 $$
-\limsup_{n\to\infin}x_n=\lim_{n\infin}(\sup_{m\geq n}x_m)
+\limsup_{n\to\infin}x_n=\lim_{n\to\infin}(\sup_{m\geq n}x_m)
 $$
 简记为 $\limsup x_n$
 
@@ -211,17 +393,30 @@ $$
 \frac{1}{R}=\limsup_{n\to\infin}\sqrt[n]{|a_n|}
 $$
 
-还有比值判别法算半径，跟实变函数差不多，参考实变函数笔记即可。
-
 ### 收敛半径内,级数和函数的分析学性质
 
-设和函数 $f(z)=\sum_{n=0}^{\infin}a_n(z-z_0)^n$ ,收敛半径是R，那么在收敛圆内（不包括圆周）$|z-z_0|<R$可以**逐项求导/积分、仍为幂级数，收敛半径不变**。
+收敛圆内幂级数一致收敛：设和函数 $f(z)=\sum_{n=0}^{\infin}a_n(z-z_0)^n$ ,收敛半径是R，那么在收敛圆内（不包括圆周）$|z-z_0|<R$，幂级数是**一致收敛**的，可以**逐项求导/积分、仍为幂级数，收敛半径不变**。
+
+:::note[证明]
+
+由Weierstrass判别法，$\forall z$ 满足 $|z-z_0|<R$ ,取 $r$ 使得 $|z-z_0|<r<R$ ,则
+$$
+|a_n(z-z_0)^n|=|a_n||z-z_0|^n
+\leq|a_n|r^n\cdot\left(\frac{|z-z_0|}{r}\right)^n<|a_n|r^n
+$$
+由此构造了一个实数级数 $\sum M_n=\sum |a_n|r^n$ ，这是实幂级数 $\sum M_n=\sum |a_n|x^n$ 中 $x=r$ 的情况。
+
+由Cauchy–Hadamard 公式，$R^\prime=\frac{1}{\limsup_{n\to\infin}\sqrt[n]{|a_n|}}=R>r$ ,所以 $\sum M_n$ 收敛。
+
+从而由Weierstrass判别法，幂级数在 $|z-z_0|<R$ 上一致收敛。
+
+:::
 
 在收敛圆内可以无限求导，体现幂级数和函数的**解析性**。在复分析中，**解析** 与 **局部可由幂级数表示**是等价的。更具体地：
 
-如果 $f$ 在一个**开邻域内可表示为幂级数**，则由一致收敛与逐项求导 $f$ 必为**解析**函数。
++ 如果 $f$ 在一个**开邻域内可表示为幂级数**，则由一致收敛与逐项求导 $f$ 必为**解析**函数。
 
-反过来，如果 $f$ 在**开邻域解析**，则对任意点 $z_0$，存在 $R>0$ 使得 $f$ 在 $|z-z_0|<R$ 等于其**泰勒级数**（由 Cauchy 积分公式的展开证明）。
++ 反过来，如果 $f$ 在**开邻域解析**，则对任意点 $z_0$，存在 $R>0$ 使得 $f$ 在 $|z-z_0|<R$ 等于其**泰勒级数**（由 Cauchy 积分公式的展开证明）。
 
 :::tip
 

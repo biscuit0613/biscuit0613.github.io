@@ -76,4 +76,20 @@ $$
 (2):$\sum_{n=1}^\infin(\frac{z}{\ln in})^n$
 根值判别法
 
-(3):把$\frac{1}{z-b}$写成
+(3):把$\frac{1}{z-b}$写成$\sum_{n=0}^\infty c_n(z-a)^n$的形式
+:::tip[solution]
+
+$$
+\frac{1}{z-b}=\frac{1}{(z-a)+(a-b)}=\frac{1}{a-b}\cdot\frac{1}{1+\frac{z-a}{a-b}}\\
+=\frac{1}{a-b}\sum_{n= 0}^\infty (-1)^n(\frac{z-a}{a-b})^n\\
+=\sum_{n=0}^\infty \frac{(-1)^n}{(a-b)^{n+1}}(z-a)^n
+$$
+:::
+
+
+(4):求$\sum_{n=0}^\infty (n+1)z^n$的和函数
+:::tip[solution]
+$$
+S_n(z)=\sum_{n=0}^\infty (n+1)z^n=\sum_{n=0}^\infty \frac{d}{dz}z^{n+1}=\frac{d}{dz}\sum_{n=0}^\infty z^{n+1}=\frac{d}{dz}\frac{z}{1-z}=\frac{1}{(1-z)^2}
+$$
+:::
