@@ -38,8 +38,8 @@ draft: false
 
 ## 累计分布函数(Cumulative Distribution Function, CDF)
 
-设X为一随机变量，$F(x)=P(X\leq x),-\infin\leq x\leq\infin$称为X的**累计分布函数**简称**分布函数**
-，就是随机变量落在任何一个区间（点）的概率。
+设X为一随机变量，$F(x)=P(X\leq x),-\infin\leq x\leq\infin$ 称为X的**累计分布函数**简称**分布函数**
+，就是随机变量落在**某点左边**的概率。
 $$
 \begin{align*}
 P(a< X<b)&=P(X<b)-P(X<a)\\
@@ -53,25 +53,48 @@ $$
 1. $0\leq F(x)=P(X\leq x)\leq 1$
 
 2. $x_1\leq x_2,F(x_1)\leq F(x_2),F(x)$是单调非减的
-   - 离散型随机变量的分布函数是**阶梯式的**
+   - 离散型随机变量的分布函数是**阶梯式的**，断点的横坐标对应随机变量的取值，断点的高度（y坐标之差）是随机变量的概率
    - 连续型随机变量的分布函数是光滑的
 3. $F(-\infin)=\lim_{x\to-\infin}F(x)=0,F(+\infin)=\lim_{x\to\infin}F(x)=1$
 4. $F(x^+)=F(x)$，分布函数是右连续的
+   + 如果是离散型随机变量，阶梯上是左闭右开（左边实心右边空心）
+   + 对于连续性随机变量，分布函数是连续的（由原函数连续），在某点处的分布函数为0，因此随机变量落在区间内不考虑端点。
+
+eg:分布函数 $F(x)=A+B\arctan x,x\in R$
+
+:::tip[solution]
+根据性质3：
+$$
+\begin{cases}
+  \lim_{x\to+\infin} F(x)=1\\
+  \lim_{x\to-\infin} F(x)=0
+\end{cases}
+$$
+:::
 
 ## 离散型随机变量及其分布列
 
 **定义**：只取有限个值或可列无穷多个值的随机变量称为离散型随机变量
 
-**分布列**：既反映每个样本点的取值，又反映每个样本点的概率
+**分布列**：既反映**每个样本点**的取某值的**概率**
 $$
 P(X=x_k)=p_k,k=1,2,3...
 $$
 
 或记作
 
-$X$|$x_1$|$x_2$|$x_3$|...
----|---|---|---|---
-$P$|$p_1$|$p_2$|$p_3$|...
+$X$|$x_1$|$x_2$|$x_3$|...|$x_n$
+---|---|---|---|---|---
+$P$|$p_1$|$p_2$|$p_3$|...|$x_n$
+
+离散型随机变量的分布列和分布函数之间是一一对应的。分布函数是分布列中所有**不大于**该数的**概率之和**
+$$
+F(x_i)=P(X\leq x_i)=\sum_{k=1,x_k\leq x_i}^iP(X=x_k)=\sum_{k=1}^ip_k
+$$
+分布列中各随机变量的**值**就是分布函数中**跳跃点的x坐标**，概率就是**跳跃高度**。由于分布函数的右连续性，在阶梯上的端点是**左闭右开**：
+$$
+P(X=x_i)=F(x_i)-F(x_i^-)
+$$
 
 ### 分布列的性质
 
@@ -167,27 +190,43 @@ $$
 2. $F(x)$ 从几何意义上看是**概率密度曲线与坐标轴**围成的面积， $F(+\infin)=\int_{-\infin}^{+\infin}f(x)=1$ 和x轴围成的面积是1。
   
 3. 表示点落在区间的概率：$P(x_1< X< x_2)=F(x_2)-F(x_1)=\int_{x_1}^{x_2}f(t)dt$ 。从这里可以看出**连续型随机变量**在**某一确定点的概率**取值为零（曲边梯形变成一条线，面积为零），故连续型随机变量计算区间概率时，区间端点可有可无。
-4. $f(x)$ 的值反应 $X$ 落在 $x$ 的邻域 $(x,x+\Delta x)$ 的概率约为 $f(x)\Delta x$
-
-  $$
-  \begin{align*}
-  f(x)=F^\prime(x&)=\lim_{\Delta x\to 0}\frac{F(x+\Delta x)-F(x)}{\Delta x}\\[5bp]
-  &=\lim_{\Delta x\to 0}\frac{P(x<X<x+\Delta x)}{\Delta x}\\
-  \Leftrightarrow f(x)\cdot\Delta x&=P(x<X<x+\Delta x)
-  \end{align*}
-  $$
-
-5. $F^\prime(x)=f(x)$
+4. $f(x)$ 的值反应 $X$ 落在 $x$ 的邻域 $(x,x+\Delta x)$ 的概率约为 $f(x)\Delta x$，近似成一个矩形的面积。
+   $$
+   \begin{align*}
+   f(x)=F^\prime(x&)=\lim_{\Delta x\to 0}\frac{F(x+\Delta x)-F(x)}{\Delta x}\\[5bp]
+   &=\lim_{\Delta x\to 0}\frac{P(x<X<x+\Delta x)}{\Delta x}\\
+   \Leftrightarrow f(x)\cdot\Delta x&=P(x<X<x+\Delta x)
+   \end{align*}
+   $$
+5. 当$f(x)$可积时，其原函数$F(x)$连续；当$f(x)$可积且连续时，$F(x)$可导。$F^\prime(x)=f(x)$
 
 - 1，2是判定一个函数$f(x)$是否为概率密度函数的**充要条件**
 - 由3，概率为零不是不可能事件
+
+eg: 设随机变量X的概率密度函数是 $\begin{cases}Axe^{-x^2},x>0\\0,x\leq0\end{cases}$ 求A以及分布函数$F(x)$
+
+:::tip[solution]
+$$
+\begin{align*}
+&\int_{-\infin}^{+\infin}f(x)dx=1\\
+&\text{这里注意按照题目缩小随机变量的取值范围}\\
+&\int_{-\infin}^{+\infin}Axe^{-x^2}dx=\frac{A}{2}(-e^{-x^2}\vert_0^\infin)=1\\
+&A=2\\
+&F(x)=\int_{-\infin}^xf(x)dx=0,x\leq0\\
+&F(x)=\int_{0}^xf(x)dx=\int_{0}^x2te^{-t^2}dt=1-e^{-x^2},x>0\\
+&\therefore F(x)=\begin{cases}
+  0,x\leq0\\
+  1-e^{-x^2},x>0
+\end{cases} 
+\end{align*}
+$$
+:::
 
 ## 常见的连续型随机变量概率分布
 
 ### 均匀分布
 
 若连续型随机变量 $X$ 具有**概率密度**  :
-
 $$
 f(x) = \left\{
   \begin{matrix}
@@ -197,15 +236,15 @@ f(x) = \left\{
   \end{align*}
   \end{matrix}\right.
 $$
-​
+
 则称 $X$ 在区间 $(a,b)$ 上服从均匀分布,记作 $X\sim U(a,b)$ 。期望 $E=\frac{a+b}{2}$ ，方差 $D=\frac{(b-a)^2}{12}$
 
-- 均匀意思是等可能，落在 $[a,b]$中长度相等的子区间 $[x_1,x_2]$是等可能的
+- 均匀意思是等可能，随机变量落在 $[a,b]$中长度相等的子区间 $[x_1,x_2]$是等可能的,都是$\frac{x_2-x_1}{b-a}$
 
 均匀分布的**分布函数**:
 
 $$
-\left\{\begin{matrix}
+F(x)=\left\{\begin{matrix}
   \begin{align*}
     &0&x<a\\
     &\frac{x-a}{b-a}&a\leq x<b\\
