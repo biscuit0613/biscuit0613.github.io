@@ -195,11 +195,11 @@ $$
 4. Dirichlet 判别法 （充分条件）
 
     设有级数  $\sum_{n=1}^\infty a_n b_n,$  ，若满足以下条件：  
-    $$\begin{align*}
-   &1. \{a_n\}\text{单调趋于0}；\\
-   &2. \{B_n\} = \left\{\sum_{k=1}^n b_k\right\} \text{有界}  
+    $$
+    \begin{align*}
+        &1. \{a_n\}\text{单调趋于0}；\\
+        &2. \{B_n\} = \left\{\sum_{k=1}^n b_k\right\} \text{有界}  
     \end{align*}
- 
     $$
     则 $\sum a_n b_n$ 收敛。  
 
@@ -218,8 +218,8 @@ $$
     设有级数  $\sum_{n=1}^\infty a_n b_n,$  ，若满足：  
     $$
     \begin{align*}
-   &1. \sum a_n \text{收敛}\\
-   &2. \{b_n\} \text{单调有界}\\
+        &1. \sum a_n \text{收敛}\\
+        &2. \{b_n\} \text{单调有界}\\
     \end{align*}
     $$
     则 $\sum a_n b_n$ 收敛。  
