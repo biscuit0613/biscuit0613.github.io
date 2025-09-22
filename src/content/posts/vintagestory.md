@@ -8,7 +8,7 @@ licenseName: "Unlicensed"
 author: biscuit
 draft: false
 ---
-# 青铜时代之前
+## 青铜时代之前
 
 概要：
 
@@ -79,7 +79,7 @@ draft: false
 
 主要是地表矿物，前期铜最重要。剩下的矿物可以标记日后再来，如果实在脸黑找不到铜，可以**小刀**加**原木**合成**淘沙盘**，在水里淘沙有概率获得金属粒
 
-# 青铜时代
+## 青铜时代
 
 概要：
 
@@ -149,10 +149,10 @@ ps:关于锡矿的生成高度计算：y轴比例系数是0.4\~0.75，矿物生�
 
 $$
 \begin{aligned}
-  \text{生皮}&{\xrightarrow[\text{一天}]{\text{石灰水}}}浸泡过的皮革\\[10bp]  
-  &{\xrightarrow{\text{小刀}}}刮过的皮革\\[10bp]
-  &\xrightarrow[三天]{\text{弱单宁}}鞣制过的皮\\[10bp]
-  &{{\xrightarrow[\text{时间因皮革种类而异}]{\text{强单宁}}}}皮革
+  \text{生皮}&{\xrightarrow[\text{一天}]{\text{石灰水}}}\text{浸泡过的皮革}\\[10bp]  
+  &{\xrightarrow{\text{小刀}}}\text{刮过的皮革}\\[10bp]
+  &\xrightarrow[三天]{\text{弱单宁}}\text{鞣制过的皮}\\[10bp]
+  &{{\xrightarrow[\text{时间因皮革种类而异}]{\text{强单宁}}}}\text{成品皮革}
 \end{aligned}
 $$
 
@@ -202,11 +202,11 @@ $$
 + 建议栅栏围起来，防止小浣熊<del>小完能</del>破坏蜂巢
 + 收获时直接破坏蜂箱即可，获得初产物蜜脾。（注意破坏之后蜜蜂对周围一切生物均有仇恨，不要离牲口太近，可以用稻草人吸引仇恨）
 
-蜜脾$\xrightarrow{对着容器挤压}0.2L$蜂蜜+1个蜜蜡
+蜜脾 $\xrightarrow{\text{对着容器挤压}}0.2L$ 蜂蜜+1个蜜蜡
 
 蜜蜡很有用，用来密封食物有点浪费，主要是制作无限光源蜡烛，进而制作提灯。
 
-# 铁器时代
+## 铁器时代
 
 ### 1. 铁的收集
 
@@ -217,9 +217,9 @@ $$
 
 锻铁需要锻铁炉，锻铁炉需要打碎才能或的产物，材料回收率挺高的，但还是建议多做一些耐火砖。  
 
-+ 赤铁矿 $\xrightarrow[木炭]{锻铁炉}$ 铁胚 ${\xrightarrow[\gt700^{\circ}]{熔炉}}$ 加热铁胚 ${\xrightarrow[随便来个锤子]{青铜砧}}$ 铁锭
++ 赤铁矿 $\xrightarrow[\text{木炭}]{\text{锻铁炉}}$ 铁胚 ${\xrightarrow[\gt700^{\circ}]{\text{熔炉}}}$ 加热铁胚 ${\xrightarrow[\text{随便来个锤子}]{\text{青铜砧}}}$ 铁锭
 
-+ 石英$\xrightarrow[木炭]{锻铁炉}$玻璃
++ 石英$\xrightarrow[\text{木炭}]{\text{锻铁炉}}$玻璃
 
 ## 附录1 常用快捷键
 
