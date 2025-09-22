@@ -1,5 +1,4 @@
 import { getImage } from "astro:assets";
-import { getCollection } from "astro:content";
 import type { RSSFeedItem } from "@astrojs/rss";
 import rss from "@astrojs/rss";
 import type { APIContext, ImageMetadata } from "astro";
@@ -27,7 +26,13 @@ export async function GET(context: APIContext) {
 
 	for (const post of posts) {
 		// convert markdown to html string
-		const body = markdownParser.render(post.body);
+		// Ensure we pass a string to markdown-it. Some collection entries may have body undefined
+		// (depending on how content was loaded). Fallback to description if body is missing.
+		const rawBody =
+			typeof post.body === "string"
+				? post.body
+				: String(post.body ?? post.data.description ?? "");
+		const body = markdownParser.render(rawBody);
 		// convert html string to DOM-like structure
 		const html = htmlParser.parse(body);
 		// hold all img tags in variable images
