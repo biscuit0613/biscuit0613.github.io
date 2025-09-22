@@ -14,6 +14,8 @@ lang: ''
 复变函数的级数可以以由实变函数直接推广而来,因此与实变函数有相似的定理和结论
 :::
 
+### 复数列的极限
+
 复数列{ $z_n=a_n+ib_n$ }的极限：复数列收敛到某个复数 $z=a+bi$ ，记作
 $$
 \lim_{n\to\infin}z_n=a+bi
@@ -27,19 +29,23 @@ $$
 + 复数列的极限满足实数列极限的四则运算
 + 复数列收敛判定定理：复数列收敛当且仅当它的实部和虚部分别收敛。$z_n=x_n+iy_n,\lim_{n\to\infin}z_n=a+bi\iff\lim_{n\to\infin}x_n=a,\lim_{n\to\infin}y_n=b$
 
+### 复级数及其部分和，敛散性
+
 复级数： $\sum_{k=1}^{\infin}z_k=z_1+z_2+z_3+\ldots$
 
-部分和：与实级数一样，复级数的关键在于部分和列 $S_n=\sum_{k=1}^{n}z_k$
+部分和：与实级数一样，复级数的关键在于**部分和列** $S_n=\sum_{k=1}^{n}z_k$
 
-复级数收敛与发散的定义：复级数 $\sum z_n$ 收敛 $\iff\lim_{n\to\infin}S_n=S$ 。也就是说，如果部分和{$S_n$}收敛到某复数S，则称复级数收敛，其和为S。否则发散
+复级数收敛与发散的定义：复级数 $\sum z_n$ 收敛 $\iff\lim_{n\to\infin}S_n=S$ 。也就是说，如果复级数的**部分和**{$S_n$}收敛到某复数S（部分和数列的极限存在），则称复级数收敛到S。否则发散
 
 ## 复级数收敛的判定与性质
 
 ### 收敛的充要条件
 
-充要条件1（部分和）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff S_n=\sum_{k=1}^{n}k_n$存在极限。
+充要条件1（**部分和**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff S_n=\sum_{k=1}^{n}k_n$存在极限。
 
-充要条件2（实虚部级数）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff\sum_{k=1}^{\infin}x_k\,,\sum_{k=1}^{\infin}y_k$ 均收敛。
+充要条件2（**实虚部级数**）：复级数 $\sum_{k=1}^{\infin}z_k$ 收敛 $\iff\sum_{k=1}^{\infin}x_k\,,\sum_{k=1}^{\infin}y_k$ 均收敛。
+
+由充要条件2可推出充要条件1：$S=S^\prime+iS^{\prime\prime}$，其中 $S^\prime$ ,$S^{\prime\prime}$ 分别为实部虚部级数的部分和极限。
 
 ### 收敛的必要条件
 
@@ -47,13 +53,33 @@ $$
 
 :::warning
 
-和实级数一样，只是必要条件，典型反例是调和级数$\sum\frac{1}{n}$
+和实级数一样，只是必要条件，典型反例是调和级数 $\sum\frac{1}{n}$
 
 :::
 
 ### 绝对收敛与条件收敛
 
-和实数项级数差不多，但注意复数的条件收敛对项的排列顺序敏感
+复级数的绝对收敛就是取模然后判断敛散性，转化为实数级数。(和实数项级数差不多，但注意复数的条件收敛对项的排列顺序敏感)
+
+绝对收敛：若复级数 $\sum_{n=1}^{\infin}z_n=\sum_{n=1}^{\infin}a_n+ib_n$ 满足 $\sum_{n=1}^{\infin}|z_n|$ 收敛，则称该级数绝对收敛，并且有
+
+$$
+\sum_{n=1}^{\infin}|z_n|\text{收敛}\iff\sum_{n=1}^{\infin}|a_n|\text{和}\sum_{n=1}^{\infin}|b_n|\text{均收敛}\iff\sum_{n=1}^{\infin}z_n\text{收敛}
+$$
+
+:::note[证明]
+利用柯西收敛准则
+$$
+\text{令}\tilde{S}=\sum_{n=1}^\infin|z_n|\\
+\sum_{n=1}^\infin|z_n|\text{收敛}\Leftrightarrow\forall\epsilon>0,\exist N,s.t\,n,m>N\\
+|\tilde{S_m}-\tilde{S_n}|<\epsilon\\
+\sum_{k=n}^m|z_k|<\epsilon\dotsb(1)\\
+\text{令}S＝\sum_{n=1}^\infin z_n\\
+\sum_{n=1}^\infin z_n\text{收敛}\Leftrightarrow\forall\epsilon>0,\exist N,s.t\,n,m>N\\
+|\tilde{S_m}-\tilde{S_n}|<\epsilon\\
+|\sum_{k=n}^m z_k|<\epsilon\dotsb(2)\\
+$$
+:::
 
 ### 敛散性判别法
 
@@ -61,11 +87,11 @@ $$
 
 1. 比较判别法
 
-    若 $|z_n|<a_n$ ,而$\sum a_n$收敛，则$z_n$ 绝对收敛。
+    若 $|z_n|<a_n$ ,而 $\sum a_n$ 收敛，则 $z_n$ 绝对收敛。
 
 2. 比值判别法
 
-    若$\lim_{n\to\infin}\frac{|z_{n+1}|}{|z_n|}$存在，记为$L$，则
+    若 $\lim_{n\to\infin}\frac{|z_{n+1}|}{|z_n|}$ 存在，记为$L$，则
 
     $$
     \begin{cases}
@@ -123,9 +149,29 @@ $$
 
 :::
 
+## 复函数项级数
+
+### 一致收敛
+
+复函数项级数的一致收敛：设有复函数项级数$\sum_{n=1}^\infin f_n(z)$,其前$n$项和记作$S_n(z)$，如果存在一个复函数$S(z)$满足：
+$$
+\forall \epsilon>0\existN,s.t.n>N4|S_n(z)-S(z)|<\epsilon,\forall z\in\mathbb{D}
+$$
+则称级数$S_n(z)$在区域$D$上一致收敛于$S(z)$
+
+### 一致收敛的判定
+
+1. 柯西一致收敛准则：
+    $$
+     \left| \sum_{k=n+1}^{n+p} f_k(z) \right| < \varepsilon 
+    $$
+2. Weierstrass判别法：
+
+### 一直收敛的性质
+
 ## 幂级数
 
-定义：形如$\sum_{n=0}^{\infin}a_n(z-z_0)^n$
+定义：形如 $\sum_{n=0}^{\infin}a_n(z-z_0)^n$
 
 ### 幂级数的收敛半径与敛散性
 
@@ -134,6 +180,12 @@ $$
 和实级数类似，阿贝尔定理也给出了收敛半径的概念，指出幂级数的收敛区域恰好是一个以z_0展开中心为圆心的圆盘。幂级数的敛散性只与 $|z-z_0|$ 和圆盘半径$R$有关。圆盘上的点需要单独考虑。
 
 ### 收敛半径的求法
+
+#### 根据定义
+
+由定义算比值判别法，根值判别法的值，然后和1比较。该方法最保险
+
+#### 公式法
 
 :::tip[上极限]
 
