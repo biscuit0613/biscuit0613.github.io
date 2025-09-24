@@ -51,21 +51,24 @@ $$
 $$
 \int_Cf(z)dz=\int_C{udx-vdy}+i\int_C{vdx+udy}
 $$
+
+:::note
 证明：(用定义)
->$$
->   \begin{align*}
->   z_k&=x_k+iy_k,x_k-x_{k-1}=\Delta x_k,y_k-y_{k-1}=\Delta y_k\\
-   >\zeta_k&=\xi_k+i\eta_k,u_k=u(\xi_k,\eta_k),v_k=v(\xi_k,\eta_k)\\
-   >S_n&=\sum_{k=1}^{k=n}f(\zeta_k)\Delta z_k\\
-   >&=\sum_{k=1}^{k=n}(u_k+iv_k)(\Delta x_k+i\Delta y_k)\\
-   >&=\sum_{k=1}^{k=n}[u_k\Delta x_k-v_k\Delta y_k+i(v_k\Delta x_k+u_k\Delta y_k)]\\
-   >&=\sum_{k=1}^{k=n}u_k\Delta x_k-v_k\Delta y_k+\sum_{k=1}^{k=n}i(v_k\Delta x_k+u_k\Delta y_k)\\
-   >&\text{ $f(z)$ 沿曲线 $C$ 连续，由复变函数连续的充要条件是实部虚部函数连续，}\\
-   >&\text{}{故 $u(x,y),v(x,y)$ 在曲线$C$上也连续}\\
-   >&\text{再由可积定义，函数连续必可积，$u,v$ 对应的两个第二型曲线积分一定存在。}\\
-   >&=\int_C{udx-vdy}+i\int_C{vdx+udy}
-   >\end{align*}
->$$
+$$
+   \begin{align*}
+   z_k&=x_k+iy_k,x_k-x_{k-1}=\Delta x_k,y_k-y_{k-1}=\Delta y_k\\
+   \zeta_k&=\xi_k+i\eta_k,u_k=u(\xi_k,\eta_k),v_k=v(\xi_k,\eta_k)\\
+   S_n&=\sum_{k=1}^{k=n}f(\zeta_k)\Delta z_k\\
+   &=\sum_{k=1}^{k=n}(u_k+iv_k)(\Delta x_k+i\Delta y_k)\\
+   &=\sum_{k=1}^{k=n}[u_k\Delta x_k-v_k\Delta y_k+i(v_k\Delta x_k+u_k\Delta y_k)]\\
+   &=\sum_{k=1}^{k=n}u_k\Delta x_k-v_k\Delta y_k+\sum_{k=1}^{k=n}i(v_k\Delta x_k+u_k\Delta y_k)\\
+   &\text{ $f(z)$ 沿曲线 $C$ 连续，由复变函数连续的充要条件是实部虚部函数连续，}\\
+   &\text{故 $u(x,y),v(x,y)$ 在曲线$C$上也连续}\\
+   &\text{再由可积定义，函数连续必可积，$u,v$ 对应的两个第二型曲线积分一定存在。}\\
+   &=\int_C{udx-vdy}+i\int_C{vdx+udy}
+   \end{align*}
+$$
+:::
 
 + 说明了一个复变函数沿某曲线可积，那么它的积分能表示成两个第二型曲线积分的运算组合
 + 曲线 $C$ 上连续不代表曲线 $C$ 上处处连续，曲线 $C$ 上连续只是说 $C$ 上的点沿 $C$ 的方向是连续的，而处处连续要考虑曲线外的方向
@@ -78,15 +81,20 @@ $$
 \int_Cf(z)dz=\int_{t_0}^Tf(z(t))z(t)^\prime dt\\
 =\int_a^b [u(x(t),y(t))+iv(X(t)+y(t))][x^\prime(t)+iy^\prime(t)]dt
 $$
+
+:::note
+
 证明：
->$$
->\begin{align*}
->dz&=(x^\prime(t)+iy^\prime(t))dt\\
->\int_Cf(z)dz&=\int_C[u(x(t),y(t))+iv(x(t),y(t))]\cdot(x^\prime(t)+iy^\prime(t))dt\\
->&\text{令}u(t)=u(x(t),y(t)),v(t)=v(x(t),y(t))\\
->&=\int_C[u(t)x^\prime(t)-v(t)y^\prime(t)]dt+i\int_C[v(t)x^\prime(t)+u(t)y^\prime(t)]dt
->\end{align*}
->$$
+$$
+\begin{align*}
+dz&=(x^\prime(t)+iy^\prime(t))dt\\
+\int_Cf(z)dz&=\int_C[u(x(t),y(t))+iv(x(t),y(t))]\cdot(x^\prime(t)+iy^\prime(t))dt\\
+&\text{令}u(t)=u(x(t),y(t)),v(t)=v(x(t),y(t))\\
+&=\int_C[u(t)x^\prime(t)-v(t)y^\prime(t)]dt+i\int_C[v(t)x^\prime(t)+u(t)y^\prime(t)]dt
+\end{align*}
+$$
+
+:::
 
 ### 复变函数积分的性质
 

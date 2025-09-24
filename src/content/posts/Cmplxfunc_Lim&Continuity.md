@@ -217,7 +217,7 @@ $$
 
 ---
 **例题**
-$f(z)=\frac{\bar{z}}{z}$在z=0处不连续
+$f(z)=\frac{\bar{z}}{z}$ 在z=0处不连续
 
 :::tip[solution]
 $$
