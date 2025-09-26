@@ -9,7 +9,7 @@ draft: false
 lang: ''
 ---
 
-eg1: 计算$\int_C f(z)dz$,，其中C是复平面内从原点到$(3,4)$的直线段
+eg1: 计算 $\int_C f(z)dz$,，其中C是复平面内从原点到 $(3,4)$的直线段
 
 :::tip[solution]
 做参数化：$z=(3+4i)t\,,t:0\to1$
@@ -37,25 +37,25 @@ $$
 
 :::
 
-eg3: 计算$\oint\frac{1}{2z-3}dz,|z|=1$
+eg3: 计算 $\oint\frac{1}{2z-3}dz,|z|=1$
 
 :::tip[solution]
 奇点是$(\frac{3}{2},0)$不在解析区域内，原积分是0
 :::
 
-eg4: 计算$\int_{z+i}^{2+4i}z^2dz$
+eg4: 计算 $\int_{z+i}^{2+4i}z^2dz$
 
 :::tip[solution]
 幂函数是整个复平面上的解析函数，因此积分与路径无关
 :::
 
-eg5: 计算$\int_{1-\pi i}^{1+\pi i}e^{\frac{z}{2}}dz$
+eg5: 计算 $\int_{1-\pi i}^{1+\pi i}e^{\frac{z}{2}}dz$
 
 :::tip[solution]
 指数函数也是全纯函数，积分与路径无关
 :::
 
-eg6: 计算$\oint_C\frac{1}{z^2-z}dz$,，这里C是包含$|z|=1$在内的正向封闭曲线
+eg6: 计算 $\oint_C\frac{1}{z^2-z}dz$ ，这里C是包含 $|z|=1$ 在内的正向封闭曲线
 
 :::tip[solution]
 取$C_1=|z-0|=\delta_1,C_2=|z-1|=\delta_2$,由复合闭路定理：
@@ -65,7 +65,6 @@ $$
 =0-2\pi i+2\pi i-0=0
 $$
 :::
-
 
 利用柯西积分公式:
 
