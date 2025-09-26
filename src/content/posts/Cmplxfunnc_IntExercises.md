@@ -18,10 +18,11 @@ $$
 $$
 :::
 
-eg2: 计算$\oint_{|z-z_0|\leq r} \frac{1}{(z-z_0)^n},n\in\mathbb{Z}$
+eg2: 计算 $\oint_{|z-z_0|\leq r} \frac{1}{(z-z_0)^n},n\in\mathbb{Z}$
 
 :::tip[solution]
 
+采用参数化
 $$
 \begin{align*}
 &z-z_0=re^{i\theta},\theta\in(0,2\pi]\\

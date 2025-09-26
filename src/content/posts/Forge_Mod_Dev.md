@@ -1,17 +1,17 @@
 ---
-title: forge模组开发
+title: neoforge模组开发
 published: 2025-09-15
 description: '濒死状态模组开发笔记'
 image: ''
-tags: [MC，mods，forge]
-category: 'forge'
+tags: [MC，mods，neoforge]
+category: 'neoforge'
 draft: false 
 lang: ''
 ---
 
 ## 模组主类
 
-模组主类是模组的入口点，负责初始化模组和注册事件。`@Mod` 是 Forge（或 NeoForge）提供的注解，用来标记一个类是模组的主类。它的参数用于告诉框架如何识别和加载这个模组。
+模组主类是模组的入口点，负责初始化模组和注册事件。`@Mod` 是 NeoForge 提供的注解，用来标记一个类是模组的主类。它的参数用于告诉框架如何识别和加载这个模组。
 
 ### 模组主类的modid
 
