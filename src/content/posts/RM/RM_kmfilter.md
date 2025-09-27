@@ -246,7 +246,7 @@ $$
 
 记
 $$
-\mathbf{S}_k \coloneqq \mathbf{H}_k\mathbf{P}_{k|k-1}\mathbf{H}_k^\top + \mathbf{R}_k.
+\mathbf{S}_k = \mathbf{H}_k\mathbf{P}_{k|k-1}\mathbf{H}_k^\top + \mathbf{R}_k.
 $$
 
 若使用标准卡尔曼增益
@@ -411,7 +411,7 @@ $$
 
 为了处理后面两项，定义
 $$
-\mathbf{S} \;\coloneqq\; \mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R},
+\mathbf{S} = \mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R},
 $$
 
 则
@@ -420,8 +420,6 @@ J(\mathbf{K})
 = \mathrm{tr}(\mathbf{P}) \;-\; 2\,\mathrm{tr}(\mathbf{K}\mathbf{H}\mathbf{P})
 \;+\; \mathrm{tr}\!\big(\mathbf{K}\mathbf{S}\mathbf{K}^\top\big)
 $$
-
-其中 $\mathbf{S}$ 是 **创新协方差**，对称且正定（在常见条件下）。
 
 矩阵微分与梯度
 
@@ -445,7 +443,6 @@ $$
 \mathbf{K}\mathbf{S} = \mathbf{P}\mathbf{H}^\top.
 $$
 
-若 $\mathbf{S}$可逆（创新协方差通常可逆），
 $$
 \boxed{\;
 \mathbf{K} \;=\; \mathbf{P}\mathbf{H}^\top \mathbf{S}^{-1}
