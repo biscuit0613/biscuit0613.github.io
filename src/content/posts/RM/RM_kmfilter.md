@@ -90,6 +90,10 @@ $\mathbf{z}_k$：$m\times1$。观测矩阵作用于真实状态向量
 
 $\mathbf{\hat{z}}_k$：$m\times1$。观测矩阵作用于先验估计（预测状态）
 
+#### 估计状态向量
+
+$\mathbf{\hat{x}}_k$：$n\times1$。由测量值映射回状态空间后的估计状态向量。
+
 #### 测量残差
 
 $\mathbf{y}_k$：理想测量和估计测量间的误差。
@@ -150,13 +154,13 @@ $$
 + 为啥不用真实的均值呢？因为这玩意没法观测。
 + 这种做法是合理的，卡尔曼滤波器在**线性、高斯、无偏初始条件**下，保证了$\mathbf{E}[\mathbf{x}_k]=\mathbf{\hat{x}}_{k|k}$(证明过程略，可以参考[维基](https://en.wikipedia.org/wiki/Kalman_filter#Properties))，所以用估计值代替真实均值是合理的。
 
-$\mathbf{e}_{k|k-1} = \mathbf{x}_k - \hat{\mathbf{x}}_{k|k-1}$：**先验估计误差**
+$\mathbf{e}_{k|k-1} = \mathbf{x}_k - \hat{\mathbf{x}}_{k|k-1}$：**先验估计误差**：真实状态与先验估计的误差。
 
-$\mathbf{e}_{k|k} = \mathbf{x}_k - \hat{\mathbf{x}}_{k|k}$：**后验误差估计**
+$\mathbf{e}_{k|k} = \mathbf{x}_k - \hat{\mathbf{x}}_{k|k}$：**后验误差估计**：真实状态与后验估计的误差。
 
-$\mathbf{P}_{k|k-1}$：**先验协方差矩阵（预测）**：$=\mathbb{E}\!\left[ \mathbf{e}_{k|k-1} \mathbf{e}_{k|k-1}^T\right]\;\;,n\times n$。
+$\mathbf{P}_{k|k-1}$：**先验协方差矩阵（预测精度）**：$=\mathbb{E}\!\left[ \mathbf{e}_{k|k-1} \mathbf{e}_{k|k-1}^T\right]\;\;,n\times n$。
 
-$\mathbf{P}_{k|k}$：**后验协方差矩阵（更新）**：$=\mathbb{E}\!\left[ \mathbf{e}_{k|k} \mathbf{e}_{k|k}^T \right]\;\;,n\times n$。  
+$\mathbf{P}_{k|k}$：**后验协方差矩阵（更新精度）**：$=\mathbb{E}\!\left[ \mathbf{e}_{k|k} \mathbf{e}_{k|k}^T \right]\;\;,n\times n$。  
 
 从上文可知，估计分为先验估计 $\mathbf{\hat{x}}_{k|k-1}$ 和后验估计 $\mathbf{\hat{x}}_{k|k}$ ，这两个估计的"真实值"都是**真实状态向量** $\mathbf{x}_k$ 。$\mathbf{P}_{k|k-1}$ 先验协方差矩阵描述先验估计的精度（预测的精度），$\mathbf{P}_{k|k}$ 后验协方差矩阵描述后验估计的精度（更新的精度）。
 
@@ -182,8 +186,12 @@ $$
 &= (F_k \mathbf{x}_{k-1} + B_k \mathbf{u}_k + \mathbf{w}_k) - (F_k \hat{\mathbf{x}}_{k-1|k-1} + B_k \mathbf{u}_k)\\
 &= F_k \mathbf{e}_{k-1|k-1} + \mathbf{w}_k\\
 \mathbf{P}_{k|k-1} &= \mathbb{E}\!\left[ \mathbf{e}_{k|k-1}\mathbf{e}_{k|k-1}^\top \right]\\
-&= \mathbf{F}_k \, \mathbb{E}\!\left[ \mathbf{e}_{k-1|k-1}\mathbf{e}_{k-1|k-1}^\top \right] \mathbf{F}_k^\top + \mathbb{E}\!\left[ \mathbf{w}_k \mathbf{w}_k^\top \right]\\
-&\text{因为 $\mathbf{w}_k$ 独立，且零均值}\\
+&= \mathbb{E}\!\left[ \mathbf{F}_k\mathbf{e}_{k-1|k-1}\mathbf{e}_{k-1|k-1}^\top \mathbf{F}_k^\top \right]
++\mathbb{E}\!\left[\mathbf{F}_k\mathbf{e}_{k-1|k-1}\mathbf{w}_k^\top\right] 
++ \mathbb{E}\left[\mathbf{w}_k\mathbf{e}_{k-1|k-1}^\top\mathbf{F}_k^\top\right] \mathbb{E}\!\left[ \mathbf{w}_k \mathbf{w}_k^\top \right]\\
+&\text{因为 $\mathbf{w}_k$ 独立，且零均值：}\mathbb{E}(\mathbf{w}_k)=0\\
+\therefore &=\mathbf{F}_k \, \mathbb{E}\!\left[ \mathbf{e}_{k-1|k-1}\mathbf{e}_{k-1|k-1}^\top \right] \mathbf{F}_k^\top
++ \mathbb{E}\!\left[ \mathbf{w}_k \mathbf{w}_k^\top \right]\\
 \mathbf{P}_{k|k-1} &= \mathbf{F}_k \mathbf{P}_{k-1|k-1}\mathbf{F}_k^\top + \mathbf{Q}_k\\
 &\text{这里 $Q_k$ 是过程噪声的协方差。}
 \end{aligned}\\
@@ -333,7 +341,26 @@ $$
  \underset{\text{当前的估计值(后验估计)}}{\hat{\mathbf{x}}_{k|k}} = \underset{\text{上一次的估计(先验估计)}}{\hat{\mathbf{x}}_{k|k-1}} + \underset{\text{系数（卡尔曼增益）}}{\mathbf{K}_k}\cdot\underset{\text{当前测量值－上一次估计值}}{(\mathbf{z}_k-\mathbf{H}_k\cdot\hat{\mathbf{x}}_{k|k-1})}\\
 $$
 
-卡尔曼滤波认为，后验估计 $\mathbf{\hat{x}}_{k|k}$ 是先验估计和测量值的**线性**组合，卡尔曼增益决定了”相信多少先验估计，相信多少测量值”
+卡尔曼滤波认为，后验估计 $\mathbf{\hat{x}}_{k|k}$ 是先验估计和测量值的**线性**组合，也就是进行数据融合，卡尔曼增益决定了”相信多少先验估计，相信多少测量值”
+
+如果纯用数据融合的方式，那么公式的形式应该长这样
+$$
+\hat{\mathbf{x}}_{k|k} =  \hat{\mathbf{x}}_{k|k-1} + \mathbf{G}\cdot (\hat{\mathbf{x}}_{k}-\mathbf{\hat{x}}_{k|k-1})\\[5pt]
+\text{其中}\hat{\mathbf{x}}_k = \mathbf{H}_k^-\mathbf{z}_k\\[5pt]
+$$
+
+$\hat{\mathbf{x}}_k$ 是根据测量值映射回状态空间后对客观状态的估计
+
+$\mathbf{G}$ 是数据融合的系数矩阵,范围是 $[0,\mathbf{I}]$，当 $\mathbf{G}=\mathbf{0}$ 时，完全相信先验估计 $\hat{\mathbf{x}}_{k|k-1}$；当 $\mathbf{G}=\mathbf{I}$ 时，完全相信测量值 $\hat{\mathbf{x}}_k$。
+
+对系数 $\mathbf{G}$ 稍微变形一下就得到了标准的卡尔曼滤波公式：
+
+$$
+\text{令}\mathbf{G} = \mathbf{K}_k\mathbf{H}_k\\[5pt]
+\Rightarrow \hat{\mathbf{x}}_{k|k} =  \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k\cdot (\mathbf{z}_k-\mathbf{H}_k\cdot\hat{\mathbf{x}}_{k|k-1})\\[5pt]
+$$
+
+这里的 $\mathbf{K}_k$ 就是卡尔曼增益。范围是 $[0,\mathbf{H}_k^{-1}]$，当 $\mathbf{K}_k=\mathbf{0}$ 时，完全相信先验估计 $\hat{\mathbf{x}}_{k|k-1}$；当 $\mathbf{K}_k=\mathbf{H}_k^{-1}$ 时，完全相信测量值 $\hat{\mathbf{x}}_k$。
 
 :::warning[下面推导可能有误，谨慎参考]
 :::
@@ -341,29 +368,38 @@ $$
 :::note[卡尔曼增益的推导]
 这一坨东西的推导和后验协方差矩阵息息相关，后验协方差矩阵越“小”越好。对于这个“小”的标准，最常见的是后验协方差矩阵的迹（trace），也就是对角线各元素之和（对角线元素是后验误差的方差）
 
-具体推导过程写不动了喵，里面有矩阵求导bulabula之类的，主包的线性代数功底不好，给出ChatGPT大人的推导方式：
+具体推导里面有矩阵求导bulabula之类的，主包的线性代数功底不好。
 
-记
+为了简化，记
 $$
 \mathbf{P}\equiv\mathbf{P}_{k|k-1},\mathbf{K}\equiv\mathbf{K}_k,\mathbf{H}=\mathbf{H}_k,\mathbf{R}=\mathbf{R}_k\\
 $$
 
-Joshep展开式可以化简为
+结合之前后验协方差矩阵的推导过程，Joshep展开:
 
 $$
-\mathbf{P}_{k|k} = (\mathbf{I}-\mathbf{K}\mathbf{H})\,\mathbf{P}\,(\mathbf{I}-\mathbf{K}\mathbf{H})^\top
-\;+\;
-\mathbf{K}\mathbf{R}\mathbf{K}^\top.
+\begin{align*}
+\mathbf{P}_{k|k}
+&= (\mathbf{I}-\mathbf{K}\mathbf{H})\,\mathbf{P}\,(\mathbf{I}-\mathbf{K}\mathbf{H})^\top+\mathbf{K}\mathbf{R}\mathbf{K}^\top\\
+&=(\mathbf{I}-\mathbf{K}\mathbf{H})\,\mathbf{P}\,(\mathbf{I}^\top-\mathbf{H}^\top\mathbf{K}^\top)+
+\mathbf{K}\mathbf{R}\mathbf{K}^\top\\
+&=\mathbf{P} - \mathbf{K}\mathbf{H}\mathbf{P} - \mathbf{P}\mathbf{H}^\top\mathbf{K}^\top + \mathbf{K}\mathbf{H}\mathbf{P}\mathbf{H}^\top\mathbf{K}^\top + \mathbf{K}\mathbf{R}\mathbf{K}^\top
+\end{align*}
 $$
 
-以迹为代价函数：
+其中 $\mathbf{P}$ 是已知的**先验协方差矩阵**，$\mathbf{H}$ 是已知的**观测矩阵**，$\mathbf{R}$ 是已知的**测量噪声协方差矩阵**，未知的是 $\mathbf{K}$。
+
+以**迹**为代价函数,对角线元素之和越小，说明后验误差的方差越小，估计精度越高
 $$
 J(\mathbf{K}) \;=\; \mathrm{tr}\!\big(\mathbf{P}_{k|k}\big).
 $$
 
-用迹的性质展开
+用迹的性质展开，关于迹的性质，可以参考[这篇博客](https://www.cnblogs.com/hjd21/p/16619280.html)。
 
-利用迹的循环不变性 $\mathrm{tr}(\mathbf{ABC})=\mathrm{tr}(\mathbf{BCA})$ 与 $\mathbf{P}^\top=\mathbf{P}$，可得
+迹的循环不变性 $\mathrm{tr}(\mathbf{ABC})=\mathrm{tr}(\mathbf{BCA})$
+
+转置不改变迹 $\mathrm{tr}(\mathbf{P}^\top)=\mathrm{tr}(\mathbf{P})$，当然，$\mathbf{P}$ 本来就是对称的。
+
 $$
 \begin{aligned}
 J(\mathbf{K})
@@ -373,7 +409,7 @@ J(\mathbf{K})
 \end{aligned}
 $$
 
-定义
+为了处理后面两项，定义
 $$
 \mathbf{S} \;\coloneqq\; \mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R},
 $$
@@ -382,14 +418,14 @@ $$
 $$
 J(\mathbf{K})
 = \mathrm{tr}(\mathbf{P}) \;-\; 2\,\mathrm{tr}(\mathbf{K}\mathbf{H}\mathbf{P})
-\;+\; \mathrm{tr}\!\big(\mathbf{K}\mathbf{S}\mathbf{K}^\top\big).
+\;+\; \mathrm{tr}\!\big(\mathbf{K}\mathbf{S}\mathbf{K}^\top\big)
 $$
 
 其中 $\mathbf{S}$ 是 **创新协方差**，对称且正定（在常见条件下）。
 
 矩阵微分与梯度
 
-我们需要对 $\mathbf{K}$ 求导。用到两个常用公式：
+对 $\mathbf{K}$ 求导。用到两个常用公式：
 
 + 若 $\mathbf{A}$ 为常矩阵$\displaystyle \frac{\partial}{\partial \mathbf{K}}\,\mathrm{tr}(\mathbf{K}\mathbf{A}) = \mathbf{A}^\top$。
 
@@ -397,7 +433,7 @@ $$
 
 于是
 $$
-\nabla_{\mathbf{K}} J
+\frac{\partial \mathbf{J}(\mathbf{K})}{\partial \mathbf{K}}
 = -2\,(\mathbf{H}\mathbf{P})^\top + 2\,\mathbf{K}\mathbf{S}
 = -2\,\mathbf{P}\mathbf{H}^\top + 2\,\mathbf{K}\mathbf{S}.
 $$
@@ -413,15 +449,12 @@ $$
 $$
 \boxed{\;
 \mathbf{K} \;=\; \mathbf{P}\mathbf{H}^\top \mathbf{S}^{-1}
-\;=\; \mathbf{P}\mathbf{H}^\top \big(\mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R}\big)^{-1}.
-\;}
+\;=\; \mathbf{P}\mathbf{H}^\top \big(\mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R}\big)^{-1}=\frac{\mathbf{P}\mathbf{H}^\top}{\mathbf{H}\mathbf{P}\mathbf{H}^\top + \mathbf{R}}}
 $$
 
-这就是**卡尔曼增益**的标准形式。
+这就是**卡尔曼增益**的标准形式。(写成分数形式是为了方便理解)
 
-+ $\mathbf{P}\mathbf{H}^\top$：把 **状态先验不确定性** 投影到观测空间后的“协方差耦合项”；
-+ $\mathbf{S}=\mathbf{H}\mathbf{P}\mathbf{H}^\top+\mathbf{R}$：**创新的协方差**（由先验不确定性与观测噪声共同组成）；
-+ $\mathbf{K}$：在“相信先验”与“相信观测”之间给出 **均方意义下最优权衡** 的权重矩阵。
+观察分母，当**测量噪声协方差** $\mathbf{R}$ 很大时，说明测量值不可靠，卡尔曼增益 $\mathbf{K}\to \mathbf{0}$ ，更相信先验估计；当 $\mathbf{R}$ 很小时，说明测量值比较可靠，卡尔曼增益 $\mathbf{K}\to \mathbf{H}^-$ ，更相信测量值。
 
 :::
 

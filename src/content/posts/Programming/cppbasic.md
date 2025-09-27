@@ -217,6 +217,20 @@ MyClass(30); // 创建一个匿名对象，调用带参数的构造函数
 drawCircle(cv::Scalar(0, 0, 255)); // 直接传入构造的对象
 ```
 
+## lambda表达式
+
+Lambda表达式是一种**匿名函数**，可以在需要函数对象的地方定义和使用。它们通常用于简化代码，特别是在需要传递简单函数作为参数时。
+基本语法：
+
+```cpp
+[capture](parameters) -> return_type { function_body }
+```
+
++ capture：捕获外部变量的方式，可以是值捕获（=）、引用捕获（&）或混合捕获（[=, &var]）
++ parameters：匿名函数的参数列表
++ return_type：返回类型，可以省略，编译器会自动推断
++ function_body：函数的主体
+
 ## 头文件引用
 
 ```cpp
