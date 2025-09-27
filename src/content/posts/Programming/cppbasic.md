@@ -377,6 +377,57 @@ head -> [10 | next] -> [20 | null]
 
 :::
 
+## cpp智能指针
+
+智能指针是 C++11 引入的一种用于自动管理动态分配内存的工具。它们通过 RAII（资源获取即初始化）原则，在智能指针对象的生命周期结束时自动释放所管理的内存，避免内存泄漏和悬挂指针等问题。
+
+C++ 标准库提供了三种主要的智能指针：
+
++ `std::unique_ptr`：表示独占所有权的智能指针。一个 `unique_ptr` 只能有一个所有者，**不能被复制，但可以被移动**。适用于需要明确单一所有权的场景。
+
+    ```cpp
+    std::unique_ptr<int> ptr1(new int(10)); // 创建 unique_ptr
+    ```
+
+    ```cpp
+    std::unique_ptr<int> ptr2 = ptr1; // 错误，不能复制
+    std::unique_ptr<int> ptr2 = std::move(ptr1); // 正确，ptr1 的所有权被转移到 ptr2
+    ```
+
++ `std::shared_ptr`：表示共享所有权的智能指针。多个 `shared_ptr` 可以指向同一个对象，通过**引用计数**来管理对象的生命周期。当最后一个 `shared_ptr` 被销毁时，所管理的对象也会被释放。适用于需要多个所有者的场景。
+
+    ```cpp
+    std::shared_ptr<int> ptr1(new int(20)); // 创建 shared_ptr
+    std::shared_ptr<int> ptr2 = ptr1; // 共享所有权，引用计数增加
+    std::cout << ptr1.use_count(); // 输出 2，表示有两个 shared_ptr 指向同一个对象
+    ```
+
+    ```cpp
+    std::shared_ptr<Person> personPtr = std::make_shared<Person>("Alice", 30); // 使用 make_shared 创建类对象，用personPtr指向
+    std::cout << personPtr->name << ", " << personPtr->age << std::endl; // 访问类成员
+    ```
+
++ `std::weak_ptr`：与 `shared_ptr` 配合使用的智能指针。它并不拥有所指向的对象，而是对 `shared_ptr` 的一种弱引用，用于解决循环引用问题。
+
+    ```cpp
+    std::shared_ptr<int> ptr1(new int(30));
+    std::weak_ptr<int> weakPtr = ptr1; // 创建 weak_ptr，不增加引用计数
+    if (auto sharedPtr = weakPtr.lock()) { // 尝试获取 shared_ptr
+        std::cout << *sharedPtr; // 输出 30
+    }
+    ```
+
+三种指针的创建语法都差不多：
+
+```cpp
+auto ptr = std::make_unique<Type>(args); // 创建 unique_ptr
+auto ptr = std::make_shared<Type>(args); // 创建 shared_ptr
+
+std::weak_ptr<Type> ptr = sharedPtr; // 创建 weak_ptr
+```
+
+当 `<type>` 是类类型时，可以直接传入**构造函数**的参数，创建一个由智能指针管理的对象，可以用`->`访问其成员。
+
 ## cpp中的this指针
 
 在 C++ 的类中，`this` 是一个隐含的指针，指向当前**对象**本身。它在类的非静态成员函数中可用，用于访问对象的成员变量和成员函数。
