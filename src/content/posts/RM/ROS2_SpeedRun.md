@@ -1,9 +1,9 @@
 ---
 title: ROS2学习笔记
 published: 2025-09-10
-description: 'ROS2～～快速～～入门指南'
+description: 'ROS2快速入门指南'
 image: ''
-tags: [ROS2]
+tags: [ROS2,RM]
 category: 'ROS2'
 draft: false 
 lang: ''

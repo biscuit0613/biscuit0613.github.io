@@ -3,7 +3,7 @@ title: cpp赛博扫盲日记
 published: 2025-09-04
 description: '记录从零开始学习C++的点点滴滴'
 image: ''
-tags: [cpp,c++，]
+tags: [cpp,c++]
 category: 'cpp'
 draft: false 
 lang: ''

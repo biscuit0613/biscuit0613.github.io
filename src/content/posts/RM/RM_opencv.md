@@ -1,7 +1,7 @@
 ---
 title: rm竞培营作业
 published: 2025-08-30
-description: ''
+description: 'rm竞培营的week4作业：opencv图像处理'
 image: ''
 tags: [opencv,RM]
 category: 'RM'

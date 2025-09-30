@@ -1,9 +1,9 @@
 ---
 title: 复变函数：复数&复球面
 published: 2025-08-17
-description: 复变函数基础知识
-tags: [复变函数，复数，复球面]
-category: 复变函数
+description: '复数的表示与运算，复球面与扩充复平面'
+tags: [复变函数, 复数, 复球面]
+category: '复变函数'
 author: biscuit
 draft: false
 ---

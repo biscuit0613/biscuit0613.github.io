@@ -1,9 +1,9 @@
 ---
-title: 复变函数的级数
+title: 复变函数：级数
 published: 2025-09-02
 description: '复变函数的级数基础知识，幂级数的收敛半径与和函数的分析续性质，泰勒级数，洛朗级数'
 image: ''
-tags: [复变函数级数]
+tags: [复变函数, 级数]
 category: '复变函数'
 draft: false 
 lang: ''

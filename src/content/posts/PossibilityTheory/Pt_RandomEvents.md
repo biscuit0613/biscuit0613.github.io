@@ -3,8 +3,8 @@ title: 概率论入门：随机事件与概率
 published: 2025-09-01
 description: '概率论入门'
 image: ''
-tags: [概率论]
-category: ''
+tags: [随机事件, 概率论]
+category: '概率论'
 draft: false 
 lang: ''
 ---

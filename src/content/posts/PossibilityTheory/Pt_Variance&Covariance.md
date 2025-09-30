@@ -4,7 +4,7 @@ published: 2025-09-01
 description: '为了RM的卡尔曼滤波先学方差'
 image: ''
 tags: [概率论，RM]
-category: ''
+category: '概率论'
 draft: false 
 lang: ''
 ---

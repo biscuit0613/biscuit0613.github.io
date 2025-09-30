@@ -3,7 +3,7 @@ title: 复变函数：点集与区域
 published: 2025-08-17
 description: 复变函数点集与区域
 tags: [复变分析]
-category: 复变函数
+category: '复变函数'
 author: biscuit
 draft: false
 ---

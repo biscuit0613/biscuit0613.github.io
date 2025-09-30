@@ -1,10 +1,10 @@
 ---
-title: 树和二叉
+title: 树和二叉树
 published: 2025-09-26
-description: ''
+description: '树和二叉树的基本概念'
 image: ''
-tags: []
-category: ''
+tags: [树, 二叉树, 数据结构]
+category: '数据结构与算法'
 draft: false 
 lang: ''
 ---

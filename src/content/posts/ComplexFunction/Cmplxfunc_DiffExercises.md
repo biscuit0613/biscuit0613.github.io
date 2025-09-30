@@ -1,9 +1,9 @@
 ---
-title: 复变函数导数可微解析的例题
+title: 复变函数：导数可微解析的例题
 published: 2025-09-08
-description: ''
+description: '可导、可微与解析的例题'
 image: ''
-tags: [复变函数，例题]
+tags: [复变函数]
 category: '复变函数'
 draft: false 
 lang: ''

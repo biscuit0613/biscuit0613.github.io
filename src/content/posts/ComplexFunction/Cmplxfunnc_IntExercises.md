@@ -1,10 +1,10 @@
 ---
-title: 复变函数积分练习题
+title: 复变函数：积分练习题
 published: 2025-09-15
 description: ''
 image: ''
-tags: []
-category: ''
+tags: [复变函数, 积分练习题]
+category: '复变函数'
 draft: false 
 lang: ''
 ---

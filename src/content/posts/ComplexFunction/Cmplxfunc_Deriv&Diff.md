@@ -1,9 +1,9 @@
 ---
 title: 复变函数：导数（微分）与解析
 published: 2025-08-19
-description: 复变函数
+description: 复变函数可导，可微与解析，柯西黎曼条件
 tags: [复变分析]
-category: 复变函数
+category: '复变函数'
 author: biscuit
 draft: false
 ---

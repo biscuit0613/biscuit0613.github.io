@@ -1,9 +1,9 @@
 ---
 title: 概率论：一维随机变量及其分布
 published: 2025-08-20
-description: 分布函数，概率密度，离散型随机变量，连续型随机变量,随机变量函数。
-tags: [概率论，随机变量]
-category: 概率论
+description: '分布函数，概率密度，离散型随机变量，连续型随机变量,随机变量函数。'
+tags: [概率论,随机变量]
+category: '概率论'
 author: biscuit
 draft: false
 ---

@@ -1,7 +1,7 @@
 ---
 title: 概率论第一章习题
 published: 2025-09-18
-description: ''
+description: '随机事件，样本空间，事件的运算'
 image: ''
 tags: [概率论]
 category: '概率论'

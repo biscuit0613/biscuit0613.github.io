@@ -3,7 +3,7 @@ title: 概型例题
 published: 2025-09-04
 description: '古典概型的课堂例题'
 image: ''
-tags: [例题，概率论]
+tags: [例题, 概率论]
 category: '概率论'
 draft: false 
 lang: ''

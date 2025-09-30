@@ -1,10 +1,10 @@
 ---
-title: UbuntuCondaRos
+title: Ubuntu_conda_RosHumble_install
 published: 2025-09-09
-description: ''
+description: '使用Miniconda安装ROS2 Humble的步骤'
 image: ''
-tags: []
-category: ''
+tags: [ROS环境搭建,RM]
+category: 'RM'
 draft: false 
 lang: ''
 ---

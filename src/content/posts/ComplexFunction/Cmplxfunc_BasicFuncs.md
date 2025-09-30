@@ -1,9 +1,9 @@
 ---
-title: 复变初等函数
+title: 复变函数：初等函数
 published: 2025-08-19
-description: 初等函数：幂指对三角
+description: '初等函数：幂指对三角以及他们的简单性质'
 tags: [复变函数]
-category: 复变函数
+category: '复变函数'
 author: biscuit
 draft: false
 ---

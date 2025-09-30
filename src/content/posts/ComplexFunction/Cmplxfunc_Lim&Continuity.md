@@ -3,7 +3,7 @@ title: 复变函数：极限与连续
 published: 2025-08-19
 description: 复变函数的极限与连续,判定方法，相关定理
 tags: [复变分析]
-category: 复变函数
+category: '复变函数'
 author: biscuit
 draft: false
 ---

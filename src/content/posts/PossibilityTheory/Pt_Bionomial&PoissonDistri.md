@@ -1,9 +1,9 @@
 ---
 title: 概率论：二项分布与泊松分布
 published: 2025-08-20
-description: 二项分布与泊松分布
-tags: [概率论，二项分布]
-category: 概率论
+description: '二项分布与泊松分布'
+tags: [概率论,二项分布]
+category: '概率论'
 author: biscuit
 draft: false
 ---

@@ -1,9 +1,9 @@
 ---
-title: 解析函数的高阶导数
+title: 解析函数：高阶导数
 published: 2025-08-25
 description: 解析函数的高阶导数
 tags: [复变函数]
-category: 复变函数
+category: '复变函数'
 author: biscuit
 draft: false
 ---

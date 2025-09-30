@@ -1,9 +1,9 @@
 ---
-title: 复变级数练习题
+title: 复变函数：级数练习题
 published: 2025-09-22
 description: ''
 image: ''
-tags: [复变函数，复级数]
+tags: [复变函数, 复级数]
 category: '复变函数'
 draft: false 
 lang: ''

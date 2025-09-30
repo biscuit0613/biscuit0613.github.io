@@ -1,9 +1,9 @@
 ---
 title: 卡尔曼滤波器
 published: 2025-08-26
-description: 卡尔曼滤波器
-tags: [卡尔曼滤波器]
-category: RM
+description: 卡尔曼滤波器的详细数学原理
+tags: [卡尔曼滤波器,RM]
+category: 'RM'
 author: biscuit
 draft: false
 ---

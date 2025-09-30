@@ -1,9 +1,9 @@
 ---
 title: 二维随机变量函数的分布
 published: 2025-08-17
-description: 二维随机变量函数的分布
+description: '二维随机变量函数的分布'
 tags: [随机变量函数]
-category: 概率论
+category: '概率论'
 author: biscuit
 draft: false
 ---
