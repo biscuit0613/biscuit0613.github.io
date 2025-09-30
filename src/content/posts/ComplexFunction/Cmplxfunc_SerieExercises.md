@@ -9,7 +9,7 @@ draft: false
 lang: ''
 ---
 
-## 敛散性判别这一块：
+## 敛散性判别这一块
 
 eg1:$\sum_{n=1}^\infin \frac{1}{n}(1+\frac{i}{n}$(发)
 
@@ -26,8 +26,6 @@ $$
 =\lim_{n\to\infin}\frac{8}{n+1}=0
 $$
 :::
-
-
 
 ## 求收敛半径
 
@@ -86,10 +84,26 @@ $$
 $$
 :::
 
-
 (4):求$\sum_{n=0}^\infty (n+1)z^n$的和函数
+
 :::tip[solution]
 $$
 S_n(z)=\sum_{n=0}^\infty (n+1)z^n=\sum_{n=0}^\infty \frac{d}{dz}z^{n+1}=\frac{d}{dz}\sum_{n=0}^\infty z^{n+1}=\frac{d}{dz}\frac{z}{1-z}=\frac{1}{(1-z)^2}
 $$
 :::
+
+## 泰勒级数的应用
+
+eg1: 设函数 $f(z)$ 在 $|z|<1$ 范围内解析，且 $g(z)=f(z^2)$ ,求 $g^{(2019)}(0)$
+
+:::tip[solution]
+$f(z)$ 解析，说明可以在 $z=0$ 处展开成泰勒级数：
+$$
+f(z)=\sum_{n=0}^\infty a_nz^n\\
+g(z)=f(z^2)=\sum_{n=0}^\infty a_nz^{2n}\\
+\text{可以看出，g(z)的泰勒展开式中只有偶数次幂项，说明奇数次幂的泰勒展开项系数是0}\\[5pt]
+\therefore g^{(2019)}(0)=0
+$$
+:::
+
+eg2:
