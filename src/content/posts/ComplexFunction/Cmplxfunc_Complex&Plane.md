@@ -8,8 +8,6 @@ author: biscuit
 draft: false
 ---
 
-# 基础知识
-
 ## 复数的表示
 
 1. 用实部和虚部：  
