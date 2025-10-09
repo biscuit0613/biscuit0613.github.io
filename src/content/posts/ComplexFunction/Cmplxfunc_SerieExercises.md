@@ -14,26 +14,45 @@ lang: ''
 eg1:$\sum_{n=1}^\infin \frac{1}{n}(1+\frac{i}{n}$(发)
 
 :::tip[solution]
-实部级数是$\frac{1}{n}$发散，原级数发散
+实部级数是 $\frac{1}{n}$ 发散，原级数发散
 :::
 
-eg2:$\sum_{n=1}^\infin\frac{(8i)^n}{n!}$(绝对收敛)
+eg2:$\sum_{n=1}^\infin\frac{(8i)^n}{n!}$ (绝对收敛)
 
 :::tip[solution]
-考察级数$\sum_{n=1}^\infin\frac{(8)^n}{n!}$,用比值判别法
+考察级数 $\sum_{n=1}^\infin\frac{(8)^n}{n!}$,用比值判别法
 $$
-\lim_{n\to\infin}\frac{\frac{(8)^(n+1)}{(n+1)!}}{\frac{(8)^n}{n!}}\\
+\lim_{n\to\infin}\frac{\frac{8^{n+1}}{(n+1)!}}{\frac{(8)^n}{n!}}\\[5pt]
 =\lim_{n\to\infin}\frac{8}{n+1}=0
 $$
 :::
 
-## 求收敛半径
+eg3：证明 $\sum_{n=0}^\infty\frac{z^n}{n^2}$ 在收敛圆内一致收敛
+
+:::note[一致收敛的判定]
+
+1. Weierstrass判别法
+2. 柯西一致收敛准则
+
+:::
+
+:::tip[solution]
+
+原级数的收敛半径 $r=1$,考察任意有界闭区域 $|z|\leq r_0<1$,则有
+$$
+| \frac{z^n}{n^2} | \leq \frac{r_0^n}{n^2}
+$$
+
+用Weierstrass判别法，考察级数 $\sum_{n=0}^\infty\frac{r_0^n}{n^2}$,它是一个收敛的正项级数，因此原级数在收敛圆内一致收敛
+:::
+
+## 收敛半径
 
 eg1:$\sum_{n=1}^\infin \frac{z^n}{n^3}$
 
 :::tip[solution]
 $$
-\rho=\lim_{n\to\infin}\frac{\frac{z^(n+1)}{(n+1)^3}}{\frac{z^n}{n^3}}=|z|\\
+\rho=\lim_{n\to\infin}\frac{\frac{z^{n+1}}{(n+1)^3}}{\frac{z^n}{n^3}}=|z|\\[5pt]
 |z|<1\iff r=1
 $$
 :::
@@ -42,7 +61,7 @@ eg2:$\sum_{n=1}^\infin n!\cdot z^n$
 
 :::tip[solution]
 $$
-\rho=\lim_{n\to\infin}\frac{(n+1)!z^(n+1)}{n!z^n}=\lim_{n\to\infin}(n+1)|z|<1\\
+\rho=\lim_{n\to\infin}\frac{(n+1)!\;z^{n+1}}{n!\;z^n}=\lim_{n\to\infin}(n+1)|z|<1\\
 r=0
 $$
 :::
@@ -72,18 +91,7 @@ r=1\\
 $$
 :::
 
-(2):$\sum_{n=1}^\infin(\frac{z}{\ln in})^n$
-根值判别法
-
-(3):把$\frac{1}{z-b}$写成$\sum_{n=0}^\infty c_n(z-a)^n$的形式
-:::tip[solution]
-
-$$
-\frac{1}{z-b}=\frac{1}{(z-a)+(a-b)}=\frac{1}{a-b}\cdot\frac{1}{1+\frac{z-a}{a-b}}\\
-=\frac{1}{a-b}\sum_{n= 0}^\infty (-1)^n(\frac{z-a}{a-b})^n\\
-=\sum_{n=0}^\infty \frac{(-1)^n}{(a-b)^{n+1}}(z-a)^n
-$$
-:::
+(2): $\sum_{n=1}^\infty(\frac{z}{\ln in})^n$ 根值判别法
 
 ## 求和函数，求幂级数展开
 
@@ -148,7 +156,65 @@ $$
 | ...   | ... | ... | ... | ... | ... |
 
 其中，$c_n$ 就是表格中第 $n+1$ 条对角线上的元素之和（n从0开始）。
+
+比如说 $c_0 = a_0b_0$，$c_1 = a_0b_1 + a_1b_0$，$c_2 = a_0b_2 + a_1b_1 + a_2b_0$，以此类推。
+
+注意要统一起始下标喵
+
 :::
+
+eg4：把 $\frac{1}{z-b}$ 写成 $\sum_{n=0}^\infty c_n(z-a)^n$ 的形式
+
+:::tip[solution]
+
+$$
+\frac{1}{z-b}=\frac{1}{(z-a)+(a-b)}=\frac{1}{a-b}\cdot\frac{1}{1+\frac{z-a}{a-b}}\\
+=\frac{1}{a-b}\sum_{n= 0}^\infty (-1)^n(\frac{z-a}{a-b})^n\\
+=\sum_{n=0}^\infty \frac{(-1)^n}{(a-b)^{n+1}}(z-a)^n
+$$
+:::
+
+eg5：求 $\frac{1}{z^2}$ 在 $z_0=-1$ 处的泰勒展开,并求出其收敛半径
+
+:::tip[solution]
+$$
+\frac{1}{z^2}\text{奇点是}z=0\\
+\text{距离}z_0=-1\text{最近的奇点是}z=0\\
+\therefore r=1\\
+\frac{1}{z^2}=\frac{1}{1-(z+1)}\cdot\frac{1}{1-(z+1)}\\
+=\sum_{n=0}^\infty (z+1)^n\cdot\sum_{n=0}^\infty (z+1)^n\\
+=\sum_{n=0}^\infty (n+1)(z+1)^n\\
+|z+1|<1\\
+$$
+:::
+
+eg6:求 $\frac{1}{4-3z}$ 在 $z_0=1+i$ 处的泰勒展开,并求出其收敛半径
+
+:::tip[solution]
+
+$$
+\frac{1}{4-3z}=\frac{1}{4-3(1+i)-3(z-(1+i))}=\frac{1}{1-3i-3(z-(1+i))}\\
+=\frac{1}{1-3i}\cdot\frac{1}{1-\frac{3}{1-3i}(z-(1+i))}\\
+=\frac{1}{1-3i}\sum_{n=0}^\infty(\frac{3}{1-3i})^n(z-(1+i))^n\\
+\text{奇点是}z=\frac{4}{3}\\
+\text{距离}z_0=1+i\text{最近的奇点是}z=\frac{4}{3}\\
+\therefore r=|\frac{4}{3}-(1+i)|=\frac{\sqrt{10}}{3}
+$$
+
+:::
+
+eg7:求 $\frac{e^{z^2}}{\cos z}$ 在 $z_0=0$ 处的泰勒展开,并求出其收敛半径
+
+:::tip[solution]
+$$
+\text{奇点是}z=\frac{\pi}{2}+k\pi,k\in Z\\
+\text{距离}z_0=0\text{最近的奇点是}z=\pm\frac{\pi}{2}\\
+\therefore r=\frac{\pi}{2}\\
+e^{z^2}=\sum_{n=0}^\infty \frac{z^{2n}}{n!}\\
+\cos z=\sum_{n=0}^\infty (-1)^n\frac{z^{2n}}{(2n)!}\\
+\text{根据幂级数的除法公式}\\
+
+$$
 
 ## 泰勒级数的应用
 
