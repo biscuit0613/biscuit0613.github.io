@@ -288,6 +288,8 @@ cv::morphologyEx(red_mask, red_mask, cv::MORPH_CLOSE, kernel);
 
 ## 轮廓的提取与筛选
 
+### 轮廓的提取 
+
 轮廓是图像中连续的边界线，可以用来表示物体的形状。opencv中常用的轮廓提取函数是`findContours()`，该函数可以从二值图像中提取轮廓。
 
 ```cpp
@@ -301,6 +303,8 @@ cv::findContours(red_mask, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APP
 - `hierarchy`：输出的轮廓层级关系，是一个`vector<Vec4i>`类型的变量
 - `cv::RETR_EXTERNAL`：轮廓检索模式，这里表示只检测外部轮廓
 - `cv::CHAIN_APPROX_SIMPLE`：轮廓近似方法，这里表示只保存轮廓的端点。
+
+### 轮廓的筛选
 
 提取到轮廓后，可以根据轮廓的面积、周长、轮廓点集的长度等属性进行筛选，去除一些不符合要求的轮廓。常用的方法是`contourArea()`和`arcLength()`函数。
 
@@ -334,3 +338,23 @@ cv::minEnclosingCircle(contours[i], center, radius);
 - `contours[i]`：输入的轮廓点集
 - `center`：输出的圆心坐标，是一个`Point2f`类型的变量
 - `radius`：输出的圆的半径，是一个`float`类型的变量
+
+### 轮廓的分类
+
+在opencv中，`partition()`函数可以根据自定义的相似性标准对轮廓进行分类。该函数的参数包括：
+
+```cpp
+int cv::partition(const std::vector<_Tp>& vec, std::vector<int>& labels, _EqPredicate predicate);
+```
+
+- `vec`：是一个`vector<vector<Point>>`类型的变量，表示多个轮廓的集合
+- `labels`：是一个`vector<int>`类型的变量，表示每个轮廓所属的类别
+- `predicate`：是一个函数指针，相当于等价关系语句。定义了两个轮廓是否相似的标准(显然，这个关系必须是自反的，对称的和传递的)
+
+在苹果的例子中，可以根据轮廓的面积和位置来定义相似性标准，进而对轮廓进行分类。
+
+```cpp
+auto predicate = [](const std::vector<cv::Point>& a, const std::vector<cv::Point>& b) {
+    double areaA = cv::contourArea(a);
+    double areaB = cv::contourArea(b);
+
