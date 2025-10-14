@@ -113,8 +113,6 @@ $$
 
 e.g.2:f(z)=Re z处处不可导
 
-:::tip[solution]
-
 $$
 \begin{align*}
 f^\prime(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
@@ -126,11 +124,7 @@ f^\prime(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
 \end{align*}
 $$
 
-:::
-
 e.g.3:讨论$f(z)=|z|^2$的可导性
-
-:::tip[solution]
 
 $$
 \begin{align*}
@@ -145,7 +139,6 @@ $$
   \end{cases}
 \end{align*}
 $$
-:::
 
 + 哪怕实部虚部函数都是可微，组成的复变函数也可能处处不可微
 

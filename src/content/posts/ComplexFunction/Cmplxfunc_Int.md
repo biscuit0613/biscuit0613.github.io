@@ -158,7 +158,7 @@ $$
 这一坨式子很熟悉，是**柯西-黎曼条件**，即 $f(z)$ 在某点处可微的必要条件之一。只要加上 $u$，$v$ 一阶偏导数连续（即 $u$，$v$ 在某点可微）这个补充条件，就成了充要条件。
 
 回顾**格林公式**：
-$\oint Pdx+Qdy=\iint_D(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y})dxdy$当这玩意等于0时，显然满足#条件，此时$\oint_Cf(z)dz=\oint_C{udx-vdy}+i\oint_C{vdx+udy}=0$。
+$\oint Pdx+Qdy=\iint_D(\dfrac{\partial Q}{\partial x}-\dfrac{\partial P}{\partial y})dxdy$ 当这玩意等于0时，显然满足#条件，此时 $\oint_Cf(z)dz=\oint_C{udx-vdy}+i\oint_C{vdx+udy}=0$。
 
 但是这样还不够，课本上给的前提是 $f$ 在 $D$ 上解析，不是可微，为什么会给出一个更严格的条件呢？这是因为 $u$，$v$ 在 $D$ 内处处可微且处处满足柯西黎曼条件，这恰好是 $f$ 在区域 $D$ 解析的充要条件
 
@@ -215,7 +215,7 @@ $$
 $$
 :::
 
-推广一下，令 $F(z)=\frac{f(z)}{z-z_0}$ 在简单闭曲线 $C$ 围成的区域内解析（圆周 $C$ 换成任意闭曲线，并且奇点由 $\frac{1}{z-z_0}$提供, $z_0\in C$），则积分
+推广一下，令 $F(z)=\dfrac{f(z)}{z-z_0}$ 在简单闭曲线 $C$ 围成的区域内解析（圆周 $C$ 换成任意闭曲线，并且奇点由 $\dfrac{1}{z-z_0}$提供, $z_0\in C$），则积分
 $$
 \begin{align*}
    \oint_C \frac{f(z)}{z-z_0}dz&=\int_0^{2\pi}\frac{f(z_0+re^{i\theta})}{re^{i\theta}}dre^{i\theta}\\
