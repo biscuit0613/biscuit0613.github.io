@@ -127,3 +127,161 @@ HTML DOM：网页的结构以树的形式表示，HTML元素是节点，嵌套�
     h=\lceil log_2(n+1)\rceil=\lfloor log_2n \rfloor +1
     $$
     :::
+
+## 二叉树的顺序存储
+
+把一个n个节点的二叉树编号，从顶向下，同一层从左至右，从1开始编号。将二叉树的节点依次存储在数组中
+
+## 二叉树的链式存储
+
+每个节点由一个数据域和两个指针域组成，分别指向左子节点和右子节点。
+
+```cpp
+typedef struct TreeNode {
+    int data;
+    struct TreeNode* left;
+    struct TreeNode* right;
+    TreeNode(int val) : data(val), left(nullptr), right(nullptr) {}
+} ;
+```
+
+### 二叉链表的建立
+
+1. 先序遍历建立二叉树  
+    按照先序遍历的顺序输入节点值，遇到空节点输入特殊标记（如#），递归建立二叉树。
+
+    ```cpp
+    #include <iostream>
+    #include <sstream>
+    using namespace std;
+
+    TreeNode* createTree() {
+        string val;
+        if (!(cin >> val)) return nullptr;
+        if (val == "#") return nullptr;
+        TreeNode* node = new TreeNode(stoi(val));
+        node->left = createTree();
+        node->right = createTree();
+        return node;
+    }
+
+2. 索引式构建二叉链表
+
+    先创建所有节点对象，然后根据输入的左右孩子编号建立指针连接。
+
+    ```cpp
+        #include <iostream>
+    #include <vector>
+    #include <string>
+    using namespace std;
+    struct TreeNode {
+        char data;
+        TreeNode* left;
+        TreeNode* right;
+        TreeNode(char val) : data(val), left(nullptr), right(nullptr) {}
+    };
+    // 每个节点的输入信息
+    struct NodeInfo {
+        char data;
+        int leftIndex;
+        int rightIndex;
+    };
+    TreeNode* buildTree(const vector<NodeInfo>& input) {
+        int n = input.size();
+        vector<TreeNode*> nodes(n);
+        // 第一步：创建所有节点对象
+        for (int i = 0; i < n; ++i) {
+            nodes[i] = new TreeNode(input[i].data);
+        }
+        // 第二步：建立左右孩子指针连接
+        for (int i = 0; i < n; ++i) {
+            int l = input[i].leftIndex;
+            int r = input[i].rightIndex;
+            if (l != 0) nodes[i]->left = nodes[l];
+            if (r != 0) nodes[i]->right = nodes[r];
+        }
+
+        return nodes[0]; // 返回根节点
+    }
+    // 前序遍历用于验证构建结果
+    void preorder(TreeNode* root) {
+        if (!root) return;
+        cout << root->data << " ";
+        preorder(root->left);
+        preorder(root->right);
+    }
+    int main() {
+        // 示例输入：构建如下结构
+        //        A
+        //       / \
+        //      B   C
+        //     / \ / \
+        //    D  E F  G
+        vector<NodeInfo> input = {
+            {'A', 1, 2},
+            {'B', 3, 4},
+            {'C', 5, 6},
+            {'D', 0, 0},
+            {'E', 0, 0},
+            {'F', 0, 0},
+            {'G', 0, 0}
+        };
+        TreeNode* root = buildTree(input);
+        cout << "前序遍历结果: ";
+        preorder(root);
+        cout << endl;
+        return 0;
+    }
+
+    ```
+
+### 二叉树的遍历
+
+遍历是指按照某种顺序访问二叉树的所有节点。常见的遍历方式有三种：先序遍历、中序遍历和后序遍历。
+
+1. **先序遍历**（Preorder Traversal）：先访问根节点，再遍历左子树，最后遍历右子树。其递归实现如下：
+
+    ```cpp
+    void preorder(TreeNode* root) {
+        if (!root) return;
+        cout << root->data << " ";
+        preorder(root->left);
+        preorder(root->right);
+    }
+    ```
+
+2. **中序遍历**（Inorder Traversal）：先遍历左子树，再访问根节点，最后遍历右子树。其递归实现如下：
+
+    ```cpp
+    void inorder(TreeNode* root) {
+        if (!root) return;
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+    ```
+
+3. **后序遍历**（Postorder Traversal）：先遍历左子树，再遍历右子树，最后访问根节点。其递归实现如下：
+
+    ```cpp
+    void postorder(TreeNode* root) {
+        if (!root) return;
+        postorder(root->left);
+        postorder(root->right);
+        cout << root->data << " ";
+    }
+    ```
+
+例如，给定如下二叉树：
+
+```plaintext
+        A
+       / \
+      B   C
+     / \ / 
+    D  E F  
+```
+
+- 先序遍历结果：A B D E C F
+- 中序遍历结果：D B E A F C
+- 后序遍历结果：D E B F C A
