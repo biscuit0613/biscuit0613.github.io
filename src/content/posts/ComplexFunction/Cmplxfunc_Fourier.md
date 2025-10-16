@@ -30,7 +30,7 @@ $$
 
 ## 傅里叶变换
 
-所谓傅里叶变换，形式化定义如下
+所谓傅里叶变换，简单理解为变自变量，把t(time)变成频率 $\omega$(frequency)形式化定义如下
 
 $$
 \mathcal{F}[f(t)]=F(\omega)=\int_{-\infty}^{+\infty}f(t)e^{-i\omega t}dt
@@ -56,37 +56,42 @@ $$
 \end{cases}
 $$
 
-**定义** 反常积分积分值为1
+**定义** 单位脉冲函数的反常积分积分值为1
 
 $$
-\int_{-\infty}^\{+\infty}\mathcal{\delta}_\lambda(t)dt=1
+\int_{-\infty}^{+\infty} \mathcal{\delta}_{\lambda}(t)dt=1
 $$
 
-令 $\lambda\to 0$，那么 $\mathcal{\delta}_\lambda(t)\to\mathcal{\delta}(t)$
+令 $\lambda\to 0$，那么 $\mathcal{\delta}_{\lambda}(t)\to\mathcal{\delta}(t)$
 
 $$
-\mathcal{\delta}_\lambda(t)=\begin{cases}
+\begin{aligned}
+\mathcal{\delta}_\lambda(t)&=\begin{cases}
     0&t\neq 0\\
     +\infty&t=0\\
 \end{cases}\\
-\int_{-\infty}^\{+\infty}\mathcal{\delta}(t)=1
+\int_{-\infty}^{+\infty}\mathcal{\delta}(t)dt&=1
+\end{aligned}
 $$
 
 同理
 
 $$
-\mathcal{\delta}_\lambda(t-t_0)=\begin{cases}
+\begin{aligned}
+    \mathcal{\delta}_\lambda(t-t_0)&=\begin{cases}
     0&t\neq t_0\\
     +\infty&t=t_0\\
 \end{cases}\\
-\int_{-\infty}^\{+\infty}\mathcal{\delta}(t-t_0)=1
+\int_{-\infty}^{+\infty}\mathcal{\delta}(t-t_0)dt&=1
+\end{aligned}
+
 $$
 
 ## $\delta$ 函数的性质
 
 1. $\delta(t)$ 是偶函数
 
-2. 筛选性质：（f(t) 是连续函数）
+2. 筛选性质：（前提：$f(t)$ 是连续函数）
     $$
         \int_{-\infty}^{\infty}\delta(t-t_0)f(t)dt=f(t_0)
     $$
@@ -111,4 +116,11 @@ $$
 5. 重要等式
     $$
     g(t)\delta(t-t_0)=g(t_0)\delta(t-t_0)
+    $$
+6. $\delta$ 函数的傅里叶变换
+    $$
+    \begin{align*}
+    \mathcal{F}[\delta(t)]&=\int_{-\infty}^{+\infty}\delta(t)e^{-i\omega t}dt=1\\
+    \mathcal{F}[\delta(t-t_0)]&=\int_{-\infty}^{+\infty}\delta(t-t_0)e^{-i\omega t}dt=e^{-i\omega t_0}
+    \end{align*}
     $$
