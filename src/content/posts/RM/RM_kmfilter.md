@@ -1,5 +1,5 @@
 ---
-title: 卡尔曼滤波器
+title: RM_卡尔曼滤波器
 published: 2025-08-26
 description: 卡尔曼滤波器的详细数学原理
 tags: [卡尔曼滤波器,RM]

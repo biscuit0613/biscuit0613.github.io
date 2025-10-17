@@ -1,7 +1,7 @@
 ---
-title: rm竞培营作业
+title: RM_OPENCV基础
 published: 2025-08-30
-description: 'rm竞培营的week4作业：opencv图像处理'
+description: '基于rm竞培营的week4作业，介绍opencv的基本使用'
 image: ''
 tags: [opencv,RM]
 category: 'RM'
@@ -74,23 +74,23 @@ img.ptr<uchar>(i); //访问图像的某一行，返回指向该行的指针
 //这个uchar是unsigned char的缩写
 ```
 
-在使用ptr函数时，需要注意以下几点：
+在opencv中，图像的像素值是按**行优先存储**的，即先存储第一行的所有像素的像素值，再存储第二行的所有像素值，以此类推。
 
-1. ptr函数返回的是指向指定行的指针，指针类型需要与图像的数据类型一致。
+所以，访问图像的**像素值**时，可以通过**行列索引**来访问（两次遍历），也可以通过指针来访问。
 
-2. 访问像素值时，需要根据图像的通道数来计算像素值在指针中的位置。指针指向的行是一个**一维数组**，数组的长度是图像的**列数 $\times$ 通道数**。
+在使用`ptr`函数时，需要注意以下几点：
+
+1. `ptr`函数返回的是指向**指定行的指针**，也就是一个**一维数组**，指针类型与图像（如CV_8UC3）的数据类型一致。
+
+2. 访问像素值时，需要根据图像的**通道数**来计算像素值在指针中的位置。指针指向的行是一个**一维数组**，数组的长度是图像的**列数 $\times$ 通道数**。
 
     - 例如，对于一张3通道的图像，第j列的第channel通道的像素值在指针中的位置是j*3+channel。
 
-3. 使用ptr函数访问像素值时，需要确保行索引在图像的范围内，否则会导致访问越界。
+3. 使用`ptr`函数访问像素值时要确保行索引在图像的范围内，否则会导致访问越界。
 
 :::warning
 对于每一个像素的像素值，opencv的RGB颜色空间是按BGR顺序存储的，即第一个通道是蓝色，第二个通道是绿色，第三个通道是红色。
 :::
-
-在opencv中，图像的像素值是按**行优先存储**的，即先存储第一行的所有像素的像素值，再存储第二行的所有像素值，以此类推。
-
-所以，访问图像的**像素值**时，可以通过行列索引来访问（两次遍历），也可以通过指针来随机访问访问。
 
 ```cpp
 int channel = 0; 
@@ -98,7 +98,6 @@ cv::Mat img = cv::imread("apple.jpg");
 img.at<cv::Vec3b>(i,j)[channel]; //访问第i行第j列第channel通道的像素值,0表示蓝色通道，1表示绿色通道，2表示红色通道
 
 uchar* p = img.ptr<uchar>(i); //获取第i行的指针
-
 p[j*3+channel]; //访问第i行第j列第channel通道的像素值
 
 for(int r=0;r<img.rows;r++){
@@ -113,7 +112,7 @@ for(int r=0;r<img.rows;r++){
 
 ### Vec类
 
-Vec类是一个模板类，可以表示任意维度的向量，常用于表示图像的像素值。Vec类的每个元素都是一个指定类型的数值，表示一个通道的值。
+Vec类可以表示任意维度的向量，常用于表示图像的像素值，此时Vec类的每个元素都表示一个通道的值。
 
 ```cpp
 template<typename _Tp, int cn> class Vec;
@@ -132,15 +131,13 @@ uchar red = pixel[2]; //红色通道
 
 ### Scalar类
 
-Scalar类是一个4维向量类，用于固定长度的数值，常用于表示**颜色、像素值**等。Scalar类的每个元素都是一个double类型的数值，表示一个**通道的值**。
-
-Scalar构造函数：
+Scalar类是一个4维向量类，用于固定长度的数值，常用于表示**颜色、像素值**等。Scalar类的每个元素都是一个double类型的数值，表示**一个通道的值**。
 
 ```cpp
 cv::Scalar(double v0, double v1 = 0, double v2 = 0, double v3 = 0);
 ```
 
-实例化:对于不同的颜色空间，传入的参数意义不同；如果传入的参数不满4个，最后的参数会被自动补0。
+对于不同的颜色空间，传入构造函数的参数意义不同；如果传入的参数不满4个，最后的参数会被自动补0。
 
 BGR颜色空间：v0：蓝色，v1：绿色，v2：红色
 
@@ -193,7 +190,7 @@ cv::Scalar lowerRed2(160, 100, 100);
 cv::Scalar upperRed2(180, 255, 255);
 ```
 
-### 阈值分割
+### 阈值分割：掩膜
 
 核心概念：**掩膜**
 
@@ -211,7 +208,7 @@ opencv中常用的阈值分割函数是`inRange()`，该函数可以根据指定
 
 ```cpp
 cv::Mat mask;
-void inRange(输入图像, 颜色下界, 颜色上界,mask);
+void inRange(输入图像, 颜色下界, 颜色上界, mask);
 //这个mask就是掩膜
 ```
 
@@ -223,13 +220,27 @@ cv::inRange(img_hsv, lowerRed2, upperRed2, mask2); //生成掩膜2
 
 因为红色在HSV空间中有两个范围，所以需要生成两个掩膜，然后将它们合并，常见的方法是使用`bitwise_or()`函数,参数列表中最后一个参数表示输出的合并结果：
 
-
 ```cpp
 cv::Mat red_mask;
 cv::bitwise_or(mask1, mask2, red_mask); //合并掩膜
 ```
 
 现在，掩膜`red_mask`中白色区域表示图像中红色的部分，可以用来提取苹果。
+
+### 二值化的方法
+
+二值化是将图像转换为只有两种像素值（0和255）的过程，常用于图像分割。常用的方法有：
+
+- 基于阈值的二值化：如`inRange()`函数，根据指定的范围将像素值分为两类。
+- 基于自适应阈值的二值化：如`adaptiveThreshold()`函数，根据局部区域的像素值动态计算阈值。
+- 基于Otsu算法的二值化：如`threshold()`函数，自动计算全局阈值。
+
+```cpp
+cv::Mat binary;
+cv::threshold(输入图像, binary, 阈值, 最大值, cv::THRESH_BINARY);
+```
+
+`type`参数决定了二值化方式，如`cv::THRESH_BINARY`表示大于阈值的像素值设为最大值，小于等于阈值的像素值设为0。`cv::THRESH_BINARY_INV`表示相反的情况。
 
 ## 形态学操作：腐蚀与膨胀
 
@@ -288,9 +299,9 @@ cv::morphologyEx(red_mask, red_mask, cv::MORPH_CLOSE, kernel);
 
 ## 轮廓的提取与筛选
 
-### 轮廓的提取 
+### 轮廓的提取
 
-轮廓是图像中连续的边界线，可以用来表示物体的形状。opencv中常用的轮廓提取函数是`findContours()`，该函数可以从二值图像中提取轮廓。
+轮廓是图像中连续的边界线，可以用来表示物体的形状。opencv中常用的轮廓提取函数是`findContours()`，该函数可以从**二值图像**中提取轮廓。
 
 ```cpp
 cv::findContours(red_mask, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
@@ -298,8 +309,8 @@ cv::findContours(red_mask, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APP
 
 - `red_mask`：输入的二值图像
 - `contours`：输出的**轮廓集合**，是一个`vector<vector<Point>>`类型的变量。
-  - `vector<Point>`表示一个轮廓，`Point`表示一个点的坐标，`vector<vector<Point>>`表示多个轮廓的集合
-  - `contours.size()`表示**轮廓的数量**，`contours[i]`表示第i个轮廓，`contours[i].size()`表示第i个**轮廓的点数**，`contours[i][j]`表示第i个轮廓的第j个点
+  - `vector<Point>`表示一个轮廓，`Point`表示一个点的坐标，`vector<Point>`构成一个轮廓，`vector<vector<Point>>`表示多个轮廓的集合
+  - `contours.size()`表示**轮廓的数量**，`contours[i]`表示第i个轮廓，`contours[i].size()`表示**第i个轮廓的点数**，`contours[i][j]`表示第i个轮廓的第j个点
 - `hierarchy`：输出的轮廓层级关系，是一个`vector<Vec4i>`类型的变量
 - `cv::RETR_EXTERNAL`：轮廓检索模式，这里表示只检测外部轮廓
 - `cv::CHAIN_APPROX_SIMPLE`：轮廓近似方法，这里表示只保存轮廓的端点。
