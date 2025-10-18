@@ -1,7 +1,7 @@
 ---
-title: yolo训练
+title: RM_yolo训练
 published: 2025-09-26
-description: 'week05:yolo训练相关内容'
+description: 'week05:yolo训练相关,包括训练参数，结果分析等'
 image: ''
 tags: [yolo,RM]
 category: 'RM'

@@ -1,7 +1,7 @@
 ---
-title: ROS2学习笔记
+title: RM_ROS2入门
 published: 2025-09-10
-description: 'ROS2快速入门指南'
+description: 'ROS2操作，包括python和C++的节点编写'
 image: ''
 tags: [ROS2,RM]
 category: 'ROS2'
