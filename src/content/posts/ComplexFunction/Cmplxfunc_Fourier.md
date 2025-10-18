@@ -23,10 +23,12 @@ lang: ''
 那么傅里叶积分：
 
 $$
-\frac{1}{2\pi }\int_{-\infty}^{+\infty}\left[\int_{-\infty}^{+\infty}f(\tau)e^{-i\omega\tau}dt\right]e^{i\omega t}d\omega
+\frac{1}{2\pi }\int_{-\infty}^{+\infty}\left[\int_{-\infty}^{+\infty}f(\tau)e^{-i\omega\tau}dt\right]e^{i\omega t}d\omega=
+\begin{cases}
+    f(t)&& \text{t为连续点}\\
+    \frac{1}{2}[f(t+0)+f(t-0)]&& \text{t为第一类间断点}
+\end{cases}
 $$
-
-存在且收敛
 
 ## 傅里叶变换
 
@@ -113,7 +115,7 @@ $$
     $$
     \delta^{(n)}(-t)=(-1)^n\delta^{(n)}
     $$
-5. 重要等式
+5. 重要等式（由筛选性质得来）
     $$
     g(t)\delta(t-t_0)=g(t_0)\delta(t-t_0)
     $$

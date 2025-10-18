@@ -86,32 +86,28 @@ $$
 
 ---
 
-e.g. $f(z)=\overline{z}$ 在全部复平面都不可微：
-
-:::tip[solution]
+>e.g. $f(z)=\overline{z}$ 在全部复平面都不可微：
 
 $$
-\begin{align*}
-&\text{在0处，检查$f(z)$的可导性：}\\
- &\lim_{z\to 0}{\frac{f(z)-f(0)}{z}}=\lim_{z\to 0}{\frac{\
+\begin{alignedat}{2}
+&\quad\text{在0处，}\\
+ &\qquad\qquad\lim_{z\to 0}{\frac{f(z)-f(0)}{z}}&&=\lim_{z\to 0}{\frac{\
   \overline{z}}{z}}=\lim_{z\to 0}{\frac{x-iy}{x+iy}}\\
-  &\lim_{\begin{matrix}
+  &\qquad\qquad\qquad \lim_{\begin{matrix}
     x=0\\y\to 0
-  \end{matrix}}{\frac{-iy}{iy}}=-1\\
-  &\lim_{\begin{matrix}
+  \end{matrix}}{\frac{-iy}{iy}}&&=-1\\
+  &\qquad\qquad\qquad\quad\lim_{\begin{matrix}
     x\to 0\\y=0
-  \end{matrix}}{\frac{x}{x}}=1\\
-  &\text{沿不同路径得到的极限值}\text{不一样，极限不存在，不可微}\\
-  &\text{在z$\neq$0处，检查$f(z)$的可导性：}\\
-  &\lim_{\Delta z\to 0}{\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}}=\lim_{\Delta z\to 0}{\frac{\overline {z_0+\Delta z}-z_0}{\Delta z}}\\
-  &=\lim_{\Delta z\to 0}{\frac{\overline {\Delta z}}{\Delta z}}=\lim_{z\to 0}{\frac{\overline{z}}{z}}\\
-&\text{回到第一种情况，无极限}
-\end{align*}
+  \end{matrix}}{\frac{x}{x}}&&=1\\
+  \quad\quad&\text{沿不同路径得到的极限值}&&\text{不一样}\\
+  &\quad\text{在z$\neq$0处，}&&\\
+  &\lim_{\Delta z\to 0}{\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}}&&=\lim_{\Delta z\to 0}{\frac{\overline {z_0+\Delta z}-z_0}{\Delta z}}\\
+  &\qquad\qquad \qquad&&=\lim_{\Delta z\to 0}{\frac{\overline {\Delta z}}{\Delta z}}=\lim_{z\to 0}{\frac{\overline{z}}{z}}\\
+  \quad\quad&\text{回到第一种情况，无极限}&&
+\end{alignedat}
 $$
 
-:::
-
-e.g.2:f(z)=Re z处处不可导
+>e.g.2:f(z)=Re z处处不可导
 
 $$
 \begin{align*}
@@ -124,7 +120,7 @@ f^\prime(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
 \end{align*}
 $$
 
-e.g.3:讨论$f(z)=|z|^2$的可导性
+>e.g.3:讨论$f(z)=|z|^2$的可导性
 
 $$
 \begin{align*}
@@ -272,17 +268,17 @@ $$
 对于函数 $\Phi(x,y)$ ,若在区域D内有二阶连续偏导数，且满足**拉普拉斯方程**
 
 $$
-\frac{\partial^2 \Phi}{\partial x^2}+\frac{\partial^2 \Phi}{\partial y^2}=0\\
-\text{简记为拉普拉斯算子：}\\
-\Delta = \frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}\\
+\boxed{\frac{\partial^2 \Phi}{\partial x^2}+\frac{\partial^2 \Phi}{\partial y^2}=0}\\[10bp]
+\text{简记为拉普拉斯算子：}\\[5bp]
+\Delta = \frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}\\[5bp]
 \Delta \Phi=0
 $$
 
-则称函数 $\Phi(x,y)$ 为区域D内的调和函数。
+则称函数 $\Phi(x,y)$ 为区域D内的**调和函数**。
 
 ### 解析函数与调和函数的关系
 
-**从解析到调和**:任何在区域D 内解析的函数，其实部函数和虚部函数均为区域D 内的调和函数。
+**从解析到调和**:任何在区域D 内解析的函数，其实部和虚部均为区域D 内的调和函数。
 
 共轭调和函数：对于函数 $f(z)=u(x,y)+iv(x,y)$ ，如果 $f(z)$ 解析，则称其虚部函数v是实部函数u的**共轭调和函数**
 
@@ -290,7 +286,7 @@ $$
 
 **从调和到解析**:答案是肯定的。在单连通区域内，我们可以通过线积分的方式获得共轭调和函数。构造如下积分：
 $$
-v(x,y)=\int_{(x_0,y_0)}^{(x,y)}-\frac{\partial u}{\partial y}dx+\frac{\partial u}{\partial x}dy
+\boxed{v(x,y)=\int_{(x_0,y_0)}^{(x,y)}-\frac{\partial u}{\partial y}dx+\frac{\partial u}{\partial x}dy}
 $$
 
 这样构造与路径无关(证明很简单， $\frac{\partial^2 u}{\partial x^2},\frac{\partial^2 u}{\partial y^2}$ 这两个二阶偏导数因为复函数解析所以满足调和函数的条件 $\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}$ ，恰好又满足格林公式的条件 $\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=\frac{\partial^2 u}{\partial y^2}-(-\frac{\partial^2 u}{\partial x^2})＝0$。)，且u,v满足柯西黎曼方程。而且这两个函数一阶偏导显然连续，由复变函数解析的充要条件，这两个函数构成的复变函数一定是解析的。
@@ -304,4 +300,3 @@ $$
 指数、三角、对数函数：在定义域内解析。
 
 复合函数：如果每一层都解析，那整体也解析。
-
