@@ -367,10 +367,10 @@ $\int_{-\infty}^{\infty} \dfrac{dx}{x^2+1} = \pi$
 
    其中 $z_k$ 是 $\dfrac{P(z)}{Q(z)}e^{iaz}$ 在上半平面内的奇点。
 
-   + **case 2** ：$Q(x)=0$ 有实根
+   + **case 2** ：$Q(x)=0$ 有实根 $x_r$
 
       $$
-         \int_{-\infty}^{+\infty}\dfrac{P(x)}{Q(x)}e^{iax}dx,a>0=2\pi i\sum_{k=1}^{n}\operatorname{Res}\left(\frac{P(z)}{Q(z)}e^{iaz},z_k\right)+2\pi i\sum_{r=1}^p\operatorname{Res}\left(\frac{P(z)}{Q(z)}e^{iaz},x_r\right)
+         \int_{-\infty}^{+\infty}\dfrac{P(x)}{Q(x)}e^{iax}dx,a>0=2\pi i\sum_{k=1}^{n}\operatorname{Res}\left(\frac{P(z)}{Q(z)}e^{iaz},z_k\right)+\pi i\sum_{r=1}^p\operatorname{Res}\left(\frac{P(z)}{Q(z)}e^{iaz},x_r\right)
       $$
 
    + **case 3** ：只有 $\cos x$ 或 $\sin x$ ，则利用欧拉公式 $e^{iax}=\cos ax + i\sin ax$ 分别计算实部和虚部
