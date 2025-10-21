@@ -9,11 +9,11 @@ draft: false
 lang: ''
 ---
 
-:::tip
+:::tip  
 函数满足狄利克雷条件，则可以进行傅里叶展开
 :::
 
-## 傅里叶积分定理
+## 傅里叶积分定理(了解就行)
 
 若定义在 $(-\infty,+\infty)$ 函数满足
 
@@ -46,9 +46,9 @@ $$
 
 求傅里叶变换的过程就是纯纯的积分
 
-## 单位脉冲函数
+## $\delta$ 函数（单位脉冲函数）
 
-**单位脉冲函数**：形如
+**$\delta$ 函数**：形如
 
 $$
 \mathcal{\delta}_\lambda(t)=\begin{cases}
@@ -58,7 +58,7 @@ $$
 \end{cases}
 $$
 
-**定义** 单位脉冲函数的反常积分积分值为1
+**定义**： $\delta$ 函数的反常积分积分值为1
 
 $$
 \int_{-\infty}^{+\infty} \mathcal{\delta}_{\lambda}(t)dt=1
@@ -67,25 +67,25 @@ $$
 令 $\lambda\to 0$，那么 $\mathcal{\delta}_{\lambda}(t)\to\mathcal{\delta}(t)$
 
 $$
-\begin{aligned}
-\mathcal{\delta}_\lambda(t)&=\begin{cases}
+\boxed{\begin{aligned}
+\delta_\lambda(t)&=\begin{cases}
     0&t\neq 0\\
     +\infty&t=0\\
 \end{cases}\\
-\int_{-\infty}^{+\infty}\mathcal{\delta}(t)dt&=1
-\end{aligned}
+\int_{-\infty}^{+\infty}\delta(t)dt&=1
+\end{aligned}}
 $$
 
 同理
 
 $$
-\begin{aligned}
+\boxed{\begin{aligned}
     \mathcal{\delta}_\lambda(t-t_0)&=\begin{cases}
     0&t\neq t_0\\
     +\infty&t=t_0\\
 \end{cases}\\
-\int_{-\infty}^{+\infty}\mathcal{\delta}(t-t_0)dt&=1
-\end{aligned}
+\int_{-\infty}^{+\infty}\delta(t)dt&=1
+\end{aligned}}
 $$
 
 ## $\delta$ 函数的性质
@@ -94,36 +94,36 @@ $$
 
 2. 筛选性质：（前提：$f(t)$ 是连续函数）
     $$
-        \int_{-\infty}^{\infty}\delta(t-t_0)f(t)dt=f(t_0)
+        \boxed{\int_{-\infty}^{\infty}\delta(t-t_0)f(t)dt=f(t_0)}
     $$
     令 $t_0=0$
     $$
-        \int_{-\infty}^{\infty}\delta(t-0)f(t)dt=f(0)
+        \boxed{\int_{-\infty}^{\infty}\delta(t-0)f(t)dt=f(0)}
     $$
-    :::tip
-    这个性质可以证明 $\delta$ 函数的傅里叶变换也是1，把 $e^{-i\omega t}$ 当成 $f(t)$ 就行
+    :::tip  
+    这个性质可证 $\delta(t)$ 的傅里叶变换是1，把 $e^{-i\omega t}$ 当成 $f(t),t_0=0$ 就行；顺带就证明了1的傅里叶逆变换是 $\delta(t)$  
     :::
 3. 坐标缩放
     $$
-    \delta(at)=\frac{1}{|a|}\delta(t)
+    \boxed{\delta(at)=\frac{1}{|a|}\delta(t)}
     $$
-    :::tip
-    a=-1的时候提现 $\delta$ 函数的偶函数性
-    :::
+    :::tip  
+    a=-1的时候体现 $\delta(t)$ 是偶函数  
+    :::  
 4. 高阶导数
     $$
-    \delta^{(n)}(-t)=(-1)^n\delta^{(n)}
+    \boxed{\delta^{(n)}(-t)=(-1)^n\delta^{(n)}(t)}
     $$
 5. 重要等式（由筛选性质得来）
     $$
-    g(t)\delta(t-t_0)=g(t_0)\delta(t-t_0)
+    \boxed{g(t)\delta(t-t_0)=g(t_0)\delta(t-t_0)}
     $$
 6. $\delta$ 函数的傅里叶变换
     $$
-    \begin{align*}
+    \boxed{\begin{align*}
     \mathcal{F}[\delta(t)]&=\int_{-\infty}^{+\infty}\delta(t)e^{-i\omega t}dt=1\\
     \mathcal{F}[\delta(t-t_0)]&=\int_{-\infty}^{+\infty}\delta(t-t_0)e^{-i\omega t}dt=e^{-i\omega t_0}
-    \end{align*}
+    \end{align*}}
     $$
 
 ## 广义傅里叶变换
@@ -133,70 +133,78 @@ $$
 ### $\delta$ 函数的傅里叶变换
 
 $$
-\mathcal{F}(\delta(t))=\int_{-\infty}^{+\infty}\delta(t)e^{-i\omega t}dt=1\\
-\mathcal{F}(\delta(t-t_0))=\int_{-\infty}^{+\infty}\delta(t-t_0)e^{-i\omega t}dt=e^{-i\omega t_0}\\
-\mathcal{F}(1)=2\pi\delta(\omega)\\
-\mathcal{F}(e^{i\omega_0t})=2\pi\delta(\omega-\omega_0)
+\begin{aligned}
+\qquad\mathcal{F}(\delta(t))&=\int_{-\infty}^{+\infty}\delta(t)e^{-i\omega t}dt=1\\
+\mathcal{F}(\delta(t-t_0))&=\int_{-\infty}^{+\infty}\delta(t-t_0)e^{-i\omega t}dt=e^{-i\omega t_0}\\
+\mathcal{F}(1)&=2\pi\delta(\omega)\\
+\mathcal{F}(e^{i\omega_0t})&=2\pi\delta(\omega-\omega_0)
+\end{aligned}
+
 $$
 
 相应的有逆变换
 
 $$
-\mathcal{F}^{-1}(1)=\delta(t)\\
-\mathcal{F}^{-1}(e^{-i\omega t_0})=\delta(t-t_0)\\
-\mathcal{F}^{-1}(2\pi\delta(\omega))=\frac{1}{2\pi}\int_{-\infty}^{+\infty}2\pi\delta(\omega)e^{-i\omega t}d\omega=1\\
+\begin{aligned}
+\mathcal{F}^{-1}(1)&=\delta(t)\\
+\mathcal{F}^{-1}(e^{-i\omega t_0})&=\delta(t-t_0)\\
+\mathcal{F}^{-1}(2\pi\delta(\omega))&=\frac{1}{2\pi}\int_{-\infty}^{+\infty}2\pi\delta(\omega)e^{-i\omega t}d\omega=1\\
+\mathcal{F}^{-1}(2\pi\delta(\omega-\omega_0))&=\frac{1}{2\pi}\int_{-\infty}^{+\infty}2\pi\delta(\omega-\omega_0)e^{-i\omega t}d\omega=e^{-i\omega_0 t}
+\end{aligned}
 $$
 
-:::note
-重要结论：符号函数 $sgn(t)=\begin{cases}
-    -1＆t<0\\
-    1&t>0\\
-\end{cases}$
-:::
+### 符号函数的傅立叶变换
 
->eg1 证明符号函数的傅里叶变换是 $\frac{1}{i\omega}$
+符号函数 $sgn(t)=\begin{cases}
+    -1&t<0\\
+    1&t>0\\
+\end{cases}$ 的傅立叶变换是 $\dfrac{1}{i\omega}$
+
+$$
+\boxed{\mathcal{F}[sgn(t)]=\frac{1}{i\omega}}
+$$
 
 :::tip
-求傅里叶正变换并不好算，可以考虑求逆变换
+求傅里叶正变换并不好算，可以考虑逆变换证明
 :::
 
 $$
-\mathcal{F}^{-1}(\frac{1}{i\omega})=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\frac{1}{i\omega}e^{i\omega t}d\omega\\
+\mathcal{F}^{-1}(\frac{1}{i\omega})=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\frac{1}{i\omega}e^{i\omega t}d\omega\\[10bp]
 =\frac{1}{\pi}\int_{-\infty}^{+\infty}\frac{\cos\omega t+i\sin\omega t}{i\omega}d\omega\\
-\text{后半个sin相关的奇函数积分为0}\\
 $$
+后半个sin相关的奇函数积分为0
 
-遇到狄利克雷积分，利用留数定理就行
+遇到狄利克雷积分 $\int_0^{+\infty}\frac{sin ax}{x}dx=\frac{\pi}{2}$，利用留数定理就行
 
-$$
-\int_0^{+\infty}\frac{sin ax}{x}dx=\frac{\pi}{2}
-$$
+### 越阶函数的傅里叶变换
 
->eg2 求阶跃函数的傅里叶变换
-
-$$
-u(t)=\begin{cases}
+越阶函数$u(t)=\begin{cases}
     0&t<0\\
     1&t>0\\
-\end{cases}
+\end{cases}$的傅立叶变换是 $\pi\delta(\omega)+\dfrac{1}{i\omega}$
+
+$$
+\boxed{\mathcal{F}[u(t)]=\pi\delta(\omega)+\frac{1}{i\omega}}
 $$
 
 :::tip
 把 $u(t)$ 和符号函数结合，$u(t)=\dfrac{1+sgn(t)}{2}$ ,利用符号函数的傅里叶变换
 :::
 
->eg3 求 $f(t)=\sin \omega t,f(t)=\cos\omega t$ 的傅里叶变换
+### 正弦函数和余弦函数的傅里叶变换
+
+$f(t)=\sin \omega t,f(t)=\cos\omega t$ 的傅里叶变换
+
+$$
+\boxed{\begin{aligned}
+\mathcal{F}[\sin \omega_0 t]&=i\pi\{\delta(\omega+\omega_0)-\delta(\omega-\omega_0)\}\\
+\mathcal{F}[\cos \omega_0 t]&=\pi\{\delta(\omega+\omega_0)+\delta(\omega-\omega_0)\}
+\end{aligned}}
+$$
 
 :::tip
 拆成e的形式，然后找 $e^{i\omega t}$ 的傅里叶变换
 :::
-
->eg4 已知 $F(\omega)=\pi\{\delta(\omega+\omega_0)+\delta(\omega-\omega_0)\}$ 为函数 $f(t)$ 的傅里叶变换，求 $f(t)$
-
-$$
-f(t)=\mathcal{F}^{-1}(F(\omega))\\
-=\pi\{\mathcal{F}^{-1}(\delta(\omega+\omega_0))+\mathcal{F}^{-1}(\omega-\omega_0))\}
-$$
 
 ## 傅里叶变换的性质
 
@@ -210,54 +218,76 @@ $$
 2. 对称性：
     交换自变量，有
     $$
-    \mathcal{F}\left[F(t)\right]=2\pi f(-\omega)
+    \boxed{\mathcal{F}\left[F(t)\right]=2\pi f(-\omega)}
     $$
 3. 放缩性质：
     $$
-    \mathcal{F}\left[f(at)\right]=\frac{1}{|a|}\mathcal{F}(\frac{\omega}{a}),\;\;a\neq 0
+    \boxed{\mathcal{F}\left[f(at)\right]=\frac{1}{|a|}\mathcal{F}\left(\frac{\omega}{a}\right),\;\;a\neq 0}
     $$
-    简单证一下：
+    :::note[简单证一下：]
     $$
     \mathcal{F}\left[f(at)\right]=\int_{-\infty}^{+\infty}f(at)e^{-i\omega t}dt\\
-    \text{令}at=\tilde{t}
     $$
-4. 平移性质：
+    a>0时，令 $at=\tilde{t}$, 则有 $t=\dfrac{\tilde{t}}{a}$, $dt=\frac{1}{a}d\tilde{t}$ 代入得
     $$
-    \mathcal{F}[f(t-t_0)]=e^{-i\omega t_0}F(\omega)\text{令}\tilde{t}=t-t_0\\
-    \mathcal{F}[e^{i\omega_0 t}f(t)]=F(\omega-\omega_0)
+    =\int_{-\infty}^{+\infty}f(\tilde{t})e^{-i\omega \frac{\tilde{t}}{a}}\frac{1}{a}d\tilde{t}=\frac{1}{|a|}F\left(\frac{\omega}{a}\right)
+    $$
+    a<0时，注意积分上下限变为 $(+\infty\to-\infty)$ ，在外面加负号调回来，就得到了 $|a|$ 。
+    :::
+
+4. 平移性质：  
+
+    注意 $F(\omega)$ 正负号变化是跟 $f(t)$ 反过来的
+    $$
+    \boxed{\begin{aligned}
+    \star\; \mathcal{F}[f(t\pm t_0)]&=e^{\pm i\omega t_0}F(\omega)\\[10pt]
+    \mathcal{F}^{-1}[e^{\pm i\omega t_0}F(\omega)]&=f(t\pm t_0)\\[10pt]
+    \star\; \mathcal{F}[e^{\pm i\omega_0 t}f(t)]&=F(\omega\mp \omega_0)\\[10pt]
+    \mathcal{F}^{-1}[F(\omega\pm\omega_0)]&=e^{\mp i\omega_0 t}f(t)
+    \end{aligned}}
     $$
 5. 导数性质
     $$
-    \mathcal{F}[f^{(n)}(t)]=i\omega F(\omega)\\
-    F^{(n)}(\omega)=\mathcal{F}[(-i\omega t)^nf(t)]
+    \boxed{\begin{aligned}
+    \mathcal{F}[f^{(n)}(t)]&=i\omega F(\omega)\\[10pt]
+    F^{(n)}(\omega)&=\mathcal{F}[(-i\omega t)^nf(t)]
+    \end{aligned}}
     $$
 
-    简单证一下：(以一阶导为例)
+    :::note[简单证一下：(以一阶导为例)]
 
     $$
-    \mathcal{F}[f^{(1)}(t)]=\int_{-\infty}^{+\infty}e^{-i\omega t}df(t)\\
-    \text{进行分部积分法}\\
-    =-\int_{-\infty}^{+\infty}f(t)(-i\omega)e^{-i\omega t}dt\\
-    =i\omega F(\omega)\\
-    F^{(1)}(\omega)=?
+    \begin{aligned}
+    \mathcal{F}[f^{(1)}(t)]&=\int_{-\infty}^{+\infty}e^{-i\omega t}df(t)\\
+    &=-\int_{-\infty}^{+\infty}f(t)(-i\omega)e^{-i\omega t}dt\\
+    &=i\omega F(\omega)\\
+    \end{aligned}
     $$
+
+    $$
+    \begin{aligned}
+    F^{(1)}(\omega)&=\frac{d}{d\omega}\int_{-\infty}^{+\infty}f(t)e^{-i\omega t}dt\\
+    &=\int_{-\infty}^{+\infty}f(t)(-it)e^{-i\omega t}dt\\
+    &=\mathcal{F}[-itf(t)]
+    \end{aligned}
+    $$
+    :::
 6. 积分性质
     $$
-    \int_{-\infty}^{+\infty}f_1\cdot \bar{f_2} dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F_1\cdot\bar{F_2}d\omega
+    \boxed{\int_{-\infty}^{+\infty}f_1\cdot \bar{f_2} dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F_1\cdot\bar{F_2}d\omega}
     $$
     特别地，如果 $f_1=f_2$ 得到帕斯威尔定理：
 
     $$
-    \int_{-\infty}^{+\infty}|f(t)|^2 dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}|F(\omega)|^2d\omega
+    \boxed{\int_{-\infty}^{+\infty}|f(t)|^2 dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}|F(\omega)|^2d\omega}
     $$
 
-    简单证一下：
-
+    :::note[简单证一下：]
     $$
     f_1=\mathcal{F}^{-1}[F_1]=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F_2e^{i\omega t}d\omega\\
-    \text{求共轭的过程给每一项分别求共轭}\\
-    \text{积分的时候换一下积分次序}\\
     $$
+    求共轭的过程给每一项分别求共轭,积分的时候换一下积分次序
+    :::
 
 >eg1 求1：$f(t)=\sin (\omega_0 t)u(t)$ 2: $f(t)=e^{i\omega_0 t}tu(t)$
 

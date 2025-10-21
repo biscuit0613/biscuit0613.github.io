@@ -254,7 +254,7 @@ f(z_0)=\frac{1}{2\pi i}\oint\frac{f(z)}{z-z_0}dz\\[5bp]
 z=z_0+re^{i\theta}\\[5bp]
 f(z_0)=\frac{1}{2\pi}\oint\frac{f(z)}{re^{i\theta}}re^{i\theta}d\theta
 $$
-：：：
+:::
 
 ### 推论6：柯西不等式
 
@@ -298,7 +298,8 @@ $$
    $$
    F^\prime(z)=f(z)
    $$
-   :::tip证明：
+
+   :::tip[证明]
    $$
    \begin{align*}
    F^\prime(z)&=\lim_{\Delta z\to 0}\frac{F(z+\Delta z)-F(z)}{\Delta z}\\[10bp]
