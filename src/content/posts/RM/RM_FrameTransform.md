@@ -5,7 +5,7 @@ description: '坐标变换的基本概念与应用'
 image: ''
 tags: [机械臂, 反向运动学, RM]
 category: 'RM'
-draft: true
+draft: false
 lang: ''
 ---
 
