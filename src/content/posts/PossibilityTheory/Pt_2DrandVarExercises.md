@@ -9,7 +9,7 @@ draft: false
 lang: ''
 ---
 
-eg1:设 
+eg1:设
 $$
 f(x,y)=\begin{cases}
     e^{-x-y}&x>0,y>0\\
@@ -77,4 +77,3 @@ f(x,y)=\frac{1}{2\pi\sigma_1\sigma_2}\operatorname{exp}\left{-\frac{1}{2}\left[\
 $$
 
 必要性取最大值点带特值证明即可
-
