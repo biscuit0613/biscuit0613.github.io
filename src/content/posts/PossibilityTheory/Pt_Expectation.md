@@ -101,6 +101,56 @@ $$
 \end{aligned}
 $$
 
+### 超几何分布的期望
+
+$$
+X\sim H(N,M,n)
+$$
+
+分布列：
+$$
+P(X=k)=\frac{C_M^k C_{N-M}^{n-k}}{C_N^n} \quad \max(0,n-(N-M)) \leq k \leq \min(n,M)
+$$
+
+期望：
+
+$$
+\mathbb{E}(X) = n\cdot\frac{M}{N}
+$$
+
+:::tip  
+就是实验次数乘以成功概率，很像二项分布的期望  
+:::
+
+:::note  
+[证明]  
+:::
+
+设随机变量 $X$ 表示抽到的好球数，定义指示变量：
+$$
+I_k = \begin{cases}
+1, & \text{第 } k \text{ 次抽到好球} \\
+0, & \text{第 } k \text{ 次抽到坏球}
+\end{cases}
+$$
+
+则有：
+$$
+X = I_1 + I_2 + \cdots + I_n
+$$
+根据期望的线性性质，有：
+$$
+\mathbb{E}(X) = \mathbb{E}(I_1) + \mathbb{E}(I_2) + \cdots + \mathbb{E}(I_n)
+$$
+由于每次抽到好球的概率为 $\frac{M}{N}$，因此：
+$$
+\mathbb{E}(I_k) = 1 \cdot \frac{M}{N} + 0 \cdot \left(1 - \frac{M}{N}\right) = \frac{M}{N}
+$$
+所以：
+$$
+\mathbb{E}(X) = n \cdot \frac{M}{N}
+$$
+
 ## 连续随机变量的期望
 
 对于连续型随机变量 $X$，其概率密度函数为 $f(x)$，则期望值 $E(X)$ 定义为：
@@ -273,4 +323,3 @@ $$
         \text{若}X_i\text{相互独立：}\mathbb{E}[X_1X_2\cdots X_n] = \mathbb{E}[X_1]\mathbb{E}[X_2]\cdots \mathbb{E}[X_n] 
     \end{cases}
     $$
-    
