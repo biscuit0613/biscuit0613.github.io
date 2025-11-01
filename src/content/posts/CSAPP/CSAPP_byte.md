@@ -1,10 +1,10 @@
 ---
 title: 信息的表示和处理：整数小数的存储
 published: 2025-10-10
-description: ''
+description: '关于数据存储的基本概念：位、字节、字，进制表示法，整数和浮点数的存储方式'
 image: ''
-tags: []
-category: ''
+tags: [位, 字节, 字, 进制, 浮点数, CSAPP]
+category: 'CSAPP'
 draft: false 
 lang: ''
 ---

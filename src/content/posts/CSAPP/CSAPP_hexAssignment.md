@@ -1,5 +1,5 @@
 ---
-title: CSAPP: 不同进制赋值与字节级读写
+title: CSAPP_不同进制赋值与字节级读写
 published: 2025-10-29
 description: '64位机器上的不同进制赋值与字节级读写示例'
 image: ''

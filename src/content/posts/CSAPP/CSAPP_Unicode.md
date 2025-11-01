@@ -1,10 +1,10 @@
 ---
 title: UTF-8 编码与 Unicode，ASCII
 published: 2025-11-01
-description: ''
+description: 'UTF-8 编码规则及其与 Unicode 码点的转换方法'
 image: ''
-tags: []
-category: ''
+tags: [UTF-8, Unicode, ASCII, CSAPP]
+category: 'CSAPP'
 draft: false 
 lang: ''
 ---
