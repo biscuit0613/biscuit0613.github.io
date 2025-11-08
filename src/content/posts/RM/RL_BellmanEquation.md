@@ -52,13 +52,15 @@ v_\pi(s) = \mathbb{E}_\pi[G_t|S_t=s]
 $$
 
 :::tip  
-当策略唯一，状态值=回报。  
+当策略导出的轨迹唯一，状态值=回报。  
+当策略导出的轨迹不唯一，状态值=每条轨迹回报的期望。
 :::
 
 ## 贝尔曼方程
 
 贝尔曼方程描述了所有状态值之间的关系。
 
+根据回报的定义，有递推关系：
 $$
 \begin{aligned}
 G_t &= R_{t+1} + \gamma G_{t+1}\\
@@ -84,7 +86,7 @@ $$
 $$
 \begin{aligned}
 \mathbb{E}[G_{t+1}|S_t=s] &= \sum_{s'\in\mathcal{S}} \mathbb{E}[G_{t+1}|S_{t+1}=s',S_t=s] \cdot p(s'|s)\\
-&= \sum_{s'\in\mathcal{S}} \mathbb{E}[G_{t+1}|S_{t+1}=s'] \cdot p(s'|s)\\
+&= \sum_{s'\in\mathcal{S}} \underbrace{\mathbb{E}[G_{t+1}|S_{t+1}=s']}_{\text{下一个状态的状态值}} \cdot p(s'|s)\\[6pt]
 &= \sum_{s'\in\mathcal{S}} v_\pi(s') \cdot\sum_{a\in\mathcal{A(s)}}  p(s'|s,a)\cdot \pi(a|s)
 \end{aligned}
 $$
@@ -92,7 +94,8 @@ $$
 综上，贝尔曼方程为：
 
 $$
-v_\pi(s) = \sum_{a\in\mathcal{A(s)}} \pi(a|s) \sum_{r\in\mathcal{R_{t+1}}} r \cdot p(r|s,a) + \gamma \sum_{s'\in\mathcal{S}} v_\pi(s') \cdot\sum_{a\in\mathcal{A(s)}}  p(s'|s,a)\cdot \pi(a|s)
+v_\pi(s) = \sum_{a\in\mathcal{A(s)}} \pi(a|s) \sum_{r\in\mathcal{R_{t+1}}} r \cdot p(r|s,a) + \gamma \sum_{s'\in\mathcal{S}} v_\pi(s') \cdot\sum_{a\in\mathcal{A(s)}}  p(s'|s,a)\cdot \pi(a|s)\\
+= \sum_{a\in\mathcal{A(s)}} \pi(a|s) \left[ \sum_{r\in\mathcal{R_{t+1}}} r \cdot p(r|s,a) + \gamma \sum_{s'\in\mathcal{S}} v_\pi(s')  p(s'|s,a) \right]
 $$
 
 其中，未知量是 $v_\pi(s)$，用来描述策略
@@ -100,3 +103,37 @@ $$
 已知量是策略 $\pi(a|s)$
 
 模型部分：奖励概率 $p(r|s,a)$，状态转移概率 $p(s'|s,a)$。可有可无
+
+## 贝尔曼最优方程
+
+贝尔曼最优方程描述了最优状态值之间的关系。
+
+最优状态值定义为：在给定状态下，遵循最优策略所能获得的最大期望回报。
+
+$$
+v_*(s) = \max_\pi v_\pi(s)
+$$
+
+根据最优状态值的定义，可以得到贝尔曼最优方程：
+
+$$
+\begin{aligned}
+    v_*(s) &= \max_{\pi(s)\in\mathcal{\Pi(s)}} \sum_{a\in\mathcal{A(s)}} \pi(a|s) \left[ \sum_{r\in\mathcal{R_{t+1}}} r \cdot p(r|s,a) + \gamma \sum_{s'\in\mathcal{S}} v_*(s')  p(s'|s,a) \right]\\
+&=\max_{a\in\mathcal{A(s)}} q_*(s,a)
+\end{aligned}
+$$
+
+条件
+
+$$
+\pi(a|s) = \begin{cases}
+1 & a = \arg\max_{a\in\mathcal{A(s)}} q_*(s,a)\\
+0 & \text{else}
+\end{cases}
+$$
+
+
+
+其中，未知量是 $v_*(s)$，用来描述最优策略
+ 
+教材上给了求解思路，讲的很清楚，这里不再赘述。
