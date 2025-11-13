@@ -250,7 +250,7 @@ $$
     $$
     \boxed{\begin{aligned}
     \mathcal{F}[f^{(n)}(t)]&=i\omega F(\omega)\\[10pt]
-    F^{(n)}(\omega)&=\mathcal{F}[(-i\omega t)^nf(t)]
+    F^{(n)}(\omega)&=\mathcal{F}[(-i t)^nf(t)]
     \end{aligned}}
     $$
 
@@ -272,9 +272,9 @@ $$
     \end{aligned}
     $$
     :::
-6. 积分性质
+6. 积分乘积性质
     $$
-    \boxed{\int_{-\infty}^{+\infty}f_1\cdot \bar{f_2} dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F_1\cdot\bar{F_2}d\omega}
+    \boxed{\int_{-\infty}^{+\infty}f_1\cdot {f_2} dt=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F_1\cdot\bar{F_2}d\omega=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\bar{F_1}\cdot F_2 d\omega}
     $$
     特别地，如果 $f_1=f_2$ 得到帕斯威尔定理：
 
