@@ -83,7 +83,7 @@ sudo cfdisk /dev/nvme0n1
 
 检查一下summary
 
-![alt text](image.png)
+![alt text](summary.png)
 
 然后就开始安装了，等一会就好了。
 
@@ -234,6 +234,3 @@ getent passwd $(whoami) | cut -d: -f7
 # 输出
 /bin/fish
 ```
-
-
-
