@@ -35,6 +35,8 @@ $$
 
 常用公式：$D(X)=E(X^2)-E^2(X)$
 
+重要推论： $E(X^2)=D(X)+E^2(X)$
+
 :::note[推导]
 $$
 \begin{align*}
@@ -56,13 +58,12 @@ $$
 3. **比例缩放**  
    $\mathrm{Var}(aX) = a^2 \mathrm{Var}(X)$。  
 
-4. **和的方差**  
+4. **和的方差(注意正负号)**  
    - 若 $X,Y$ 独立：
      $$
-     \mathrm{Var}(X+Y) = \mathrm{Var}(X) + \mathrm{Var}(Y)
+     \mathrm{Var}(X\pm Y) = \mathrm{Var}(X) + \mathrm{Var}(Y)
      $$
    - 若不独立：
      $$
-     \mathrm{Var}(X+Y) = \mathrm{Var}(X) + \mathrm{Var}(Y) + 2\mathrm{Cov}(X,Y)
+     \mathrm{Var}(X\pm Y) = \mathrm{Var}(X) + \mathrm{Var}(Y) \pm 2\mathrm{Cov}(X,Y)
      $$
-

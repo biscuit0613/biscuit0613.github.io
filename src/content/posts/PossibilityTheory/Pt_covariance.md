@@ -27,46 +27,99 @@ $$
 ### 协方差的性质
 
 1. **对称性**  
-   $\mathrm{Cov}(X,Y) = \mathrm{Cov}(Y,X)$。  
-
-2. **和的展开式**  
    $$
-   \mathrm{Var}(X+Y) = \mathrm{Var}(X) + \mathrm{Var}(Y) + 2\mathrm{Cov}(X,Y)
-   $$
+   \mathrm{Cov}(X,Y) = \mathrm{Cov}(Y,X)
+   $$  
 
-3. **独立性**  
+2. **独立性的必要条件**  
    若 $X,Y$ 独立，则 $\mathrm{Cov}(X,Y)=0$。  
-   （但 $\mathrm{Cov}(X,Y)=0$ 不一定独立）。  
+   （但 $\mathrm{Cov}(X,Y)=0$ 不一定独立）。
 
-4. **常数协方差**  
-   $\mathrm{Cov}(X,c)=0$。  
+3. **计算变量和的方差**  
+   $$
+   \boxed{\mathrm{Var}(X\pm Y) = \mathrm{Var}(X) + \mathrm{Var}(Y) \pm 2\mathrm{Cov}(X,Y)}
+   $$  
+
+   特别地，当 $\mathrm{Cov}(X,Y)=0$ 时，$X+Y$ 的方差可以像计算均值那样直接相加。
+
+4. **随机变量和常数的协方差=0**  
+   $$
+   \mathrm{Cov}(X,c)=0
+   $$
 
 5. **线性性**  
-   $\mathrm{Cov}(aX+b, \, cY+d) = ac \cdot \mathrm{Cov}(X,Y)$。  
+   $$
+   \mathrm{Cov}(aX+b, \, cY+d) = ac \cdot \mathrm{Cov}(X,Y)
+   $$
 
-6. **方差是协方差的特例**  
+6. **协方差的组合性**
+   $$
+   \mathrm{Cov}(X_1+X_2, Y_1+Y_2) = \mathrm{Cov}(X_1,Y_1) + \mathrm{Cov}(X_1,Y_2)+ \mathrm{Cov}(X_2,Y_1)  + \mathrm{Cov}(X_2,Y_2)
+   $$
+
+7. **方差是协方差的特例**  
    $\mathrm{Var}(X) = \mathrm{Cov}(X,X)$。  
 
 ---
 
-### 相关系数（Correlation Coefficient）
+## 相关系数（Correlation Coefficient）
 
 标准化的协方差定义为：
 $$
 \rho_{XY} = \frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)} \cdot \sqrt{\mathrm{Var}(Y)}}
 $$
+
+:::tip
+如果 $\mathrm{Cov}(X,Y)=0$ ，则 $\rho_{XY}$ 得0。
+:::
+
 直观理解：协方差主要用来描述两个变量的相关性，因此**符号**很重要，但从数值上看，哪怕两个变量的变化趋势（上升或下降）相同，协方差的值也可能会因为其中单个变量的变化幅度而有很大差别。有没有一种方法通过**数值**来描述相关性呢？我们可以同时除以两个变量的**标准差**来消除这个影响，就得到了**相关系数**
 
 相关系数的**大小**和**符号**都可以反映两随机变量的**线性**相关性
 
 - $-1 \leq \rho_{XY} \leq 1$  （证明可以用柯西施瓦茨不等式）
+
 - $\rho=0$：无**线性相关** （可能有别的非线性相关性）
-- $\rho=1$：完全正相关  
-- $\rho=-1$：完全负相关  
+- $\rho=1$：完全正相关 $\iff$ 存在常数 $a>0,b$ 使得 $Y=aX+b$
+- $\rho=-1$：完全负相关 $\iff$ 存在常数 $a<0,b$ 使得 $Y=aX+b$  
+
+:::warning[注意]  
+$\rho=0$ 或 $\mathrm{Cov}(X,Y)=0$ 并不能推出 $X,Y$ 独立。  
+
+独立一定不相关，相关一定不独，反之不一定成立。  
+
+当且仅当 $X,Y$ 联合分布是二维正态分布时，不相关才能推出独立。  
+:::
+
+### 二维正态分布的相关系数
+
+对于二维正态分布 $N(\mu_X, \mu_Y, \sigma_X^2, \sigma_Y^2, \rho)$，其相关系数
+
+$$
+\rho_{XY}=\frac{\mathrm{Cov}(X,Y)}{\sigma_X \sigma_Y}=\rho
+$$
 
 ---
 
-### 协方差矩阵（Covariance Matrix）
+## 矩：原点矩，中心矩，标准化矩
+
+**原点矩**的定义：若 $\mathbb{E}(X^k)$ 存在，则称 $\mathbb{E}(X^k)$ 为随机变量 $X$ 的 **k 阶原点矩**，记作 $\alpha_k=\mathbb{E}(X^k)$
+
+**中心矩**的定义：若 $\mathbb{E}[(X-\mathbb{E}(X))^k]$ 存在，则称 $\mathbb{E}[(X-\mathbb{E}(X))^k]$ 为随机变量 $X$ 的 **k 阶中心矩**，记作 $\beta_k=\mathbb{E}[(X-\mathbb{E}(X))^k]$
+
+:::note
+注意这里k次方的位置
+:::
+
+- 可以看出，数学期望 $\mathbf{E}$ 是随机变量的 1 阶原点矩，方差 $\mathbf{D}$ 是随机变量的 2 阶中心矩。
+
+**混合原点矩**的定义：设 $(X,Y)$ 是二维随机变量，若 $\mathbb{E}(X^k Y^l)$ 存在，则称 $\mathbb{E}(X^k Y^l)$ 为二维随机变量 $(X,Y)$ 的 **k+l阶混合原点矩**，记作 $\alpha_{k,l}=\mathbb{E}(X^k Y^l)$
+
+**混合中心距**的定义：设 $(X,Y)$ 是二维随机变量，若 $\mathbb{E}[(X-\mathbb{E}(X))^k (Y-\mathbb{E}(Y))^l]$ 存在，则称 $\mathbb{E}[(X-\mathbb{E}(X))^k (Y-\mathbb{E}(Y))^l]$ 为二维随机变量 $(X,Y)$ 的 **k+l阶混合中心矩**，记作 $\beta_{k,l}=\mathbb{E}[(X-\mathbb{E}(X))^k (Y-\mathbb{E}(Y))^l]$
+
+- 可以看出，协方差 $\mathrm{Cov}(X,Y)$ 是二维随机变量 $(X,Y)$ 的 1+1 阶混合中心矩。
+
+## 协方差矩阵(了解)（Covariance Matrix）
 
 :::tip  
 协方差矩阵就是多为随机变量的方差，是一维随机变量方差的推广,从数变成矩阵了。
