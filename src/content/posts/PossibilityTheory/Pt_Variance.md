@@ -1,10 +1,10 @@
 ---
-title: 概率论：方差（速通版）
+title: 方差（速通版）
 published: 2025-09-01
 description: '为了RM的卡尔曼滤波先学方差'
 image: ''
-tags: [概率论，RM]
-category: '概率论'
+tags: [概率论, RM]
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

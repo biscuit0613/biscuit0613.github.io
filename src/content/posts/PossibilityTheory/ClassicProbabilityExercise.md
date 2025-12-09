@@ -4,7 +4,7 @@ published: 2025-09-04
 description: '古典概型的课堂例题'
 image: ''
 tags: [例题, 概率论]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

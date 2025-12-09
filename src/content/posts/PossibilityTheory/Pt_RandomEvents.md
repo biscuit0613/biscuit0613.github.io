@@ -4,7 +4,7 @@ published: 2025-09-01
 description: '概率论入门'
 image: ''
 tags: [随机事件, 概率论]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

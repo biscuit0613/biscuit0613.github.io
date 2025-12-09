@@ -1,5 +1,5 @@
 ---
-title: 区间估计
+title: 区间估计：单个及两个正态总体参数估计
 published: 2025-12-09
 description: '区间估计的原理'
 image: ''
@@ -74,7 +74,8 @@ $$
 所以，$\mu$ 置信度为 $1-\alpha$ 的置信区间为：
 
 $$
-\left(\overline{X} - u_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}, \; \overline{X} + u_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}\right)$$
+\left(\overline{X} - u_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}, \; \overline{X} + u_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}\right)
+$$
 
 记住就行了喵。
 
@@ -102,7 +103,8 @@ $$
 所以，$\mu$ 置信度为 $1-\alpha$ 的置信区间为：
 
 $$
-\left(\overline{X} - t_{1-\alpha/2}(n-1) \frac{S}{\sqrt{n}}, \; \overline{X} + t_{1-\alpha/2}(n-1) \frac{S}{\sqrt{n}}\right)$$
+\left(\overline{X} - t_{1-\alpha/2}(n-1) \frac{S}{\sqrt{n}}, \; \overline{X} + t_{1-\alpha/2}(n-1) \frac{S}{\sqrt{n}}\right)
+$$
 
 ### 总体方差 $\sigma^2$ 的置信区间
 

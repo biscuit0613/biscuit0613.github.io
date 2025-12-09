@@ -1,10 +1,10 @@
 ---
-title: 随机变量的数学特征：期望值
+title: 期望值以及常见分布的期望
 published: 2025-10-23
 description: '随机变量的期望'
 image: ''
 tags: [概率论, 随机变量, 期望值]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

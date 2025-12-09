@@ -1,9 +1,9 @@
 ---
-title: 概率论：多维（二维）随机变量及其分布
+title: 多维（二维）随机变量及其分布
 published: 2025-08-23
 description: '离散型多维随机变量，连续型多维随机变量，二维随机变量的分布'
 tags: [概率论,多维随机变量]
-category: '概率论'
+category: '概率论与数理统计'
 author: biscuit
 draft: false
 ---

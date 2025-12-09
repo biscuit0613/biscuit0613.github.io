@@ -1,10 +1,10 @@
 ---
-title: 概率论：一维随机变量函数及其分布
+title: 一维随机变量函数及其分布
 published: 2025-10-27
 description: '一维随机变量函数的概率密度和分布函数'
 image: ''
 tags: [随机变量函数]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

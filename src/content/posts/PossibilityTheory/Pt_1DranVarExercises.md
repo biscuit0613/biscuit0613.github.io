@@ -1,10 +1,10 @@
 ---
-title: Pt_randomVarExercises
+title: 一维随机变量及其分布练习题
 published: 2025-10-09
 description: '一维随机变量及其分布练习题'
 image: ''
 tags: [随机变量,习题]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

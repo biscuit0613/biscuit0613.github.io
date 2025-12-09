@@ -1,10 +1,10 @@
 ---
-title: 概率论：2维随机变量及其分布 习题
+title: 2维随机变量及其分布 习题
 published: 2025-10-16
 description: ''
 image: ''
 tags: [2维随机变量]
-category: '概率论'
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---

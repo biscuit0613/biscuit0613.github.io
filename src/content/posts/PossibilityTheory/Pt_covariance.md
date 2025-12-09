@@ -1,10 +1,10 @@
 ---
-title: 概率论：协方差与相关系数
+title: 协方差与相关系数，矩
 published: 2025-10-27
-description: '协方差的定义、性质及其矩阵形式，相关系数的定义及其意义'
+description: '协方差的定义、性质及其矩阵形式，相关系数的定义及其意义，矩的定义'
 image: ''
-tags: [协方差, 相关系数]
-category: '概率论'
+tags: [协方差, 相关系数, 矩]
+category: '概率论与数理统计'
 draft: false 
 lang: ''
 ---
