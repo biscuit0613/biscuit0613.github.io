@@ -1,7 +1,7 @@
 ---
 title: 数理统计的基本概念
 published: 2025-12-08
-description: '数理统计的基本概念：总体、样本、三大统计分布，统计量'
+description: '数理统计的基本概念：总体、样本、三大统计分布，统计量，正态总体下统计量的分布，矩'
 image: ''
 tags: [数理统计]
 category: '概率论与数理统计'
@@ -116,19 +116,42 @@ $$
 
 :::tip
 正态分布的线性组合依然是正态分布，所以样本均值的分布是正态分布。
+
+均值的推导：
+$$
+\mathbb{E}(\overline{X}) = \mathbb{E}\left(\frac{1}{n} \sum_{i=1}^{n} X_i\right) = \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}(X_i) = \mu
+$$
+
+方差的推导（方差的独立可加性）：
+$$
+\mathbb{D}(\overline{X}) = \mathbb{D}\left(\frac{1}{n} \sum_{i=1}^{n} X_i\right) = \frac{1}{n^2} \sum_{i=1}^{n} \mathbb{D}(X_i) = \frac{\sigma^2}{n}
+$$
 :::
 
-对样本均值进行标准化：
+注意，**无论总体是什么分布**，总有：
+
+$$
+\mathbb{E}(\overline{X}) = \mu, \quad \mathbb{D}(\overline{X}) = \frac{\sigma^2}{n}
+$$
+
+两个结论的推导只依赖于期望和方差的线性性质，和总体的分布无关。如果总体不是正态分布，但样本容量足够大，根据**中心极限定理**，样本均值 $\overline{X}$ 近似服从正态分布。
+
+对样本均值进行标准化，可以构造出标准正态分布变量 $Z$：
+
 $$
 Z = \frac{\overline{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
 $$
 
 ### 正态总体下样本方差的分布
 
+这个目前没法证，只能记结论：
+
 对于正态样本 $X_i \sim N(\mu, \sigma^2)$，样本方差 $S^2 = \dfrac{1}{n-1} \sum_{i=1}^{n} (X_i - \overline{X})^2$ 服从卡方分布：
 $$
 \frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)
 $$
+
+### 正态总体下样本标准差的分布
 
 结合样本均值和样本方差，可以构造出 t 分布：
 
