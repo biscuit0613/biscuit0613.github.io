@@ -4,6 +4,11 @@ published: 2025-11-27 20:01:00
 tags: [概率论,数学]
 category: 概率论与数理统计
 ---
+
+:::warning
+注意支撑集的范围喵
+:::
+
 ## 事件运算
 
 $$
@@ -89,6 +94,8 @@ D(X) = np(1-p)
 $$
 
 ### 泊松分布
+
+泊松分布可以用e的指数来快速判断参数 $\lambda$
 
 $$
 X \sim Po(\lambda) \\[1em]
@@ -194,6 +201,38 @@ $$
 2. $\int_{-\infty}^{+\infty} f(x) \, dx = 1$ 积分为1
 3. $F(x) = \int_{-\infty}^{x} f(t) \, dt$
 4. $f(x) = \frac{d}{dx} F(x)$
+
+## 二维分布函数与概率密度函数
+
+### 二维分布函数需要满足的条件
+
+1. $F(x,y)$ 在 $x$ 和 $y$ 上均单调不减
+
+2. $F(-\infty,y) = 0, \quad F(x,-\infty) = 0, \quad F(+\infty,+\infty) = 1$
+3. $F(x,y)$ 在 $x$ 和 $y$ 上均右连续
+4. 对任意 $x_1 < x_2, y_1 < y_2$，有
+    $$
+    P(x_1 < X \leq x_2, y_1 < Y \leq y_2) = F(x_2,y_2) - F(x_2,y_1) - F(x_1,y_2) + F(x_1,y_1) \geq 0
+    $$
+
+### 二维概率密度函数需要满足的条件
+
+1. $f(x,y) \geq 0$ 恒大于等于0
+
+2. $\int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} f(x,y) \, dx \, dy = 1$ 积分为1
+3. $F(x,y) = \int_{-\infty}^{x} \int_{-\infty}^{y} f(u,v) \, du \, dv$
+4. $f(x,y) = \frac{\partial^2}{\partial x \partial y} F(x,y)$  
+
+### 边缘分布和边缘概率密度
+
+$$
+F_X(x) = \lim_{y \to +\infty} F_{X,Y}(x,y) \\[1em]
+F_Y(y) = \lim_{x \to +\infty} F_{X,Y}(x,y)\\[1em]
+f_X(x) = \int_{-\infty}^{+\infty} f_{X,Y}(x,y) \, dy \\[1em]
+f_Y(y) = \int_{-\infty}^{+\infty} f_{X,Y}(x,y) \, dx \\[1em]
+f_X(x)=\frac{\partial}{\partial x}F_X(x) \\[1em]
+f_Y(y)=\frac{\partial}{\partial y}F_Y(y)
+$$
 
 ## 随机变量的函数
 
@@ -648,7 +687,19 @@ $$
 f_{aX}(\omega) = \frac{1}{|a|} f_X \left( \frac{\omega}{a} \right)
 $$
 
-### 高斯积分
+### 伽马函数(从0到正无穷积分)
+
+$\alpha$ 只在t的指数上出现
+
+$$
+\Gamma(\alpha+1) = \int_{0}^{+\infty} t^{\alpha}e^{-t}  \, dt \quad (\alpha > 0) \\[1em]
+\Gamma(n) = (n-1)! \quad (n=1,2,3,\ldots) \\[1em]
+\Gamma(\alpha + 1) = \alpha \Gamma(\alpha)
+$$
+
+### 高斯积分（从负无穷到正无穷积分）
+
+$\lambda$ 是指数e上的系数
 
 $$
 \int_{-\infty}^{+\infty} e^{- \lambda x^2} \,dx = \sqrt{\frac{\pi}{\lambda}} \quad (\lambda > 0) \\[1em]
