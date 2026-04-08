@@ -43,6 +43,8 @@ udevadm info -a -n /dev/ttyACM0 | grep '{serial}'
 ATTRS{serial}=="356834513437"
 ```
 
+207136764143
+
 编写一个udev规则文件：
 
 ```bash
