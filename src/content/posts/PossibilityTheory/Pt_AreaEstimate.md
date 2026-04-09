@@ -3,7 +3,7 @@ title: 区间估计：单个及两个正态总体参数估计
 published: 2025-12-09
 description: '区间估计的原理'
 image: ''
-tags: [区间估计]
+tags: [概率论, 区间估计]
 category: '概率论与数理统计'
 draft: false 
 lang: ''

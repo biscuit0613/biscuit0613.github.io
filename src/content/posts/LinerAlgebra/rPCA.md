@@ -3,7 +3,7 @@ title: rPCA(Robust Principal Component Analysis)
 published: 2026-04-08
 description: 'rPCA的介绍'
 image: ''
-tags: [线性代数]
+tags: [rPCA]
 category: '线性代数'
 draft: false 
 lang: ''

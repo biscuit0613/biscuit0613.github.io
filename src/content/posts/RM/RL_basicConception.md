@@ -3,7 +3,7 @@ title: RL_basicConception
 published: 2025-11-02
 description: '强化学习的基本概念介绍'
 image: ''
-tags: [强化学习]
+tags: [RL]
 category: 'RL'
 draft: false 
 lang: ''

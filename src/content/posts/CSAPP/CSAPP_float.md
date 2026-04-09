@@ -3,7 +3,7 @@ title: CSAPP_小数的表示
 published: 2025-11-04
 description: '关于计算机中小数的表示方法，包括定点表示和浮点表示，舍入误差，IEEE754标准等内容'
 image: ''
-tags: [float, 浮点数, IEEE754, CSAPP, 规格化数, 非规格化数]
+tags: [数据存储]
 category: 'CSAPP'
 draft: false 
 lang: ''

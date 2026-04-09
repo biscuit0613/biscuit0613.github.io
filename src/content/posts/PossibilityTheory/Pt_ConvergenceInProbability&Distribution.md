@@ -3,7 +3,7 @@ title: 依概率收敛和依分布收敛
 published: 2025-12-08
 description: '依概率收敛和依分布收敛'
 image: ''
-tags: [收敛]
+tags: [概率论, 收敛]
 category: '概率论与数理统计'
 draft: false 
 lang: ''

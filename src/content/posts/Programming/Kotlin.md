@@ -3,7 +3,7 @@ title: Kotlin 扫盲笔记
 published: 2025-09-28
 description: '为了安卓开发而学习 Kotlin 的一些笔记'
 image: ''
-tags: [Kotlin, Android, Programming]
+tags: [Kotlin, Android]
 category: 'Kotlin'
 draft: false 
 lang: ''

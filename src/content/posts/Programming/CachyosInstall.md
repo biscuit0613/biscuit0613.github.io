@@ -4,7 +4,7 @@ published: 2025-12-04
 description: '从ubuntu22逃过来的'
 image: ''
 tags: [linux,cachyos,archlinux]
-category: 'Linux'
+category: 'linux'
 draft: false 
 lang: ''
 ---

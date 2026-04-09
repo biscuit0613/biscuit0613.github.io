@@ -3,8 +3,8 @@ title: 向量的投影
 published: 2026-04-07
 description: ''
 image: ''
-tags: []
-category: ''
+tags: [投影]
+category: '线性代数'
 draft: false 
 lang: ''
 ---

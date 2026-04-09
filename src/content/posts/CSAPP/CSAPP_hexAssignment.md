@@ -3,7 +3,7 @@ title: CSAPP_不同进制赋值与字节级读写
 published: 2025-10-29
 description: '64位机器上的不同进制赋值与字节级读写示例'
 image: ''
-tags: [数据存储, 进制, CSAPP]
+tags: [数据存储]
 category: 'CSAPP'
 draft: false 
 lang: ''

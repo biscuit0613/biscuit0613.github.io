@@ -3,7 +3,7 @@ title: RM_solvePnP
 published: 2025-10-09
 description: ''
 image: ''
-tags: [计算机视觉,solvePnP]
+tags: [RM, solvePnP]
 category: 'RM'
 draft: false 
 lang: ''

@@ -3,8 +3,8 @@ title: RM_ROS2入门
 published: 2025-09-10
 description: 'ROS2操作，包括python和C++的节点编写'
 image: ''
-tags: [ROS2,RM]
-category: 'ROS2'
+tags: [ROS,RM]
+category: 'RM'
 draft: false 
 lang: ''
 ---

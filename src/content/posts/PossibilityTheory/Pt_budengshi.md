@@ -3,7 +3,7 @@ title: 两个重要不等式
 published: 2025-12-08
 description: '马尔可夫不等式与切比雪夫不等式'
 image: ''
-tags: [马尔可夫不等式, 切比雪夫不等式]
+tags: [概率论,马尔可夫不等式, 切比雪夫不等式]
 category: '概率论与数理统计'
 draft: false 
 lang: ''

@@ -3,7 +3,7 @@ title: PCA (Principal Component Analysis)
 published: 2026-04-07
 description: 'PCA的介绍'
 image: ''
-tags: [线性代数]
+tags: [PCA]
 category: '线性代数'
 draft: false 
 lang: ''

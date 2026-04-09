@@ -3,7 +3,7 @@ title: CSAPP_机器级编程
 published: 2025-10-24
 description: 'cpu结构和指令执行这一块'
 image: ''
-tags: [CSAPP, 机器级编程, CPU, 指令集]
+tags: [机器级编程,  指令集]
 category: 'CSAPP'
 draft: false 
 lang: ''

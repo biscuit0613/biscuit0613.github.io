@@ -3,7 +3,7 @@ title: 变量的独立性+条件分布
 published: 2025-10-27
 description: '随机变量之间的独立性及其判别方法，随机变量的条件分布'
 image: ''
-tags: [独立性]
+tags: [概率论, 独立性]
 category: '概率论与数理统计'
 draft: false 
 lang: ''

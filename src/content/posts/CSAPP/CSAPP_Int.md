@@ -3,7 +3,7 @@ title: CSAPP_整数的表示
 published: 2025-11-04
 description: '关于计算机中整数的表示方法，包括补码表示，溢出，位运算等内容'
 image: ''
-tags: [整数, 补码, 溢出, 位运算, CSAPP]
+tags: [数据存储]
 category: 'CSAPP'
 draft: false 
 lang: ''

@@ -3,8 +3,8 @@ title: ubuntu22 同时装ros1和ros2
 published: 2025-12-15
 description: '因为要用ros1bridge，所以需要在ubuntu22上同时安装ros1和ros2'
 image: ''
-tags: []
-category: ''
+tags: [RM,ROS]
+category: 'RM'
 draft: false 
 lang: ''
 ---

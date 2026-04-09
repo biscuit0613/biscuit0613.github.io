@@ -3,8 +3,8 @@ title: distrobox的安装与使用
 published: 2025-11-05
 description: ''
 image: ''
-tags: [Linux, Distrobox, 容器]
-category: 'Linux'
+tags: [linux, distrobox]
+category: 'linux'
 draft: false 
 lang: ''
 ---

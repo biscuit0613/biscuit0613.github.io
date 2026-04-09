@@ -3,7 +3,7 @@ title: 线性代数：从"列"的角度理解矩阵与向量
 published: 2026-03-11
 description: '这里参考gilbert strang的线性代数教材。'
 image: ''
-tags: []
+tags: [矩阵]
 category: '线性代数'
 draft: false 
 lang: ''

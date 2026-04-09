@@ -3,7 +3,7 @@ title: cmake
 published: 2025-09-06
 description: 'cmake介绍，c++程序的编译这一块'
 image: ''
-tags: [cpp,c++,cmake,编译原理]
+tags: [cpp,cmake]
 category: 'cpp'
 draft: false 
 lang: ''

@@ -3,7 +3,7 @@ title: RM_miniconda安装ROS2
 published: 2025-09-09
 description: '使用Miniconda安装ROS2 Humble的步骤'
 image: ''
-tags: [ROS环境搭建,RM]
+tags: [ROS,RM]
 category: 'RM'
 draft: false 
 lang: ''

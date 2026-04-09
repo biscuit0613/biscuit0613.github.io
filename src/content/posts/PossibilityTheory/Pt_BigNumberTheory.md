@@ -3,7 +3,7 @@ title: 三个大数定律和中心极限定理
 published: 2025-12-08
 description: '依概率收敛理解大数定律，中心极限定理的内容与意义'
 image: ''
-tags: [大数定律,中心极限定理]
+tags: [概率论,大数定律,中心极限定理]
 category: '概率论与数理统计'
 draft: false 
 lang: ''

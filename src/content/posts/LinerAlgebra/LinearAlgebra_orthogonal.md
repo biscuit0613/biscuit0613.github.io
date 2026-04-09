@@ -3,8 +3,8 @@ title: 线性代数：正交与正交补，直和分解
 published: 2026-03-11
 description: ''
 image: ''
-tags: []
-category: ''
+tags: [线性空间]
+category: '线性代数'
 draft: false 
 lang: ''
 ---

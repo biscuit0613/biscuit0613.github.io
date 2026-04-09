@@ -3,7 +3,7 @@ title: 线性代数基础：线性空间
 published: 2026-03-10
 description: 线性空间是线性代数中的基本概念，它是由向量组成的集合，这些向量可以进行加法和标量乘法运算。
 image: ''
-tags: [线代, 线性空间]
+tags: [线性空间]
 category: '线性代数'
 draft: false 
 lang: ''
