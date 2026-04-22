@@ -11,7 +11,7 @@ lang: ''
 
 ## 雅各比矩阵
 
-在向量微积分中，雅各比矩阵是一阶偏导数以一定方式排列成的矩阵，其行列式称为雅各比行列式。
+在向量微积分中，雅各比矩阵是**一阶偏导数**以一定方式排列成的**矩阵**，其行列式称为雅各比行列式。
 
 雅各比矩阵的重要性在于它体现了一个可微方程与给出点的最优线性逼近。因此，雅各比矩阵类似于多元函数的导数。
 
@@ -22,7 +22,7 @@ $$
 \mathbf{x} &\mapsto \mathbf{F}(\mathbf{x})
 \end{align*}
 $$
-其中 $\mathbf{x}=(x_1,x_2,...,x_n)$，这个函数 $\mathbf{F}$ 由 $m$ 个实分量函数组成，即 $\mathbf{F}(\mathbf{x})=(f_1(\mathbf{x}),f_2(\mathbf{x}),...,f_m(\mathbf{x}))$。
+其中 $\mathbf{x}=(x_1,x_2,...,x_n)$，这个函数 $\mathbf{F}$ 由 $m$ 个**实分量函数**组成，即 $\mathbf{F}(\mathbf{x})=(f_1(\mathbf{x}),f_2(\mathbf{x}),...,f_m(\mathbf{x}))$。
 
 如果每个分量函数 $f_i$ 在点 $\mathbf{a}$ 处对每个变量 $x_j$ 都可偏导，则称 $\mathbf{F}$ 在点 $\mathbf{a}$ 处可偏导。
 雅可比矩阵$\mathbf{J}$定义为：
@@ -84,7 +84,7 @@ $$
 
 对于二维函数 $f:\mathbb{R}^2\to\mathbb{R},\mathbf{x}=(x,y),\mathbf{F}=f$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial f}{\partial (x,y)}=(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})^T$ 就是梯度。(这里应该是列向量，写成行向量的转置)
 
-对于二维函数的线性组合： $\mathbf{F}:\mathbb{R}^2\to\mathbb{R}^2,\mathbf{x}=(x,y),\mathbf{F}=(u,v)$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial (u,v)}{\partial (x,y)}$ 就是二维函数线性组合的导数（雅各比矩阵）。
+对于二维函数 $u,v$ 的线性组合： $\mathbf{F}:\mathbb{R}^2\to\mathbb{R}^2,\mathbf{x}=(x,y),\mathbf{F}=(u,v)$ ， $\mathbf{J}=\frac{\partial \mathbf{F}}{\partial \mathbf{x}}=\frac{\partial (u,v)}{\partial (x,y)}$ 就是二维函数线性组合的导数（雅各比矩阵）。
 
 ## 雅各比行列式
 
