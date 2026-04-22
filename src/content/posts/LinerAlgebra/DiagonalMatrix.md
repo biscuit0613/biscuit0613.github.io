@@ -1,10 +1,10 @@
 ---
-title: 对角矩阵 (Diagonal Matrix)及其性质
+title: 对角矩阵 (Diagonal Matrix)
 published: 2026-04-10
-description: ''
+description: '对角阵是指在一个方阵中，只有主对角线上的元素可能非零，而其他位置的元素都是零的矩阵。本文将介绍对角矩阵的定义、性质以及计算方法。'
 image: ''
 tags: []
-category: ''
+category: '线性代数'
 draft: false 
 lang: ''
 ---
@@ -34,7 +34,6 @@ $$
 - 如果 $d_2 = 0.5$，意味着它把向量在 $y$ 轴方向压缩一半。
 - ...
 - 各轴独立：每个轴的缩放互不干扰。
-
 
 ## 计算
 

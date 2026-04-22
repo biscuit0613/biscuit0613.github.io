@@ -3,7 +3,7 @@ title: 雅各布矩阵&雅各布行列式
 published: 2025-09-13
 description: '系统介绍一下雅各布矩阵和雅各布行列式'
 image: ''
-tags: [向量的微积分,雅各布矩阵]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

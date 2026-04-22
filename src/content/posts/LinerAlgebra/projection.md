@@ -1,9 +1,9 @@
 ---
-title: 向量的投影
+title: 向量投影
 published: 2026-04-07
-description: ''
+description: ' 向量投影的定义、计算方法以及一些注意事项。'
 image: ''
-tags: [投影]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

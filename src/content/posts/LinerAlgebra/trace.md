@@ -1,9 +1,9 @@
 ---
 title: 矩阵的迹(Trace)
 published: 2026-04-15
-description: ''
+description: '矩阵的迹（Trace）是一个重要的矩阵特征，它表示矩阵主对角线元素的和。本文将介绍迹的定义、性质以及在矩阵求导中的应用。'
 image: ''
-tags: [迹]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

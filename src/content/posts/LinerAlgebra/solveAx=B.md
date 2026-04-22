@@ -1,7 +1,7 @@
 ---
-title: solve_Ax=B:线性方程组求解
+title: solve_Ax=B:线性方程组求解,矩阵LU分解,矩阵的稳定性
 published: 2026-04-15
-description: ''
+description: '高斯消元法和LU分解是求解线性方程组 $A\mathbf{x} = \mathbf{b}$ 的两种常用方法。本文将介绍这两种方法的基本原理、步骤以及它们之间的关系。顺便提一下矩阵的稳定性问题。'
 image: ''
 tags: []
 category: '线性代数'

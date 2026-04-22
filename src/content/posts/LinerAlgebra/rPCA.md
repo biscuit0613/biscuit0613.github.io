@@ -1,9 +1,9 @@
 ---
-title: rPCA(Robust Principal Component Analysis)
+title: rPCA鲁棒主成分分析 (Robust Principal Component Analysis)
 published: 2026-04-08
-description: 'rPCA的介绍'
+description: 'rPCA（Robust Principal Component Analysis）是一种用于处理含有噪声和离群点的高维数据的降维技术。本文将介绍rPCA的基本概念、数学原理以及应用场景。'
 image: ''
-tags: [rPCA]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

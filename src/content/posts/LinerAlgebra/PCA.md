@@ -1,9 +1,9 @@
 ---
-title: PCA (Principal Component Analysis)
+title: PCA主成分分析 (Principal Component Analysis)
 published: 2026-04-07
-description: 'PCA的介绍'
+description: 'PCA（Principal Component Analysis）是一种常用的降维技术，旨在通过线性变换将高维数据映射到低维空间，同时尽可能保留原始数据的方差信息。本文将介绍PCA的基本概念、数学原理以及应用场景。'
 image: ''
-tags: [PCA]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

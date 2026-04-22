@@ -1,5 +1,5 @@
 ---
-title: 线性代数：矩阵的初等变换
+title: 矩阵的初等变换
 published: 2026-03-11
 description: ''
 image: ''

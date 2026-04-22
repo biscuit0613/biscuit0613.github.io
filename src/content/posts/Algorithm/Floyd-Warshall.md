@@ -63,5 +63,3 @@ $$d_{ij}^k =\begin{cases}
    $$
    \text{if } D[i] [j] = D[i] [k] + D[k] [j] \text{ then } P[i] [j] = P[k] [j]=k
    $$
-
-   

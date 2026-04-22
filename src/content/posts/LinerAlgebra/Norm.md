@@ -1,9 +1,9 @@
 ---
-title: 范数 (Norm)
+title: 矩阵和向量的范数 (Norm)
 published: 2026-04-10
 description: ''
 image: ''
-tags: [线性代数, 范数]
+tags: []
 category: '线性代数'
 draft: false 
 lang: ''

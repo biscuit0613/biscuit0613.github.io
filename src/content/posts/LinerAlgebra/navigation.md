@@ -3,7 +3,7 @@ title: 线性代数知识导航
 published: 2026-04-15
 description: 基于知识依赖关系图的线性代数学习导航，提供清晰的学习路径和概念依赖关系
 image: ''
-tags: [线性代数, 导航, 学习路径, 知识图谱]
+tags: []
 category: '线性代数'
 draft: false
 lang: 'zh-CN'

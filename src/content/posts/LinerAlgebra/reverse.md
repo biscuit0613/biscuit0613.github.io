@@ -1,7 +1,7 @@
 ---
-title: 矩阵求逆
+title: 矩阵的可逆性与矩阵逆引理
 published: 2026-04-20
-description: ''
+description: '矩阵的可逆性定义、性质以及计算方法。矩阵逆引理的应用。'
 image: ''
 tags: []
 category: '线性代数'

@@ -1,7 +1,7 @@
 ---
-title: 内积与内积空间
+title: 从向量到矩阵的内积：Gram矩阵与$A^TA$
 published: 2026-04-20
-description: ''
+description: '讲一讲内积的定义和性质，以及它在矩阵空间中的推广，特别是GRAM矩阵和$A^TA$和$AA^T$这两种常见的处理长方形矩阵手段的关系。'
 image: ''
 tags: []
 category: '线性代数'

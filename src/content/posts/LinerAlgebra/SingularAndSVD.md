@@ -1,10 +1,10 @@
 ---
 title: 奇异值和奇异值分解 (Singular Value Decomposition, SVD)
 published: 2026-04-22
-description: ''
+description: '矩阵的奇异值分解（SVD）是一种重要的矩阵分解方法，它将一个矩阵分解为三个矩阵的乘积：一个正交矩阵、一个对角矩阵和另一个正交矩阵。本文将介绍SVD的定义、计算方法以及在数据分析和机器学习中的应用。'
 image: ''
 tags: []
-category: ''
+category: '线性代数'
 draft: false 
 lang: ''
 ---
@@ -46,4 +46,3 @@ $$
 再旋转：$\mathbf{U}$ 对拉伸后的椭球进行最后的角度调整。
 
 奇异值 $\sigma_i$ 就是这个椭球各个半轴的长度。 如果某个奇异值非常大，说明矩阵在那个方向上的“投影”非常强；如果接近 0，说明那个维度几乎不包含有效信息。
-
