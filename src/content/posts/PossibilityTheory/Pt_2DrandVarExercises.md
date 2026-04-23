@@ -5,7 +5,7 @@ description: ''
 image: ''
 tags: [概率论,多维随机变量]
 category: '概率论与数理统计'
-draft: false 
+draft: true
 lang: ''
 ---
 

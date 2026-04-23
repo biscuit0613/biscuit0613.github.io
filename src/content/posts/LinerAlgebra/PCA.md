@@ -150,7 +150,7 @@ gemini的巧思：
 假设原始数据的协方差矩阵为 $\Sigma$，其维度为 $d \times d$。总方差就是该矩阵主对角线元素之和，也就是协方差矩阵的 **迹 (Trace)** 数学表达式为：
 
 $$
-Total\_Variance = \text{Tr}(\Sigma) = \sum_{i=1}^{d} \sigma_{ii}^2
+Total\_Variance = \text{tr}(\Sigma) = \sum_{i=1}^{d} \sigma_{ii}^2
 $$
 
 其中 $\sigma_{ii}^2$ 是原始坐标系中第 $i$ 个维度的方差。这代表了在没有任何旋转、压缩的情况下，系统总共包含的“能量”（波动）。

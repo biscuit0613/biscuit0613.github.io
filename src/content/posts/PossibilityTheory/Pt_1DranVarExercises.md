@@ -5,7 +5,7 @@ description: '一维随机变量及其分布练习题'
 image: ''
 tags: [随机变量]
 category: '概率论与数理统计'
-draft: false 
+draft: true
 lang: ''
 ---
 
