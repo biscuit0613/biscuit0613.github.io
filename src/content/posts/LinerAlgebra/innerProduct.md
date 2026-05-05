@@ -104,16 +104,23 @@ $A$ 是一个 $m \times n$ 的矩阵。$A^T A$ 是一个 $n \times n$ 的对称�
    证明：
 
    设 $\mathbf{v}$ 是 $A^T A$ 的特征向量，对应特征值 $\lambda$：
+
    $$
    (A^T A) \mathbf{v} = \lambda \mathbf{v}
    $$
+
    两边同时左乘 $A$：
+
    $$
-   A (A^T A) \mathbf{v} = A (\lambda \mathbf{v})$$
+   A (A^T A) \mathbf{v} = A (\lambda \mathbf{v})
+   $$
+
    利用矩阵结合律重组左边：
+
    $$
    (A A^T) (A \mathbf{v}) = \lambda (A \mathbf{v})
    $$
+
    结果显而易见：$A \mathbf{v}$ 变成了 $AA^T$ 的特征向量，且对应的特征值依然是 $\lambda$
 
 - **迹（Trace）** 相等：由循环不变性 $\text{tr}(AB) = \text{tr}(BA)$。所以 $\text{tr}(A^T A) = \text{tr}(A A^T) = \sum a_{ij}^2$（这就是矩阵的 Frobenius 范数的平方）。
