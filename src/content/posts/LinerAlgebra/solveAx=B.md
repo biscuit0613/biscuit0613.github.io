@@ -13,11 +13,6 @@ lang: ''
 
 对于矩阵 $A\in \mathbb{R}^{m\times n}$
 
-:::tip
-行满秩，列无敌
-        ----帕拉迪宇
-:::
-
 $$
 \begin{cases}
 m \leq n,\text{A行满秩} \rArr A\mathbf{x}\text{可以构成} \mathbb{R}^m \text{中任意向量} \\
