@@ -37,7 +37,7 @@ $$
 Gram矩阵有几个重要性质：
 
 1. **对称性**：由于内积的对称性，Gram矩阵是一个对称矩阵，即 $G_{ij} = G_{ji}$。
-2. **半正定性**：Gram矩阵是半正定的。这意味着对于任何非零向量 $\mathbf{c} \in \mathbb{R}^m$，都有 $\mathbf{c}^T G \mathbf{c} \geq 0$。这是因为 $\mathbf{c}^T G \mathbf{c} = \sum_{i=1}^m \sum_{j=1}^m c_i c_j \langle \mathbf{v}_i, \mathbf{v}_j \rangle = \langle \sum_{i=1}^m c_i \mathbf{v}_i, \sum_{j=1}^m c_j \mathbf{v}_j \rangle \geq 0$。
+2. **半正定性**：Gram矩阵是半正定的。任何非零向量 $\mathbf{c} \in \mathbb{R}^m$，都有 $\mathbf{c}^T G \mathbf{c} \geq 0$。这是因为 $\mathbf{c}^T G \mathbf{c} = \sum_{i=1}^m \sum_{j=1}^m c_i c_j \langle \mathbf{v}_i, \mathbf{v}_j \rangle = \langle \sum_{i=1}^m c_i \mathbf{v}_i, \sum_{j=1}^m c_j \mathbf{v}_j \rangle \geq 0$。
 3. **秩**：Gram矩阵的秩等于向量集合 $\{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_m\}$ 的线性独立向量的数量。换句话说，如果这些向量中有 $r$ 个是线性独立的，那么 Gram矩阵的秩就是 $r$。
 4. **特征值**：由于 Gram矩阵是半正定的，它的所有特征值都是非负的。这些特征值反映了向量集合的几何性质，例如它们在空间中的分布和相互关系。
 

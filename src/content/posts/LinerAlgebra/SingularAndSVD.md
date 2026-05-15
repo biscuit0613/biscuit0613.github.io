@@ -19,9 +19,9 @@ $$
 \mathbf{A} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T
 $$
 
-- $\mathbf{V}$ (右奇异向量)：输入空间的一组标准正交基， $n \times n$ 的正交矩阵，是 $\mathbf{A}^T\mathbf{A}$ 的**特征向量矩阵**，定义了**输入空间**里对输入数据的“旋转”。
+- $\mathbf{V}$ (右奇异向量)：输入空间的一组**标准正交基**， $n \times n$ 的正交矩阵，是 $\mathbf{A}^T\mathbf{A}$ 的**特征向量矩阵**归一化得到，定义了**输入空间**里对输入数据的“旋转”。
 - $\mathbf{\Sigma}$ (奇异值)：和矩阵 $A$ 同型，对角线上就是奇异值。对角线上元素 $\sigma_i$ 是 $\mathbf{A}^T\mathbf{A}$ 特征值的平方根，按**从大到小**排列，对应在 $\mathbf{V}$ 定义的那些方向上，空间被拉伸了多少倍。
-- $\mathbf{U}$ (左奇异向量)：输出空间的一组标准正交基，$m \times m$ 的正交矩阵，是 $\mathbf{A}\mathbf{A}^T$ 的**特征向量矩阵**，把拉伸后的数据**映射到输出空间**。
+- $\mathbf{U}$ (左奇异向量)：输出空间的一组**标准正交基**，$m \times m$ 的正交矩阵，是 $\mathbf{A}\mathbf{A}^T$ 的**特征向量矩阵**归一化得到，把拉伸后的数据**映射到输出空间**。
 
 :::note
 
@@ -46,3 +46,26 @@ $$
 再旋转：$\mathbf{U}$ 对拉伸后的椭球进行最后的角度调整。
 
 奇异值 $\sigma_i$ 就是这个椭球各个半轴的长度。 如果某个奇异值非常大，说明矩阵在那个方向上的“投影”非常强；如果接近 0，说明那个维度几乎不包含有效信息。
+
+## 计算方法
+
+1. 计算 $\mathbf{A}^T\mathbf{A}$ 或$\mathbf{A}\mathbf{A}^T$。然后获得它们的特征值和特征向量。
+
+2. 特征值的平方根就是奇异值 $\sigma_i$，得到矩阵 $\mathbf{\Sigma}$。
+3. $\mathbf{V}$ 的列向量就是 $\mathbf{A}^T\mathbf{A}$ 的特征向量归一化
+4. 通过 $\mathbf{U} = \mathbf{A} \mathbf{V} \mathbf{\Sigma}^{-1}$ 计算 $\mathbf{U}$ 的列向量。
+
+注意通过一个来推另一个，因为uv之间有符号关系。（-u,-v也成立，但不能构造svd分解）
+
+### 对于方阵填充0得到的非方阵
+
+如果 $A$ 是一个 $n \times n$ 的方阵，$\tilde{A}$ 是通过在 $A$ 的下方添加 $m-n$ 行全零得到的 $m \times n$ 的矩阵，那么 $\tilde{A}$ 的奇异值分解可以表示为：
+$$
+\tilde{A} = \begin{pmatrix} A \\ 0 \end{pmatrix} = \begin{pmatrix} U & 0 \\ 0 & U_{m-n} \end{pmatrix} \begin{pmatrix} \Sigma & 0 \\ 0 & 0 \end{pmatrix} V^T
+$$
+
+或
+
+$$
+\tilde{A} = \begin{pmatrix} A & 0 \end{pmatrix} = U \begin{pmatrix} \Sigma & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} V & 0  \\ 0 & V_{m-n} \end{pmatrix}^T
+$$

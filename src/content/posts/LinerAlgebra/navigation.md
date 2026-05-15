@@ -5,7 +5,7 @@ description: 基于知识依赖关系图的线性代数学习导航，提供清�
 image: ''
 tags: []
 category: '线性代数'
-draft: false
+draft: true
 lang: 'zh-CN'
 ---
 
@@ -161,4 +161,3 @@ graph TD
     R[线性方程组求解] -.-> C
     S[内积空间] -.-> E
 ```
-
