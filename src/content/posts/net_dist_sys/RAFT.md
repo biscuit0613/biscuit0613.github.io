@@ -70,15 +70,46 @@ flowchart TD
 
 避免平局：选举超时时间随机（例如 100~200ms 之间），使一个服务器大概率先发起选举并获胜。
 
+### RequestVote RPC
+
+| 字段         | 类型   | 说明                                      |
+| ------------ | ------ | ----------------------------------------- |
+| term         | int    | 候选人的当前任期号                        |
+| candidateId  | string | 候选人的服务器 ID                         |
+| lastLogIndex | int    | 候选人最后一条日志条目的索引（从 1 开始） |
+| lastLogTerm  | int    | 候选人最后一条日志条目的任期号            |
+
+接收方的处理逻辑:
+
+1. 如果 term < currentTerm：返回 false，拒绝投票。
+
+2. 如果 voteGranted 尚未投给其他人（或已投给该 candidateId）：
+
+- 比较候选人与自己的日志“谁更完整”：
+
+  - 如果 lastLogTerm > 接收方的 lastLogTerm → 候选人的日志更新 → 可以投票；
+
+  - 若 lastLogTerm == 接收方的 lastLogTerm，则比较 lastLogIndex >= 接收方的 lastLogIndex → 候选人的日志不短于自己 → 可以投票；
+
+- 否则拒绝投票。
+
+投票后，持久化记录 voteFor = candidateId，防止同一任期内重复投票。
+
 ## 日志复制（正常操作）
 
-客户端命令只发给 Leader。
+1. 客户端向 Leader 发送命令。(客户端命令只发给 Leader。)
 
-Leader 将命令作为日志条目追加到本地日志（包含：索引、任期、命令）。
+2. Leader 将命令作为新条目追加到本地日志。
 
-Leader 通过 AppendEntries RPC 并行复制到所有 Follower。
+3. Leader 并发向所有 Follower 发送 AppendEntries RPC。
 
-当条目被超过半数节点复制后，Leader 提交该条目，应用到状态机，并通知客户端。
+4. 当该条目被过半数节点复制后，Leader 将该条目**提交（commit）**：
+
+    - 应用到 Leader 的状态机，产生结果返回客户端。
+
+5. Leader 在后续的 AppendEntries RPC 中告诉 Follower 已提交的条目索引。
+
+6. Follower 将已提交的条目应用到自己的状态机。
 
 ### 日志结构
 
@@ -90,9 +121,42 @@ Leader 通过 AppendEntries RPC 并行复制到所有 Follower。
 
 ### 日志特性
 
-两个不同服务器上的相同索引和任期的日志条目，它们存储的命令一定相同。
+如果两个不同服务器上的日志条目有相同索引和相同任期，则：
 
-并且在该条目之前的所有日志也完全一致（通过一致性检查保证）。
+1. 它们存储相同的命令。
+
+2. 它们之前的所有日志条目也完全相同。（通过一致性检查保证）。
+
+### AppendEntries RPC与日志一致性
+
+| 字段         | 类型       | 说明                                                                                                                  |
+| ------------ | ---------- | --------------------------------------------------------------------------------------------------------------------- |
+| term         | int        | 领导者的当前任期号                                                                                                    |
+| leaderId     | string     | 领导者的 ID（Follower 用于重定向客户端）                                                                              |
+| prevLogIndex | int        | 紧接新日志条目之前的那个日志条目的索引，Leader 认为 Follower 应该已经拥有的日志索引（通常是 nextIndex[follower] - 1） |
+| prevLogTerm  | int        | prevLogIndex 条目的任期号，Leader 自己在该索引位置的条目的任期。                                                      |
+| entries[]    | []LogEntry | 需要复制的日志条目列表（心跳时为空）                                                                                  |
+| leaderCommit | int        | 领导者已提交的最高日志索引                                                                                            |
+
+接收方处理逻辑（Follower）
+
+1. 如果 term < currentTerm：返回 false（拒绝）。
+
+2. 如果 term > currentTerm：更新 currentTerm，转为 Follower。
+
+3. 检查自己日志中在 prevLogIndex 位置的条目的`任期`是否和 prevLogTerm 匹配：
+
+    - 若不匹配 → 返回 false（触发 Leader 递减 nextIndex 重试）。
+
+    - 若匹配 → 接受新条目：
+
+4. 删除从 prevLogIndex+1 开始的所有冲突条目（保持一致性）。
+
+5. 追加 entries[] 到本地日志。
+
+6. 如果 leaderCommit > commitIndex：更新 commitIndex = min(leaderCommit, 最后一个新条目的索引)，并应用到状态机。
+
+返回 success = true。
 
 ### 日志不一致
 
