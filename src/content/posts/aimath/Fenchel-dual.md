@@ -4,7 +4,7 @@ published: 2026-05-15
 description: ''
 image: ''
 tags: []
-category: ''
+category: '人工智能数学基础'
 draft: false 
 lang: ''
 ---
