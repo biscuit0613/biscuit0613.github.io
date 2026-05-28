@@ -224,7 +224,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/avatar.gif", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
+	avatar: "assets/images/avatar.png", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "Biscuit",
 	bio: "哈基米，你要大步大步地走下去啊，不行，要悠哒悠哒才能欣赏到沿途的风景。",
 	links: [
