@@ -1,5 +1,5 @@
 ---
-title: 模式识别与机器学习：线性分类器
+title: 模式识别与机器学习：线性分类器-感知机和LMSE
 published: 2026-05-28
 description: ''
 image: ''
