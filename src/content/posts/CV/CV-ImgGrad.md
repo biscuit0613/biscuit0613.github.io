@@ -16,8 +16,8 @@ lang: ''
 图像在 $(x,y)$ 处的梯度定义为：
 
 $$
-I_x(x,y) = I(x+1,y) - I(x,y)\\
-I_y(x,y) = I(x,y+1) - I(x,y)\\
+I_x(x,y) = I(x+1,y) - I(x-1,y)\\
+I_y(x,y) = I(x,y+1) - I(x,y-1)\\
 $$
 
 等价于卷积形式：
@@ -45,6 +45,6 @@ $$
 \nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2} \approx I(x+1,y) + I(x-1,y) + I(x,y+1) + I(x,y-1) - 4I(x,y)
 $$
 
-还可以进行拓展，加入对角线方向的二阶微分：
+还可以进行拓展，加入对角线方向的二阶微分
 
 ![alt text](image-4.png)

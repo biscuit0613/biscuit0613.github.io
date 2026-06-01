@@ -73,7 +73,49 @@ $$
 
 - 高斯核是可分离核：先进行一维横向高斯模糊，再进行一维纵向高斯模糊，计算复杂度从 $O(n^2)$ 降为 $O(n)$。
 - 两次使用标准差为 $\sigma$ 的高斯核进行卷积，等价于使用一次标准差为 $\sqrt{2}\sigma$ 的高斯核进行卷积。
--滤波器尺寸和 $\sigma$ 的关系：$kernel\ size \approx 6\sigma + 1$ 因为高斯分布在 $\pm 3\sigma$ 范围内包含了 99.7% 的能量。
+- 滤波器尺寸和 $\sigma$ 的关系：$kernel\ size \approx 6\sigma + 1$ 因为高斯分布在 $\pm 3\sigma$ 范围内包含了 99.7% 的能量。
+- 有时候使用的权重是 $\frac{w(i,j)}{\sum_{i,j} w(i,j)}$ ， 归一化确保核的亮度不变性（平滑后平均亮度不变）。
+
+基于sigma产生高斯核：
+
+```rust
+
+use std::f64::consts::PI;
+
+/// 生成二维高斯核
+/// - `size`: 核尺寸，必须是奇数（如 3, 5, 7）
+/// - `sigma`: 高斯标准差 (σ)
+/// 返回值：size x size 的二维浮点数组，已归一化（所有元素之和为 1）
+fn gaussian_kernel(size: usize, sigma: f64) -> Vec<Vec<f64>> {
+    assert!(size % 2 == 1, "核尺寸必须是奇数");
+    let radius = (size / 2) as i32;
+    let sigma2 = sigma * sigma;
+    let denom = 2.0 * sigma2;
+    let norm = 1.0 / (2.0 * PI * sigma2);
+    
+    let mut kernel = vec![vec![0.0; size]; size];
+    let mut sum = 0.0;
+    
+    for i in 0..size {
+        let x = (i as i32 - radius) as f64;
+        for j in 0..size {
+            let y = (j as i32 - radius) as f64;
+            let value = norm * (-(x*x + y*y) / denom).exp();
+            kernel[i][j] = value;
+            sum += value;
+        }
+    }
+    
+    // 归一化，使所有权重之和为 1
+    for row in &mut kernel {
+        for val in row {
+            *val /= sum;
+        }
+    }
+    kernel
+}
+
+```
 
 ## 非线性滤波器
 
