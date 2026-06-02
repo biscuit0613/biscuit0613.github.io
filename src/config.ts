@@ -439,3 +439,12 @@ export const widgetConfigs = {
 	sakura: sakuraConfig,
 	fullscreenWallpaper: fullscreenWallpaperConfig,
 } as const;
+
+/**
+ * Encryption config for password-protected posts
+ * - fallbackDescription: used for OG tags / social cards when post is encrypted
+ */
+export const encryptConfig = {
+	enable: true,
+	fallbackDescription: "此内容已加密",
+} as const;

@@ -22,6 +22,17 @@ const postsCollection = defineCollection({
 		prevSlug: z.string().default(""),
 		nextTitle: z.string().default(""),
 		nextSlug: z.string().default(""),
+
+		/*
+		 * Encryption support (added by remark-encrypt plugin)
+		 * password: only exists during build, stripped from output
+		 * encrypted / encryptedContent / encryptSalt / encryptIv: injected by plugin
+		 */
+		password: z.string().optional().default(""),
+		encrypted: z.boolean().optional().default(false),
+		encryptedContent: z.string().optional().default(""),
+		encryptSalt: z.string().optional().default(""),
+		encryptIv: z.string().optional().default(""),
 	}),
 });
 const specCollection = defineCollection({

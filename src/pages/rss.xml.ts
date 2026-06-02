@@ -25,6 +25,9 @@ export async function GET(context: APIContext) {
 	const feed: RSSFeedItem[] = [];
 
 	for (const post of posts) {
+		// Skip encrypted posts — post.body contains original plaintext markdown
+		// (remark plugin only modifies AST, not the raw body field)
+		if (post.data.encrypted) continue;
 		// convert markdown to html string
 		// Ensure we pass a string to markdown-it. Some collection entries may have body undefined
 		// (depending on how content was loaded). Fallback to description if body is missing.

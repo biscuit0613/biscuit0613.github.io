@@ -23,6 +23,7 @@ import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.
 import { rehypeMermaid } from "./src/plugins/rehype-mermaid.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
+import { remarkEncrypt } from "./src/plugins/remark-encrypt.mjs";
 import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 // https://astro.build/config
@@ -123,6 +124,10 @@ export default defineConfig({
 			remarkSectionize,
 			parseDirectiveNode,
 			remarkMermaid,
+
+			// Must run LAST: encrypts password-protected posts and replaces body
+			// (plugins before it compute reading-time/excerpt on original content)
+			remarkEncrypt,
 		],
 		rehypePlugins: [
 			rehypeKatex,
