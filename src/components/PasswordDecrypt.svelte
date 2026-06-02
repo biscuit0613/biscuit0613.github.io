@@ -1,5 +1,6 @@
 <script lang="ts">
 import MarkdownIt from "markdown-it";
+import katex from "katex";
 
 interface EncData {
 	content: string;
@@ -7,8 +8,8 @@ interface EncData {
 	iv: string;
 }
 
-// Encrypted data injected by [...slug].astro — built by remark-encrypt plugin
-let { encData }: { encData: EncData } = $props();
+// Encrypted data + post URL for resolving relative image paths
+let { encData, postUrl = "" }: { encData: EncData; postUrl?: string } = $props();
 
 let password = $state("");
 let decryptedHtml = $state("");
@@ -16,12 +17,60 @@ let error = $state("");
 let loading = $state(false);
 
 const md = new MarkdownIt({
-	html: false, // strip raw HTML from decrypted markdown (XSS prevention)
+	html: false,
 	linkify: true,
 });
 
 function base64ToBuf(base64: string): ArrayBuffer {
 	return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)).buffer;
+}
+
+/** Render markdown → HTML, then render KaTeX math and resolve relative image paths */
+function renderRichHtml(mdText: string): string {
+	// Step 1: basic markdown → HTML
+	let html = md.render(mdText);
+
+	// Step 2: render display math $$...$$ with KaTeX on the client
+	// KaTeX CSS is already loaded globally via Layout.astro (katex.css)
+	html = html.replace(/\$\$([\s\S]*?)\$\$/g, (_match, formula: string) => {
+		try {
+			return katex.renderToString(formula.trim(), {
+				displayMode: true,
+				throwOnError: false,
+			});
+		} catch {
+			return `<span class="text-red-500">[KaTeX error: ${formula.trim()}]</span>`;
+		}
+	});
+
+	// Step 3: render inline math $...$ with KaTeX
+	// Must run AFTER display math to avoid matching $$ content
+	html = html.replace(/\$(?!\$)(.+?)\$/g, (_match, formula: string) => {
+		try {
+			return katex.renderToString(formula.trim(), {
+				throwOnError: false,
+			});
+		} catch {
+			return `<span class="text-red-500">[KaTeX error]</span>`;
+		}
+	});
+
+	// Step 4: resolve relative image paths against the post URL
+	if (postUrl) {
+		const base = postUrl.endsWith("/") ? postUrl : postUrl + "/";
+		html = html.replace(
+			/(<img[^>]+src\s*=\s*["'])(\.\.?\/[^"']+)/g,
+			(_match, prefix: string, relPath: string) => {
+				try {
+					return prefix + new URL(relPath, window.location.origin + base).href;
+				} catch {
+					return prefix + relPath;
+				}
+			},
+		);
+	}
+
+	return html;
 }
 
 async function decrypt() {
@@ -70,7 +119,7 @@ async function decrypt() {
 			combined,
 		);
 
-		decryptedHtml = md.render(new TextDecoder().decode(decrypted));
+		decryptedHtml = renderRichHtml(new TextDecoder().decode(decrypted));
 	} catch {
 		error = "密码错误";
 	} finally {

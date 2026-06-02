@@ -28,13 +28,14 @@ const { Content, headings } = await entry.render();
 
 const { remarkPluginFrontmatter } = await entry.render();
 
-// Encryption check: if post has password field, remark-encrypt plugin sets encrypted: true
-const isEncrypted = entry.data.encrypted ?? false;
+// Encryption check: remark-encrypt plugin injects these into vfile frontmatter,
+// available via remarkPluginFrontmatter (NOT entry.data, which is pre-render)
+const isEncrypted = remarkPluginFrontmatter.encrypted ?? false;
 const encData = isEncrypted
 	? {
-			content: entry.data.encryptedContent,
-			salt: entry.data.encryptSalt,
-			iv: entry.data.encryptIv,
+			content: remarkPluginFrontmatter.encryptedContent,
+			salt: remarkPluginFrontmatter.encryptSalt,
+			iv: remarkPluginFrontmatter.encryptIv,
 		}
 	: null;
 // Use fallback OG description for encrypted posts to avoid leaking hints
@@ -124,7 +125,7 @@ const jsonLd = {
             -->
             {isEncrypted && encData ? (
                 <div class="mb-6 markdown-content onload-animation">
-                    <PasswordDecrypt encData={encData} client:only="svelte" />
+                    <PasswordDecrypt encData={encData} postUrl={Astro.url.pathname} client:only="svelte" />
                 </div>
             ) : (
                 <Markdown class="mb-6 markdown-content onload-animation">
