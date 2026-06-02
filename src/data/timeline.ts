@@ -27,8 +27,7 @@ export const timelineData: TimelineItem[] = [
 	{
 		id: "current-study",
 		title: "计算机科学与技术专业在读",
-		description:
-			"目前正在学习计算机科学与技术专业。",
+		description: "目前正在学习计算机科学与技术专业。",
 		type: "education",
 		startDate: "2024-09-01",
 		location: "哈夫克航天学院",

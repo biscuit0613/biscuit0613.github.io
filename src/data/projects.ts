@@ -6,9 +6,9 @@ export interface Project {
 	title: string;
 	description: string;
 	image: string;
-	category: 'web' | 'mobile' | 'desktop' | 'other';
+	category: "web" | "mobile" | "desktop" | "other";
 	techStack: string[];
-	status: 'completed' | 'in-progress' | 'planned';
+	status: "completed" | "in-progress" | "planned";
 	liveDemo?: string;
 	sourceCode?: string;
 	startDate: string;
@@ -19,18 +19,18 @@ export interface Project {
 
 export const projectsData: Project[] = [
 	{
-		id: 'desktopPet',
-		title: '桌面宠物',
-		description: '一个桌宠应用，使用python开发，支持多种宠物形象和互动功能。',
-		image: '/projects/desktop-pet.png',
-		category: 'desktop',
-		techStack: ['Python', 'PyQt', 'Pillow'],
-		status: 'completed',
-		sourceCode: 'https://github.com/biscuit0613/desktopet',
-		startDate: '2025-8-20',
-		endDate: '2023-9-03',
+		id: "desktopPet",
+		title: "桌面宠物",
+		description: "一个桌宠应用，使用python开发，支持多种宠物形象和互动功能。",
+		image: "/projects/desktop-pet.png",
+		category: "desktop",
+		techStack: ["Python", "PyQt", "Pillow"],
+		status: "completed",
+		sourceCode: "https://github.com/biscuit0613/desktopet",
+		startDate: "2025-8-20",
+		endDate: "2023-9-03",
 		featured: true,
-		tags: ['Python']
+		tags: ["Python"],
 	},
 	// {
 	// 	id: 'mizuki-blog',
@@ -102,38 +102,40 @@ export const projectsData: Project[] = [
 // 获取项目统计信息
 export const getProjectStats = () => {
 	const total = projectsData.length;
-	const completed = projectsData.filter(p => p.status === 'completed').length;
-	const inProgress = projectsData.filter(p => p.status === 'in-progress').length;
-	const planned = projectsData.filter(p => p.status === 'planned').length;
+	const completed = projectsData.filter((p) => p.status === "completed").length;
+	const inProgress = projectsData.filter(
+		(p) => p.status === "in-progress",
+	).length;
+	const planned = projectsData.filter((p) => p.status === "planned").length;
 
 	return {
 		total,
 		byStatus: {
 			completed,
 			inProgress,
-			planned
-		}
+			planned,
+		},
 	};
 };
 
 // 按分类获取项目
 export const getProjectsByCategory = (category?: string) => {
-	if (!category || category === 'all') {
+	if (!category || category === "all") {
 		return projectsData;
 	}
-	return projectsData.filter(p => p.category === category);
+	return projectsData.filter((p) => p.category === category);
 };
 
 // 获取特色项目
 export const getFeaturedProjects = () => {
-	return projectsData.filter(p => p.featured);
+	return projectsData.filter((p) => p.featured);
 };
 
 // 获取所有技术栈
 export const getAllTechStack = () => {
 	const techSet = new Set<string>();
-	projectsData.forEach(project => {
-		project.techStack.forEach(tech => techSet.add(tech));
+	projectsData.forEach((project) => {
+		project.techStack.forEach((tech) => techSet.add(tech));
 	});
 	return Array.from(techSet).sort();
 };
