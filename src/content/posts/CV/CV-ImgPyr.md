@@ -33,12 +33,12 @@ lang: ''
 
 每一层存的是上一层的高斯模糊和下采样结果：
 
-- $G_0$ = 原始图像
-- $G_1$ = downsample(GaussianBlur($G_0$))
-- $G_2$ = downsample(GaussianBlur($G_1$))
+- $G^{(0)}$ = 原始图像
+- $G^{(1)}$ = downsample(GaussianBlur($G^{(0)}$))
+- $G^{(2)}$ = downsample(GaussianBlur($G^{(1)}$))
 - ...
 
-$G_i$ 是原图经过 $i$ 次高斯模糊和下采样得到的低频近似。
+$G^{(i)}$ 是原图经过 $i$ 次高斯模糊和下采样得到的低频近似。
 
 ### 高斯金字塔的特性
 
@@ -58,18 +58,18 @@ $G_i$ 是原图经过 $i$ 次高斯模糊和下采样得到的低频近似。
 
 先构造高斯金字塔:
 
-- $G_0$ = 原始图像
-- $G_1$ = downsample(GaussianBlur($G_0$))
-- $G_2$ = downsample(GaussianBlur($G_1$))
+- $G^{(0)}$ = 原始图像
+- $G^{(1)}$ = downsample(GaussianBlur($G^{(0)}$))
+- $G^{(2)}$ = downsample(GaussianBlur($G^{(1)}$))
 - ...
 
 拉普拉斯金字塔的第 $i$ 层定义为：
 
 $$
-L_i = G_i - upsample(G_{i+1})
+L^{(i)} = G^{(i)} - upsample(G^{(i+1)})
 $$
 
-其中 $upsample(G_{i+1})$ 是对 $G_{i+1}$ 进行上采样（插值+高斯模糊）得到的图像。
+其中 $upsample(G^{(i+1)})$ 是对 $G^{(i+1)}$ 进行上采样（插值+高斯模糊）得到的图像.
 
 ![alt text](image-5.png)
 
@@ -79,10 +79,67 @@ $$
 
 - 需要存储每一层的残差和最高层的高斯图像。
 
-- 拉普拉斯金字塔实际上是对高斯金字塔的差分操作。
+- 拉普拉斯金字塔实际上是对高斯金字塔的差分操作.
 
 - 高斯差分（Difference of Gaussians, DoG）可以近似拉普拉斯算子，用于边缘检测。
 
 ## 高斯差分金字塔（Difference of Gaussians Pyramid,DoG）
 
-在SIFT那里介绍，这里不展开了。
+高斯差分金字塔是通过对高斯金字塔的相邻层进行差分得到的，是用于近似LoG算子和NLoG算子的，这里以sift为例：
+
+先简单回顾一下尺度空间的构建：
+
+- 选择一组离散的尺度 $\sigma_0, \sigma_1, \dots, \sigma_k,\sigma_{i+1}=k\sigma_i$。
+- 对于每个尺度 $\sigma_i$，对原始图像进行高斯模糊，得到尺度空间图像 $S(x,y,\sigma_i) =  I*G_{\sigma_i}(x,y)$。
+- 构建高斯金字塔，每组（octave）有若干层（intervals），相邻层的尺度成等比关系。
+
+标准的NLoG方法是直接对尺度空间图像进行二阶导数计算然后归一化：(这里的 $G_\sigma$ 是高斯核函数，因为和坐标无关，所以直接写成 $G_\sigma$)
+
+$$
+\text{NLoG}(x,y,\sigma) = \sigma^2 \nabla^2 S(x,y,\sigma) = \sigma^2 \nabla^2 G_\sigma * I(x,y)
+$$
+
+补充高斯核函数的导数性质，对尺度 $\sigma$ 求导：
+
+$$
+\frac{\partial}{\partial \sigma} G_\sigma = \sigma \nabla^2 G_\sigma
+$$
+
+对于高斯核的差分：
+
+$$
+\frac{\partial}{\partial \sigma} G_\sigma \approx \frac{G_{k\sigma} - G_\sigma}{(k-1)\sigma}
+$$
+
+代入上式：
+
+$$
+\sigma \nabla^2 G_\sigma \approx \frac{G_{k\sigma} - G_\sigma}{(k-1)\sigma}
+$$
+
+可以得到LoG的近似：
+
+$$
+\text{LoG}(x,y,\sigma) = \nabla^2 G_\sigma  \approx \frac{G_{k\sigma}  - G_\sigma(\sigma) }{(k-1)\sigma^2}
+$$
+
+进而得到NLoG的近似,发现比例系数 $(k-1)$ 是常数，可以忽略：
+
+$$
+\text{NLoG}(x,y,\sigma) = \sigma^2 \nabla^2 G_\sigma \approx \frac{G_{k\sigma} - G_\sigma}{k-1}
+$$
+
+分子 $G_{k\sigma} - G_\sigma$ 就是高斯差分金字塔的卷积核定义，因此高斯差分金字塔可以近似实现NLoG方法：
+
+$$
+\begin{aligned}
+D(x,y,\sigma) &= S(x,y,k\sigma) - S(x,y,\sigma) \\
+&= \left(G_{k\sigma}  - G_\sigma\right) * I(x,y)\\
+&\approx (k-1) \sigma^2 \nabla^2 G_\sigma * I(x,y)\\
+& = (k-1) \text{NLoG}(x,y,\sigma)
+\end{aligned}
+$$
+
+检测 DoG 的极值等价于检测 NLoG 的极值。
+
+SIFT 的高斯金字塔中，每组（octave）有若干层（intervals），相邻层相减得到 DoG 金字塔。然后在 DoG 的三维空间（x,y,σ）中找局部极值，作为候选关键点。

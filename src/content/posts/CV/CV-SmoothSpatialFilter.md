@@ -60,7 +60,21 @@ flowchart LR
 一个常见的加权滤波器是高斯滤波器（Gaussian filter），其权重由高斯函数定义：
 
 $$
-w(i,j) = \dfrac{1}{2\pi\sigma^2} \exp{(-\dfrac{i^2 + j^2}{2\sigma^2})}
+G(x,y,\sigma) = \dfrac{1}{2\pi\sigma^2} \exp{(-\dfrac{x^2 + y^2}{2\sigma^2})}
+$$
+
+$x,y$ 定义为相对于卷积核中心的偏移量，$\sigma$ 是高斯函数的标准差，控制权重的分布范围。
+
+当用高斯核对图像做卷积时：
+
+1. 将高斯核的中心对齐到图像当前像素 $(i,j)$。
+
+2. 对于核上的每一个偏移位置 $(x,y)$，从图像中取出对应像素值 $I(i+x,j+y)$，具体正负需要约定（通常$x$ 向右为正，$y$ 向下为正）
+
+3. 乘以核权重 $G(x,y)$，累加。
+
+$$
+g(i,j) = \sum_{x=-3\sigma}^{3\sigma} \sum_{y=-3\sigma}^{3\sigma} G(x,y,\sigma) \cdot I(i+x,j+y)
 $$
 
 ![alt text](image-2.png)
@@ -74,7 +88,7 @@ $$
 - 高斯核是可分离核：先进行一维横向高斯模糊，再进行一维纵向高斯模糊，计算复杂度从 $O(n^2)$ 降为 $O(n)$。
 - 两次使用标准差为 $\sigma$ 的高斯核进行卷积，等价于使用一次标准差为 $\sqrt{2}\sigma$ 的高斯核进行卷积。
 - 滤波器尺寸和 $\sigma$ 的关系：$kernel\ size \approx 6\sigma + 1$ 因为高斯分布在 $\pm 3\sigma$ 范围内包含了 99.7% 的能量。
-- 有时候使用的权重是 $\frac{w(i,j)}{\sum_{i,j} w(i,j)}$ ， 归一化确保核的亮度不变性（平滑后平均亮度不变）。
+- 有时候使用的权重是 $\frac{G(i,j)}{\sum_{i,j} G(i,j)}$ ， 归一化确保核的亮度不变性（平滑后平均亮度不变）。
 
 基于sigma产生高斯核：
 
@@ -119,6 +133,8 @@ fn gaussian_kernel(size: usize, sigma: f64) -> Vec<Vec<f64>> {
 
 ## 非线性滤波器
 
+假设滤波器尺寸为 $k \times k,k=2a+1$，以中心像素为基准，定义邻域为 $[x-a, x+a] \times [y-a, y+a]$，其中 $a = \frac{k-1}{2}$。
+
 - **中值滤波器（Median filter）**：用邻域内像素的中位数替代中心像素，能有效去除椒盐噪声，同时保持边缘。
 
 $$
@@ -145,18 +161,20 @@ $$
 
 通过两个高斯函数分别对空间距离和像素值差异进行加权：
 
+用 $i,j$ 表示像素的坐标，用 $f(i,j)$ 表示像素的灰度值，用 $k,l$ 表示核内部的偏移坐标：
+
 Domain Kernel:
 $$
-d(i,j,k,l) = \exp{(-\dfrac{(i-k)^2 + (j-l)^2}{2\sigma_d^2})}
+d(k,l) = \exp{(-\dfrac{k^2 + l^2}{2\sigma_d^2})}
 $$
 
 Range Kernel:
 $$
-r(i,j,k,l) = \exp{(-\dfrac{(f(i,j)-f(k,l))^2}{2\sigma_r^2})}
+r(k,l) = \exp{(-\dfrac{(f(i,j)-f(i+k,j+l))^2}{2\sigma_r^2})}
 $$
 
 $$
-g(i,j) = \dfrac{1}{W_p} \sum_{k,l} f(k,l) \cdot \underbrace{\exp{(-\dfrac{(i-k)^2 + (j-l)^2}{2\sigma_d^2})}}_{\text{空间距离权重}w_d(x,y,k,l)} \cdot \underbrace{\exp{(-\dfrac{(f(i,j)-f(k,l))^2}{2\sigma_r^2})}}_{\text{像素值差异权重}w_r(f(x,y), f(k,l))}
+g(i,j) = \dfrac{1}{W_p} \sum_{k,l} f(i+k,j+l) \cdot \underbrace{\exp{(-\dfrac{k^2 +l^2}{2\sigma_d^2})}}_{\text{空间距离权重}w_d(x,y,k,l)} \cdot \underbrace{\exp{(-\dfrac{(f(i,j)-f(i+k,j+l))^2}{2\sigma_r^2})}}_{\text{像素值差异权重}w_r(f(x,y), f(i+k,j+l))}
 $$
 
 其中 $W_p$ 是归一化因子，$\sigma_d$ 控制空间距离的权重，$\sigma_r$ 控制像素值差异的权重。

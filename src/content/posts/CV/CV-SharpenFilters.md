@@ -24,7 +24,7 @@ lang: ''
 符号定义：
 
 - $\nabla f=mag{\nabla\mathbf{f}}\approx|\frac{\partial f}{\partial x}| + |\frac{\partial f}{\partial y}|$
-- $G_x = \frac{\partial f}{\partial x}$, $G_y = \frac{\partial f}{\partial y}$
+- $g_x = \frac{\partial f}{\partial x}$, $g_y = \frac{\partial f}{\partial y}$
 
 不同的算子设计：(就是不同的卷积核设计)
 
@@ -39,8 +39,8 @@ $$
 对应的梯度计算思想是沿着对角线方向计算差分：
 
 $$
-G_x = I * K_x = I(x,y) - I(x+1,y+1) \\
-G_y = I * K_y = I(x+1,y) - I(x,y+1)
+g_x = I * K_x = I(x,y) - I(x+1,y+1) \\
+g_y = I * K_y = I(x+1,y) - I(x,y+1)
 $$
 
 计算量极小
@@ -98,6 +98,8 @@ $$
 $$
 K = \begin{bmatrix}1&1&1\\1&-8&1\\1&1&1\end{bmatrix}
 $$
+
+无论哪种核，都是不可分离的卷积核，计算量较大。
 
 :::tip
 各向同性滤波器具有旋转不变性，即滤波响应基本不受图像灰度变
