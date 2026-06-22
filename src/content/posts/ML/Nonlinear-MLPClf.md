@@ -22,15 +22,15 @@ lang: ''
 
 单个神经元的结构如图
 
-![alt text](image.png)
-
-数学模型如下：
+![alt text](image-8.png)
 
 $$
-y=f(\mathbf{w}^T\mathbf{x})=f\left( \sum_{i=0}^n w_i x_i\right)
+y=f(\mathbf{w}^T\mathbf{x})=f\left( \sum_{i=0}^{d+1} w_i x_i\right)
 $$
 
-其中 $\mathbf{w}$ 是权重向量(已经增广包含偏置项)，$\mathbf{x}$ 是输入向量（已经是增广向量），$f$ 是激活函数。
+- 其中 $\mathbf{w}$ 是权重向量(已经增广包含偏置项)，$\mathbf{x}$ 是输入向量（已经是增广向量），$f$ 是激活函数。
+
+- 当 f 为符号函数时，“神经元”等价于“线性判别函数”
 
 ## 网络设置
 

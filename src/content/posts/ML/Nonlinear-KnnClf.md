@@ -33,9 +33,9 @@ lang: ''
 | 切比雪夫距离   | $d(\mathbf{x}, \mathbf{y}) = \max_{i=1}^n\|\mathbf{x}_i - \mathbf{y}_i\|$                         |
 | 闵可夫斯基距离 | $d(\mathbf{x}, \mathbf{y}) = \left( \sum_{i=1}^n\|\mathbf{x}_i - \mathbf{y}_i\| ^p \right)^{1/p}$ |
 
-## 单个标准样本
+## 平均样本法
 
-对于 $c$ 个类别 $\omega_1, \omega_2, \ldots, \omega_c$，每个类别有一个标准样本 $T_i$，对于待识别样本 $\mathbf{x}$，计算其与每个标准样本的距离：
+对于 $c$ 个类别 $\omega_1, \omega_2, \ldots, \omega_c$，每个类别有一个**标准样本** $T_i$，对于待识别样本 $\mathbf{x}$，计算其与每个标准样本的距离，取最小作为分类结果。
 
 $$
 i_0 = \arg\min_{1 \leq i \leq c} d(\mathbf{x}, T_i)
@@ -47,11 +47,19 @@ $$
 
 规则：找与待测样本 $\mathbf{x}$ 距离最近的单个训练样本 $\mathbf{x}'$，以这个最近样本 $\mathbf{x}'$ 的类别作为待测样本 $\mathbf{x}$ 的预测类别。
 
+最近邻规则相当于k=1的k-近邻分类，其分类界面可以用Voronoi网格表示
+
 理论保证：渐近误差不超过贝叶斯误差的2倍。
 
 缺点：对噪声敏感，决策边界复杂（Voronoi图）。
 
-## K近邻法
+## K-近邻法（K-Nearest Neighbors, KNN）
+
+:::tip
+
+这个也是贝叶斯分类器的一种非参数估计方法，直接从数据中“拼凑”出密度函数。
+
+:::
 
 规则：找与待测样本 $\mathbf{x}$ 距离最近的 $K$ 个训练样本，根据这 $K$ 个样本的类别进行投票，选择出现频率最高的类别作为预测结果。
 
