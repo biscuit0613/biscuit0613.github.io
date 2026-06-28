@@ -10,10 +10,10 @@ draft: false
 lang: ''
 ---
 
-考虑特征向量的所有维度
+考虑特征向量 $\mathbf{x} \in \mathbb{R}^d$，假设类条件概率密度是高斯分布：
 
 $$
-P(\mathbf{x}|\omega_i) = \frac{1}{(2\pi)^{d/2} |\Sigma_i|^{1/2}} \exp\left( -\frac{1}{2} (\mathbf{x} - \mu_i)^T \Sigma_i^{-1} (\mathbf{x} - \mu_i) \right)\sim \mathcal{N}(\mu_i, \Sigma_i)
+p(\mathbf{x}|\omega_i) = \frac{1}{(2\pi)^{d/2} |\Sigma_i|^{1/2}} \exp\left( -\frac{1}{2} (\mathbf{x} - \mu_i)^T \Sigma_i^{-1} (\mathbf{x} - \mu_i) \right)\sim \mathcal{N}(\mu_i, \Sigma_i)
 $$
 
 此时的判别函数为：
@@ -26,7 +26,7 @@ $$
 
 $$
 \begin{aligned}
-g_i(\mathbf{x}) &= \ln P(\mathbf{x}|\omega_i) + \ln P(\omega_i) \\
+g_i(\mathbf{x}) &= \ln p(\mathbf{x}|\omega_i) + \ln P(\omega_i) \\
 &= -\frac{1}{2} (\mathbf{x} - \mu_i)^T \Sigma_i^{-1} (\mathbf{x} - \mu_i) - \frac{1}{2} \ln |\Sigma_i| + \ln P(\omega_i) - \cancel{\frac{d}{2} \ln (2\pi)}\\[1em]
 i &= \arg\max_i g_i(\mathbf{x})
 \end{aligned}
@@ -92,23 +92,29 @@ $$
 
 ## 朴素贝叶斯分类器
 
-假设特征向量的各个维度之间条件独立，即 $P(\mathbf{x}|\omega_i) = \prod_{j=1}^d P(x_j|\omega_i)$ （第i类，第j维），每个特征单独建模为一维高斯分布：
+:::tip
+
+参数估计里面的独立性假设是针对数据集中的特征向量之间而言的，而朴素贝叶斯分类器的独立性假设是针对具体特征向量的各个维度之间而言的。
+
+:::
+
+假设特征向量的各个维度之间条件独立，即 $p(\mathbf{x}|\omega_i) = \prod_{j=1}^d p(x_j|\omega_i)$ （第i类，第j维），每个特征单独建模为一维高斯分布：
 
 $$
-P(x_j|\omega_i) = \frac{1}{\sqrt{2\pi} \sigma_{ij}} \exp\left( -\frac{(x_j - \mu_{ij})^2}{2\sigma_{ij}^2} \right)
+p(x_j|\omega_i) = \frac{1}{\sqrt{2\pi} \sigma_{ij}} \exp\left( -\frac{(x_j - \mu_{ij})^2}{2\sigma_{ij}^2} \right)
 $$
 
 特征向量的类条件概率密度函数为：
 
 $$
-P(\mathbf{x}|\omega_i) = \prod_{j=1}^d P(x_j|\omega_i) = \prod_{j=1}^d \frac{1}{\sqrt{2\pi} \sigma_{ij}} \exp\left( -\frac{(x_j - \mu_{ij})^2}{2\sigma_{ij}^2} \right)
+p(\mathbf{x}|\omega_i) = \prod_{j=1}^d p(x_j|\omega_i) = \prod_{j=1}^d \frac{1}{\sqrt{2\pi} \sigma_{ij}} \exp\left( -\frac{(x_j - \mu_{ij})^2}{2\sigma_{ij}^2} \right)
 $$
 
 判别函数为：
 
 $$
 \begin{aligned}
-g_i(\mathbf{x}) &= \ln P(\mathbf{x}|\omega_i) + \ln P(\omega_i) \\
+g_i(\mathbf{x}) &= \ln p(\mathbf{x}|\omega_i) + \ln P(\omega_i) \\
 &= \sum_{j=1}^d \left( -\frac{(x_j - \mu_{ij})^2}{2\sigma_{ij}^2} - \frac{1}{2} \ln (2\pi) - \ln \sigma_{ij} \right) + \ln P(\omega_i) \\
 &= -\frac{1}{2} \sum_{j=1}^d \frac{(x_j - \mu_{ij})^2}{\sigma_{ij}^2}  - \sum_{j=1}^d \ln \sigma_{ij} + \ln P(\omega_i)- \cancel{\frac{d}{2} \ln (2\pi)}
 \end{aligned}

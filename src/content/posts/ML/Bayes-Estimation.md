@@ -23,22 +23,22 @@ lang: ''
 
 假设前提：
 
-1. 假设类条件概率的分布长这样：$P(\mathbf{x}|\omega_i) = P(\mathbf{x}|\omega_i;\theta_i)$。
-2. 独立同分布：同一类别的样本是**独立同分布**的随机变量。可以把联合概率写成乘积的形式：$P(D_i|\omega_i) = \prod_{j=1}^{N_i} P(\mathbf{x}_j|\omega_i)$。
+1. 假设类条件概率的分布长这样：$p(\mathbf{x}|\omega_i) = p(\mathbf{x}|\omega_i;\theta_i)$。
+2. 独立同分布：同一类别（$\omega_i$ 相同）的样本是**独立同分布**的随机变量。可以把联合概率写成乘积的形式：$p(D_i|\omega_i) = \prod_{j=1}^{N_i} p(\mathbf{x}_j|\omega_i)$。其中 $D_i = \{\mathbf{x}_j | y_j = \omega_i\}$ 是第 $i$ 类的训练样本集合，$N_i$ 是第 $i$ 类的样本数。
 
 方便起见通常把类 $\omega_i$ 省略掉，参数 $\theta_i$ 简称为 $\theta$
 
 ### 最大似然估计（MLE）
 
-最大似然估计的核心思想是：在给定数据的前提下，找到使得 **数据出现概率** $P(D_i|\theta_i)$ 最大的参数值 $\hat{\theta_i}$。
+最大似然估计的核心思想是：在给定数据的前提下，找到使得 **数据出现概率** $p(D_i|\theta_i)$ 最大的参数值 $\hat{\theta_i}$。
 
 对于某一类 $\omega_i$ 的数据集：$D_i = \{\mathbf{x}_j | y_j = \omega_i\}$
 
-似然$L(\theta_i) = P(D_i | \theta_i) = \prod_{j=1}^{N_i} P(\mathbf{x}_j | \omega_i; \theta_i)$。
+似然$L(\theta_i) = p(D_i | \theta_i) = \prod_{j=1}^{N_i} p(\mathbf{x}_j | \omega_i; \theta_i)$。
 
-- 对数化 $l(\theta_i) = \ln P(D_i | \theta_i)= \sum_{j=1}^{N_i} \ln P(\mathbf{x}_j | \omega_i; \theta_i)$。
+- 对数化 $l(\theta_i) = \ln p(D_i | \theta_i)= \sum_{j=1}^{N_i} \ln p(\mathbf{x}_j | \omega_i; \theta_i)$。
 
-- 目标函数 $\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i)=\argmax_{\theta_i} \ln P(D_i | \theta_i)$。
+- 目标函数 $\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i)=\argmax_{\theta_i} \ln p(D_i | \theta_i)$。
 - 计算：解方程 $\frac{\partial}{\partial \theta}l(\theta) = 0$
 
 对于服从高斯分布的类条件概率，参数 $\theta_i$ 包括均值 $\mu_i$ 和协方差矩阵 $\Sigma_i$，MLE 的解为：
@@ -49,40 +49,38 @@ $$
 
 ### 最大后验估计（MAP）
 
-最大后验估计的核心思想是：在给定数据的前提下，结合对参数 $\theta_i$ 的先验，找到使得参数 $\theta_i$ 的 **后验概率** $P(\theta_i|D_i)$ 最大的参数值 $\hat{\theta_i}$。
+最大后验估计的核心思想是：在给定数据的前提下，结合对参数 $\theta_i$ 的先验，找到使得参数 $\theta_i$ 的 **后验概率** $p(\theta_i|D_i)$ 最大的参数值 $\hat{\theta_i}$。
 
-根据贝叶斯定理，后验概率可以写成：$P(\theta_i|D_i) = \frac{P(D_i|\theta_i)P(\theta_i)}{P(D_i)}\propto P(D_i|\theta_i)P(\theta_i)$。
+根据贝叶斯定理，后验概率可以写成：$p(\theta_i|D_i) = \frac{p(D_i|\theta_i)p(\theta_i)}{p(D_i)}\propto p(D_i|\theta_i)p(\theta_i)$。
 
-似然函数 $L(\theta_i) = P(D_i|\theta_i)$，先验概率 $P(\theta_i)$。
+似然函数 $L(\theta_i) = p(D_i|\theta_i)$，先验概率 $p(\theta_i)$。
 
-- 对数化 $l(\theta_i) = \ln P(D_i|\theta_i) + \ln P(\theta_i)=\sum_{j=1}^{N_i} \ln P(\mathbf{x}_j | \omega_i; \theta_i) + \ln P(\theta_i)$。
-- 目标函数 $\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i) = \arg\max_{\theta_i} \ln P(D_i|\theta_i) + \ln P(\theta_i)$。
+- 对数化 $l(\theta_i) = \ln p(D_i|\theta_i) + \ln p(\theta_i)=\sum_{j=1}^{N_i} \ln p(\mathbf{x}_j | \omega_i; \theta_i) + \ln p(\theta_i)$。
+- 目标函数 $\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i) = \arg\max_{\theta_i} \ln p(D_i|\theta_i) + \ln p(\theta_i)$。
 - 计算：解方程 $\frac{\partial}{\partial \theta_i}l(\theta_i) = 0$
 
-相比于 MLE，MAP 通过引入先验概率 $P(\theta_i)$ 来对参数进行 **正则化**，避免过拟合问题。
+相比于 MLE，MAP 通过引入先验概率 $p(\theta_i)$ 来对参数进行 **正则化**，避免过拟合问题。
 
 - 当先验为高斯分布时，MAP等价于Ridge回归（L2正则化）
 - 当先验为拉普拉斯分布时，等价于Lasso回归（L1正则化）。
 
 ### 贝叶斯估计（Bayesian Estimation）
 
-计算参数 $\theta_i$ 的 **后验分布** $P(\theta_i|D_i)$，而不是单一的点估计 $\hat{\theta_i}$。
+计算参数 $\theta_i$ 的 **后验分布** $p(\theta_i|D_i)$，而不是单一的点估计 $\hat{\theta_i}$。
 
 #### 学习过程
 
-计算后验分布 $P(\theta_i|D_i) = \frac{P(D_i|\theta_i)P(\theta_i)}{P(D_i)}=\frac{P(D_i|\theta_i)P(\theta_i)}{\int P(D_i|\theta_i)P(\theta_i)d\theta_i}$。分母那一坨是归一化用的。
+计算后验分布 $p(\theta_i|D_i) = \dfrac{p(D_i|\theta_i)p(\theta_i)}{p(D_i)}=\dfrac{p(D_i|\theta_i)p(\theta_i)}{\int p(D_i|\theta_i)p(\theta_i)d\theta_i}$。分母那一坨是归一化用的。
 
 #### 分类过程（预测）
 
 对于一个新的样本 $\mathbf{x}$，计算其类条件概率的 **预测分布**：
 
 $$
-P(\mathbf{x}|D_i) = \int P(\mathbf{x}|\theta_i)P(\theta_i|D_i)d\theta_i
+p(\mathbf{x}|\omega_i) = p(\mathbf{x}|D_i) = \int p(\mathbf{x}|\theta_i)p(\theta_i|D_i)d\theta_i
 $$
 
-这里 $D_i$ 的意思和 $\omega_i$ 是一样的，都是第i类的数据集。
-
-然后根据最小错误率准则，计算后验概率 $P(\omega_i|\mathbf{x}) \propto P(\mathbf{x}|D_i)P(\omega_i)$，选择后验概率最大的类别 $\omega_i$ 作为预测结果。
+然后根据最小错误率准则，计算后验概率 $P(\omega_i|\mathbf{x}) \propto p(\mathbf{x}|D_i)P(\omega_i)$，选择后验概率最大的类别 $\omega_i$ 作为预测结果。
 
 ## 类条件概率的非参数估计
 
