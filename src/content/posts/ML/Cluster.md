@@ -4,7 +4,8 @@ published: 2026-06-21
 description: ''
 image: ''
 tags: []
-category: ''
+category: '模式识别与机器学习'
+order: 23
 draft: false 
 lang: ''
 ---

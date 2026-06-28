@@ -4,7 +4,8 @@ published: 2026-06-03
 description: ''
 image: ''
 tags: []
-category: ''
+category: '计算机视觉'
+order: 6
 draft: false 
 lang: ''
 ---

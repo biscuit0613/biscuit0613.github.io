@@ -5,6 +5,7 @@ description: ''
 image: ''
 tags: []
 category: '模式识别与机器学习'
+order: 15
 draft: false 
 lang: ''
 ---

@@ -21,7 +21,7 @@ NFA 的定义：一个非确定的有穷自动机（NFA）是一个五元组 $A 
 
 - $Q$ 是状态的有限集合；
 - $\Sigma$ 是输入字母表；
-- $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to \mathcal{P}(Q)=2^{|Q|}$ 是转移函数，其中 $\mathcal{P}(Q)$ 表示 $Q$ 的幂集；
+- $\delta: Q \times \Sigma \to \mathcal{P}(Q)=2^{|Q|}$ 是转移函数，其中 $\mathcal{P}(Q)$ 表示 $Q$ 的幂集；
 - $q_0 \in Q$ 是初始状态；
 - $F \subseteq Q$ 是接受状态的集合。
 
@@ -29,14 +29,14 @@ NFA 的定义：一个非确定的有穷自动机（NFA）是一个五元组 $A 
 
 与DFA的区别：
 
-1. 转移函数 $\delta=2^{|Q|}$
-2. 同一个输入符号可以有多个转移结果 
+1. 转移函数 $\delta= Q \times \Sigma \to 2^{|Q|}$
+2. 同一个输入符号可以有多个转移结果
 
 :::
 
 ## 带有空转移的非确定有穷自动机 （NFA-ε）
 
-可能不读字符就转移状态
+空转移：可能不读字符就转移状态
 
 定义：一个带有空转移的非确定的有穷自动机（NFA-ε）是一个五元组 $A = (Q, \Sigma, \delta, q_0, F)$，其中：
 
@@ -45,3 +45,13 @@ NFA 的定义：一个非确定的有穷自动机（NFA）是一个五元组 $A 
 - $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to \mathcal{P}(Q)=2^{|Q|}$ 是转移函数，其中 $\mathcal{P}(Q)$ 表示 $Q$ 的幂集；
 - $q_0 \in Q$ 是初始状态；
 - $F \subseteq Q$ 是接受状态的集合。
+
+
+:::tip
+
+一般认为这俩个模型等价，NFA-ε 可以通过添加状态和转移来模拟 NFA，反之亦然。
+
+:::
+
+## NFA 与 DFA 的等价性
+
