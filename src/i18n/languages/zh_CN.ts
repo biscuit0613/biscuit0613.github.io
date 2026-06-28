@@ -112,6 +112,10 @@ export const zh_CN: Translation = {
 	[Key.projectsDemo]: "在线演示",
 	[Key.projectsSource]: "源代码",
 
+	// 归档页面排序
+	[Key.sortByTime]: "按时间排序",
+	[Key.sortByReadingOrder]: "阅读顺序",
+
 	// RSS页面
 	[Key.rss]: "RSS 订阅",
 	[Key.rssDescription]: "订阅获取最新更新",

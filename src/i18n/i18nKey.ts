@@ -137,6 +137,10 @@ enum I18nKey {
 	skillsByLevel = "skillsByLevel",
 	skillsByCategory = "skillsByCategory",
 
+	// 归档页面排序
+	sortByTime = "sortByTime",
+	sortByReadingOrder = "sortByReadingOrder",
+
 	// RSS页面
 	rss = "rss",
 	rssDescription = "rssDescription",

@@ -115,6 +115,10 @@ export const en: Translation = {
 	[Key.projectsDemo]: "Demo",
 	[Key.projectsSource]: "Source",
 
+	// Archive sort
+	[Key.sortByTime]: "Sort by Time",
+	[Key.sortByReadingOrder]: "Reading Order",
+
 	// RSS page
 	[Key.rss]: "RSS Feed",
 	[Key.rssDescription]: "Subscribe for latest updates",

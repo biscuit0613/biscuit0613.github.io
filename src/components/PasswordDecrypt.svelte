@@ -1,6 +1,6 @@
 <script lang="ts">
-import MarkdownIt from "markdown-it";
 import katex from "katex";
+import MarkdownIt from "markdown-it";
 
 interface EncData {
 	content: string;
@@ -9,7 +9,8 @@ interface EncData {
 }
 
 // Encrypted data + post URL for resolving relative image paths
-let { encData, postUrl = "" }: { encData: EncData; postUrl?: string } = $props();
+let { encData, postUrl = "" }: { encData: EncData; postUrl?: string } =
+	$props();
 
 let password = $state("");
 let decryptedHtml = $state("");

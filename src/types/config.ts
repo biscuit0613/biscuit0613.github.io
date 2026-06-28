@@ -151,10 +151,15 @@ export type BlogPostData = {
 	image?: string;
 	category?: string;
 	pinned?: boolean;
+	order?: number;
 	prevTitle?: string;
 	prevSlug?: string;
 	nextTitle?: string;
 	nextSlug?: string;
+	readingOrderPrevTitle?: string;
+	readingOrderPrevSlug?: string;
+	readingOrderNextTitle?: string;
+	readingOrderNextSlug?: string;
 };
 
 export type ExpressiveCodeConfig = {

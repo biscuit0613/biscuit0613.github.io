@@ -168,4 +168,8 @@ export const ja: Translation = {
 	[Key.timelineCurrentRole]: "現在の役職",
 	[Key.timelineEmployed]: "在職中",
 	[Key.timelineAvailable]: "利用可能",
+
+	// アーカイブ並び替え
+	[Key.sortByTime]: "時間順",
+	[Key.sortByReadingOrder]: "読書順",
 };

@@ -5,14 +5,17 @@ import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import { getPostUrlBySlug } from "../utils/url-utils";
 
-export let tags: string[];
-export let categories: string[];
-export let sortedPosts: Post[] = [];
+export let tags: string[] = [];
+export let categories: string[] = [];
+export let timeSortedPosts: Post[] = [];
+export let readingOrderedPosts: Post[] = [];
 
 const params = new URLSearchParams(window.location.search);
 tags = params.has("tag") ? params.getAll("tag") : [];
 categories = params.has("category") ? params.getAll("category") : [];
 const uncategorized = params.get("uncategorized");
+let sortMode =
+	params.get("sort") || localStorage.getItem("archiveSortMode") || "time";
 
 interface Post {
 	slug: string;
@@ -24,12 +27,23 @@ interface Post {
 	};
 }
 
-interface Group {
+interface YearGroup {
 	year: number;
 	posts: Post[];
 }
 
+interface CategoryGroup {
+	category: string;
+	posts: Post[];
+}
+
+type Group = YearGroup | CategoryGroup;
+
 let groups: Group[] = [];
+
+function isYearGroup(g: Group): g is YearGroup {
+	return "year" in g;
+}
 
 function formatDate(date: Date) {
 	const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -41,11 +55,31 @@ function formatTag(tagList: string[]) {
 	return tagList.map((t) => `#${t}`).join(" ");
 }
 
-onMount(async () => {
-	let filteredPosts: Post[] = sortedPosts;
+function setMode(mode: string) {
+	sortMode = mode;
+	localStorage.setItem("archiveSortMode", mode);
+	rebuildGroups();
+}
+
+function getPostUrl(slug: string) {
+	const base = getPostUrlBySlug(slug);
+	if (sortMode === "reading-order") {
+		const separator = base.includes("?") ? "&" : "?";
+		return `${base}${separator}sort=reading-order`;
+	}
+	return base;
+}
+
+function rebuildGroups() {
+	let filtered: Post[];
+
+	const source =
+		sortMode === "reading-order" ? readingOrderedPosts : timeSortedPosts;
+
+	filtered = [...source];
 
 	if (tags.length > 0) {
-		filteredPosts = filteredPosts.filter(
+		filtered = filtered.filter(
 			(post) =>
 				Array.isArray(post.data.tags) &&
 				post.data.tags.some((tag) => tags.includes(tag)),
@@ -53,44 +87,102 @@ onMount(async () => {
 	}
 
 	if (categories.length > 0) {
-		filteredPosts = filteredPosts.filter(
+		filtered = filtered.filter(
 			(post) => post.data.category && categories.includes(post.data.category),
 		);
 	}
 
 	if (uncategorized) {
-		filteredPosts = filteredPosts.filter((post) => !post.data.category);
+		filtered = filtered.filter((post) => !post.data.category);
 	}
 
-	const grouped = filteredPosts.reduce(
-		(acc, post) => {
-			const year = post.data.published.getFullYear();
-			if (!acc[year]) {
-				acc[year] = [];
-			}
-			acc[year].push(post);
-			return acc;
-		},
-		{} as Record<number, Post[]>,
-	);
+	if (sortMode === "reading-order") {
+		const grouped = filtered.reduce(
+			(acc, post) => {
+				const cat = post.data.category?.trim() || i18n(I18nKey.uncategorized);
+				if (!acc[cat]) {
+					acc[cat] = [];
+				}
+				acc[cat].push(post);
+				return acc;
+			},
+			{} as Record<string, Post[]>,
+		);
 
-	const groupedPostsArray = Object.keys(grouped).map((yearStr) => ({
-		year: Number.parseInt(yearStr),
-		posts: grouped[Number.parseInt(yearStr)],
-	}));
+		const catOrder =
+			sortMode === "reading-order"
+				? [
+						...new Set(
+							readingOrderedPosts.map(
+								(p) => p.data.category?.trim() || i18n(I18nKey.uncategorized),
+							),
+						),
+					]
+				: [];
 
-	groupedPostsArray.sort((a, b) => b.year - a.year);
+		const groupedArray: CategoryGroup[] = catOrder
+			.filter((cat) => grouped[cat])
+			.map((cat) => ({
+				category: cat,
+				posts: grouped[cat],
+			}));
 
-	groups = groupedPostsArray;
+		groups = groupedArray;
+	} else {
+		const grouped = filtered.reduce(
+			(acc, post) => {
+				const year = post.data.published.getFullYear();
+				if (!acc[year]) {
+					acc[year] = [];
+				}
+				acc[year].push(post);
+				return acc;
+			},
+			{} as Record<number, Post[]>,
+		);
+
+		const groupedArray: YearGroup[] = Object.keys(grouped)
+			.map((yearStr) => ({
+				year: Number.parseInt(yearStr),
+				posts: grouped[Number.parseInt(yearStr)],
+			}))
+			.sort((a, b) => b.year - a.year);
+
+		groups = groupedArray;
+	}
+}
+
+onMount(() => {
+	rebuildGroups();
 });
 </script>
 
 <div class="card-base px-8 py-6">
+    <!-- sort mode toggle -->
+    <div class="flex gap-2 mb-6">
+        <button
+            class="text-sm px-4 py-1.5 rounded-lg"
+            class:btn-plain={sortMode !== "time"}
+            class:btn-card={sortMode === "time"}
+            onclick={() => setMode("time")}
+        >
+            {i18n(I18nKey.sortByTime)}
+        </button>
+        <button
+            class="text-sm px-4 py-1.5 rounded-lg"
+            class:btn-plain={sortMode !== "reading-order"}
+            class:btn-card={sortMode === "reading-order"}
+            onclick={() => setMode("reading-order")}
+        >
+            {i18n(I18nKey.sortByReadingOrder)}
+        </button>
+    </div>
+
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
                 <div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75">
-                    {group.year}
+                    {isYearGroup(group) ? group.year : group.category}
                 </div>
                 <div class="w-[15%] md:w-[10%]">
                     <div
@@ -105,7 +197,7 @@ onMount(async () => {
 
             {#each group.posts as post}
                 <a
-                        href={getPostUrlBySlug(post.slug)}
+                        href={getPostUrl(post.slug)}
                         aria-label={post.data.title}
                         class="group btn-plain !block h-10 w-full rounded-lg hover:text-[initial]"
                 >

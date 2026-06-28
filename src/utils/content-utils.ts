@@ -3,18 +3,39 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { getCategoryUrl } from "@utils/url-utils.ts";
 
-// // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
 	const allBlogPosts = await getCollection("posts", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 
 	const sorted = allBlogPosts.sort((a, b) => {
-		// 首先按置顶状态排序，置顶文章在前
 		if (a.data.pinned && !b.data.pinned) return -1;
 		if (!a.data.pinned && b.data.pinned) return 1;
 
-		// 如果置顶状态相同，则按发布日期排序
+		const dateA = new Date(a.data.published);
+		const dateB = new Date(b.data.published);
+		return dateA > dateB ? -1 : 1;
+	});
+	return sorted;
+}
+
+async function getReadingOrderSortedPosts() {
+	const allBlogPosts = await getCollection("posts", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	});
+
+	const sorted = allBlogPosts.sort((a, b) => {
+		if (a.data.pinned && !b.data.pinned) return -1;
+		if (!a.data.pinned && b.data.pinned) return 1;
+
+		const catA = a.data.category || "";
+		const catB = b.data.category || "";
+		if (catA !== catB) return catA.localeCompare(catB);
+
+		const orderA = a.data.order ?? 999999;
+		const orderB = b.data.order ?? 999999;
+		if (orderA !== orderB) return orderA - orderB;
+
 		const dateA = new Date(a.data.published);
 		const dateB = new Date(b.data.published);
 		return dateA > dateB ? -1 : 1;
@@ -24,6 +45,7 @@ async function getRawSortedPosts() {
 
 export async function getSortedPosts() {
 	const sorted = await getRawSortedPosts();
+	const readingSorted = await getReadingOrderSortedPosts();
 
 	for (let i = 1; i < sorted.length; i++) {
 		sorted[i].data.nextSlug = sorted[i - 1].slug;
@@ -34,16 +56,53 @@ export async function getSortedPosts() {
 		sorted[i].data.prevTitle = sorted[i + 1].data.title;
 	}
 
+	const byCategory = new Map<string, CollectionEntry<"posts">[]>();
+	for (const post of readingSorted) {
+		const cat = post.data.category || "";
+		if (!byCategory.has(cat)) byCategory.set(cat, []);
+		byCategory.get(cat)!.push(post);
+	}
+
+	const roMap = new Map<
+		string,
+		{ nextSlug: string; nextTitle: string; prevSlug: string; prevTitle: string }
+	>();
+	for (const [, posts] of byCategory) {
+		for (let i = 0; i < posts.length; i++) {
+			const info = { nextSlug: "", nextTitle: "", prevSlug: "", prevTitle: "" };
+			if (i < posts.length - 1) {
+				info.nextSlug = posts[i + 1].slug;
+				info.nextTitle = posts[i + 1].data.title;
+			}
+			if (i > 0) {
+				info.prevSlug = posts[i - 1].slug;
+				info.prevTitle = posts[i - 1].data.title;
+			}
+			roMap.set(posts[i].slug, info);
+		}
+	}
+
+	for (const entry of sorted) {
+		const roInfo = roMap.get(entry.slug);
+		if (roInfo) {
+			entry.data.readingOrderNextSlug = roInfo.nextSlug;
+			entry.data.readingOrderNextTitle = roInfo.nextTitle;
+			entry.data.readingOrderPrevSlug = roInfo.prevSlug;
+			entry.data.readingOrderPrevTitle = roInfo.prevTitle;
+		}
+	}
+
 	return sorted;
 }
+
 export type PostForList = {
 	slug: string;
 	data: CollectionEntry<"posts">["data"];
 };
+
 export async function getSortedPostsList(): Promise<PostForList[]> {
 	const sortedFullPosts = await getRawSortedPosts();
 
-	// delete post.body
 	const sortedPostsList = sortedFullPosts.map((post) => ({
 		slug: post.slug,
 		data: post.data,
@@ -51,6 +110,23 @@ export async function getSortedPostsList(): Promise<PostForList[]> {
 
 	return sortedPostsList;
 }
+
+export async function getPostsForArchive() {
+	const timeSorted = await getRawSortedPosts();
+	const readingSorted = await getReadingOrderSortedPosts();
+
+	return {
+		timeOrdered: timeSorted.map((post) => ({
+			slug: post.slug,
+			data: post.data,
+		})),
+		readingOrdered: readingSorted.map((post) => ({
+			slug: post.slug,
+			data: post.data,
+		})),
+	};
+}
+
 export type Tag = {
 	name: string;
 	count: number;
@@ -69,7 +145,6 @@ export async function getTagList(): Promise<Tag[]> {
 		});
 	});
 
-	// sort tags
 	const keys: string[] = Object.keys(countMap).sort((a, b) => {
 		return a.toLowerCase().localeCompare(b.toLowerCase());
 	});

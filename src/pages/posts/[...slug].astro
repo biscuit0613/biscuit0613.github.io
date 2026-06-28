@@ -141,7 +141,8 @@ const jsonLd = {
     <!-- 评论（加密文章不显示评论区，内容不可见时评论无意义） -->
     {!isEncrypted && <Comment post={entry} />}
 
-    <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
+    <!-- Time-order navigation -->
+    <div id="post-nav-time" class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
            class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
             {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4" >
@@ -163,4 +164,41 @@ const jsonLd = {
         </a>
     </div>
 
+    <!-- Reading-order navigation -->
+    <div id="post-nav-reading-order" class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full hidden">
+        <a href={entry.data.readingOrderNextSlug ? getPostUrlBySlug(entry.data.readingOrderNextSlug) : "#"}
+           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.readingOrderNextSlug}]}>
+            {entry.data.readingOrderNextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4" >
+                <Icon name="material-symbols:chevron-left-rounded" class="text-[2rem] text-[var(--primary)]" />
+                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+                    {entry.data.readingOrderNextTitle}
+                </div>
+            </div>}
+        </a>
+
+        <a href={entry.data.readingOrderPrevSlug ? getPostUrlBySlug(entry.data.readingOrderPrevSlug) : "#"}
+           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.readingOrderPrevSlug}]}>
+            {entry.data.readingOrderPrevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-end gap-4">
+                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+                    {entry.data.readingOrderPrevTitle}
+                </div>
+                <Icon name="material-symbols:chevron-right-rounded" class="text-[2rem] text-[var(--primary)]" />
+            </div>}
+        </a>
+    </div>
+
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var sortMode = params.get("sort") || localStorage.getItem("archiveSortMode") || "time";
+
+            if (sortMode === "reading-order") {
+                localStorage.setItem("archiveSortMode", "reading-order");
+                var timeNav = document.getElementById("post-nav-time");
+                var readingNav = document.getElementById("post-nav-reading-order");
+                if (timeNav) timeNav.classList.add("hidden");
+                if (readingNav) readingNav.classList.remove("hidden");
+            }
+        })();
+    </script>
 </MainGridLayout>

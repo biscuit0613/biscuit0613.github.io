@@ -166,4 +166,8 @@ export const zh_TW: Translation = {
 	[Key.timelineCurrentRole]: "目前職位",
 	[Key.timelineEmployed]: "在職",
 	[Key.timelineAvailable]: "可工作",
+
+	// 歸檔頁面排序
+	[Key.sortByTime]: "按時間排序",
+	[Key.sortByReadingOrder]: "閱讀順序",
 };

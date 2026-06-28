@@ -17,11 +17,18 @@ const postsCollection = defineCollection({
 		licenseName: z.string().optional().default(""),
 		licenseUrl: z.string().optional().default(""),
 
+		/* Custom reading order within a category */
+		order: z.number().optional(),
+
 		/* For internal use */
 		prevTitle: z.string().default(""),
 		prevSlug: z.string().default(""),
 		nextTitle: z.string().default(""),
 		nextSlug: z.string().default(""),
+		readingOrderPrevTitle: z.string().default(""),
+		readingOrderPrevSlug: z.string().default(""),
+		readingOrderNextTitle: z.string().default(""),
+		readingOrderNextSlug: z.string().default(""),
 
 		/*
 		 * Encryption support (added by remark-encrypt plugin)
