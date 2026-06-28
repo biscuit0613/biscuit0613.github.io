@@ -5,7 +5,7 @@ description: 'GoogLeNet的inception模块介绍，分治和因式分解思想'
 image: ''
 tags: []
 category: '模式识别与机器学习'
-order: 17
+order: 21
 draft: false 
 lang: ''
 ---

@@ -5,7 +5,7 @@ description: 'PCA（Principal Component Analysis）是一种常用的降维技�
 image: ''
 tags: []
 category: '模式识别与机器学习'
-order: 9
+order: 13
 draft: false 
 lang: ''
 ---

@@ -5,7 +5,7 @@ description: 'positional encoding位置编码、残差连接、层归一化、�
 image: ''
 tags: []
 category: '模式识别与机器学习'
-order: 29
+order: 33
 draft: false 
 lang: ''
 ---
