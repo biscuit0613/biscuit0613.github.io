@@ -14,13 +14,13 @@ lang: ''
 
 本系列统一使用以下符号规则：
 
-| 符号 | 含义 | 示例 |
-|------|------|------|
-| $P(\cdot)$ | **概率**（离散事件） | 先验 $P(\omega_i)$、后验 $P(\omega_i \mid \mathbf{x})$ |
-| $p(\cdot)$ | **概率密度**（连续变量） | 类条件密度 $p(\mathbf{x} \mid \omega_i)$、证据因子 $p(\mathbf{x})$ |
-| $\mathbf{x}$ | 加粗 = 特征向量 | $\mathbf{x} = (x_1,\dots,x_d)^T$ |
-| $\omega_i$ | 第 $i$ 个类别 | $\omega_1$ 表示"正类"，$\omega_2$ 表示"负类" |
-| $\hat{\omega}$ | 预测类别 | $\hat{\omega} = \arg\max_i P(\omega_i \mid \mathbf{x})$ |
+| 符号           | 含义                     | 示例                                                               |
+| -------------- | ------------------------ | ------------------------------------------------------------------ |
+| $P(\cdot)$     | **概率**（离散事件）     | 先验 $P(\omega_i)$、后验 $P(\omega_i \mid \mathbf{x})$             |
+| $p(\cdot)$     | **概率密度**（连续变量） | 类条件密度 $p(\mathbf{x} \mid \omega_i)$、证据因子 $p(\mathbf{x})$ |
+| $\mathbf{x}$   | 加粗 = 特征向量          | $\mathbf{x} = (x_1,\dots,x_d)^T$                                   |
+| $\omega_i$     | 第 $i$ 个类别            | $\omega_1$ 表示"正类"，$\omega_2$ 表示"负类"                       |
+| $\hat{\omega}$ | 预测类别                 | $\hat{\omega} = \arg\max_i P(\omega_i \mid \mathbf{x})$            |
 
 **角标规则**：$\lambda_{ij}$ 中第一个下标 $i$ 为真实类别，第二个 $j$ 为预测类别。
 **密度和概率永远不会出现在等式同侧参与比较**（密度可以 $>1$，概率始终 $\in [0,1]$）。
@@ -111,15 +111,13 @@ $$
 
 ### 单个样本 $\mathbf{x}$ 的条件风险 （用于决策）
 
-将真实类别 $\omega_i$ 判断成 $\omega_j$ 的损失定义为 $\lambda_{ij}$，则对于一个待分类样本 $\mathbf{x}$，我们计算每个类别 $\omega_j$ 的期望风险：
+将真实类别 $\omega_i$ 判断成 $\omega_j$ 的损失定义为 $\lambda_{ij}$，则对于一个待分类样本 $\mathbf{x}$，我们计算每个类别 $\omega_j$ 的期望风险 $R(\omega_j | \mathbf{x})$ ，是 $\mathbf{x}$ 属于 $\omega_i$ 的条件下，将 $\mathbf{x}$ 误分类为 $\omega_j$ 的期望损失。
 
 $$
 R(\omega_j | \mathbf{x}) = \sum_{i} \lambda_{ij} P(\omega_i | \mathbf{x})
 $$
 
 :::tip
-
-$R(\omega_j | \mathbf{x})$ 是 $\mathbf{x}$ 属于 $\omega_i$ 的条件下，将 $\mathbf{x}$ 误分类为 $\omega_j$ 的期望损失。
 
 例如有正常人(w1)和病人(w2)两类，误将病人判断为正常人的风险就是 $R(\omega_1 | \mathbf{x}) = \lambda_{21} P(\omega_2 | \mathbf{x})$，误将正常人判断为病人的风险就是 $R(\omega_2 | \mathbf{x}) = \lambda_{12} P(\omega_1 | \mathbf{x})$。
 
@@ -130,10 +128,10 @@ $R(\omega_j | \mathbf{x})$ 是 $\mathbf{x}$ 属于 $\omega_i$ 的条件下，将
 整个特征空间上，总体风险是对所有样本的条件风险求期望：
 
 $$
-R_\text{total} = \int R(\omega(\mathbf{x}) | \mathbf{x}) p(\mathbf{x}) d\mathbf{x}
+R_\text{total} = \int R(\hat{\omega}(\mathbf{x}) | \mathbf{x}) p(\mathbf{x}) d\mathbf{x}
 $$
 
-其中 $\omega(\mathbf{x})$ 是决策准则。
+其中 $\hat{\omega}(\mathbf{x})$ 是决策准则。
 
 ### 最小风险决策准则
 
@@ -246,9 +244,12 @@ $$
 \end{aligned}
 $$
 
-等价于积分项里面最小化。
+等价于对每个 $\mathbf{x}$ **逐点最小化**被积函数：
 
-如果被积函数为正，则 $\mathbf{x}$ 属于 $R_2$，否则属于 $R_1$：
+- 若 $p(\mathbf{x} | \omega_2) P(\omega_2) - \mu p(\mathbf{x} | \omega_1) P(\omega_1) > 0$，说明把 $\mathbf{x}$ 分入 $R_1$ 产生的代价更大，因此 $\mathbf{x}$ 应属于 $R_2$
+- 若为负，则 $\mathbf{x}$ 应属于 $R_1$
+
+即：
 
 $$
 p(\mathbf{x} | \omega_2) P(\omega_2) - \mu p(\mathbf{x} | \omega_1) P(\omega_1) < 0
@@ -269,3 +270,100 @@ $$
 推导过程中，先验是固定的，可以最后算。
 
 :::
+
+## 4. 三类准则的统一视角
+
+三类准则看似不同，但本质上都是 **对似然比 $\dfrac{p(\mathbf{x} | \omega_1)}{p(\mathbf{x} | \omega_2)}$ 设一个阈值**，区别仅在于阈值由什么决定：
+
+| 准则            | 决策依据                                   | 似然比阈值（二分类）                                                 | 依赖先验？   | 依赖损失？           | 适用场景                             |
+| --------------- | ------------------------------------------ | -------------------------------------------------------------------- | ------------ | -------------------- | ------------------------------------ |
+| **最小错误率**  | 最大后验概率 $P(\omega_j \mid \mathbf{x})$ | $\dfrac{P(\omega_2)}{P(\omega_1)}$                                   | 是           | 否（隐含0-1损失）    | 默认选择，各类错误代价相同           |
+| **最小风险**    | 最小期望损失 $R(\omega_j \mid \mathbf{x})$ | $\dfrac{P(\omega_2)\lambda_{12}}{P(\omega_1)\lambda_{21}}$           | 是           | 是（$\lambda_{ij}$） | 误分类代价不对称（如医疗诊断）       |
+| **聂曼-皮尔逊** | 固定一类错误率，最小化另一类               | $\dfrac{P(\omega_2)}{\mu P(\omega_1)}$（$\mu$ 由约束 $\alpha$ 解出） | 形式上不依赖 | 否                   | 先验未知或两类错误有硬约束（如安检） |
+
+**记法**：三类准则都等价于$\dfrac{p(\mathbf{x} | \omega_1)}{p(\mathbf{x} | \omega_2)} > \text{threshold} \implies \text{判为 } \omega_1$。核心框架是同一个，变化的只是分子的分母的权重。
+
+同时 $\bm{\arg\max}$ 视角也统一：三类都可以写成 $i = \arg\max_j g_j(\mathbf{x})$ 的形式——最小错误率用后验概率，最小风险用负风险，NP 用似然比（等价于 $g_1 = \Lambda$，$g_2 = \text{threshold}$）。
+
+## 5. 贝叶斯错误率
+
+**任何分类器**的错误率都有一个理论下界，称为**贝叶斯错误率（Bayes Error Rate）**。
+
+### 条件错误率与总体错误率
+
+对于任意分类器 $\hat{\omega}(\mathbf{x})$，在样本 $\mathbf{x}$ 处的条件错误率为：
+$$
+P(\text{error} \mid \mathbf{x}) = 1 - P(\hat{\omega}(\mathbf{x}) \mid \mathbf{x})
+$$
+
+总体错误率是对所有 $\mathbf{x}$ 积分：
+$$
+P(\text{error}) = \int P(\text{error} \mid \mathbf{x}) \, p(\mathbf{x}) \, d\mathbf{x}
+= 1 - \int P(\hat{\omega}(\mathbf{x}) \mid \mathbf{x}) \, p(\mathbf{x}) \, d\mathbf{x}
+$$
+
+### 最优性证明
+
+贝叶斯分类器选择后验概率最大的类别 $\hat{\omega}^*(\mathbf{x}) = \arg\max_j P(\omega_j \mid \mathbf{x})$，因此：
+
+$$
+P(\hat{\omega}^*(\mathbf{x}) \mid \mathbf{x}) = \max_j P(\omega_j \mid \mathbf{x}) \geq P(\hat{\omega}(\mathbf{x}) \mid \mathbf{x}), \quad \forall \hat{\omega}(\mathbf{x})
+$$
+
+代入总体错误率公式，不等式反向（减去更大的数得更小的值）：
+
+$$
+P^*(\text{error}) = 1 - \int \max_j P(\omega_j \mid \mathbf{x}) \, p(\mathbf{x}) \, d\mathbf{x}
+\leq 1 - \int P(\hat{\omega}(\mathbf{x}) \mid \mathbf{x}) \, p(\mathbf{x}) \, d\mathbf{x} = P(\text{error})
+$$
+
+即 **任何分类器的错误率 $\geq$ 贝叶斯错误率**，等号仅当分类器 $\hat{\omega}(\mathbf{x})$ 每点都选择后验最大的类。
+
+### 另一种等价形式
+
+用 §1 的积分区域语言，最小错误率分类器选择：
+$$
+R_1^* = \{\mathbf{x} \mid P(\omega_1 \mid \mathbf{x}) > P(\omega_2 \mid \mathbf{x})\}, \quad
+R_2^* = \{\mathbf{x} \mid P(\omega_2 \mid \mathbf{x}) \geq P(\omega_1 \mid \mathbf{x})\}
+$$
+
+贝叶斯错误率就是在这个最优分界下的积分值（即 §1 中 $P(mistake)$ 在最优决策 $R_1^*, R_2^*$ 下的取值）：
+$$
+P^*(\text{error}) = \int_{R_2^*} p(\mathbf{x} \mid \omega_1) P(\omega_1) \, d\mathbf{x}
++ \int_{R_1^*} p(\mathbf{x} \mid \omega_2) P(\omega_2) \, d\mathbf{x}
+$$
+
+或等价地写成**后验的 min 形式**（更紧凑）：
+
+$$
+P^*(\text{error}) = \int \min_j P(\omega_j \mid \mathbf{x}) \, p(\mathbf{x}) \, d\mathbf{x}
+$$
+
+### 意义
+
+贝叶斯错误率是分类问题的"天花板"——它反映数据本身的重叠程度。如果两类在特征空间上完全可分（分布不重叠），贝叶斯错误率为 0；如果完全不可分（分布完全重合），贝叶斯错误率等于 $\min(P(\omega_1), P(\omega_2))$（瞎猜的水平）。实际分类器的错误率越接近这个值，说明模型越充分挖掘了数据的信息。
+
+## 6. 生成式与判别式分类器
+
+从本篇到下一章，分类器的设计哲学有一条重要的分水岭：**生成式 vs 判别式**。
+
+### 两种建模路径
+
+| | 生成式（Generative） | 判别式（Discriminative） |
+|---|---|---|
+| **方式** | 先建模 $p(\mathbf{x} \mid \omega_i)$ 和 $P(\omega_i)$，再用贝叶斯公式反推 $P(\omega_i \mid \mathbf{x})$ | 直接建模决策边界 $P(\omega_i \mid \mathbf{x})$ 或 $g(\mathbf{x}) = 0$ |
+| **路径** | 数据 $\to$ 类条件分布 $\to$ 后验概率 $\to$ 决策 | 数据 $\to$ 决策函数 $\to$ 决策 |
+| **例子** | 贝叶斯分类器、朴素贝叶斯、GMM、HMM | 逻辑回归、感知机、SVM、神经网络 |
+| **优点** | 可生成新样本、自然处理缺失值、对数据量要求更低 | 聚焦在分类边界上，通常数据充分时精度更高 |
+| **缺点** | 需要假设分布形式，假设错误时偏差大 | 无法生成样本、无法利用无标签数据 |
+
+### 直观对比
+
+以两类问题为例：
+
+- **生成式**先回答"$\omega_1$ 的数据大概长什么样？$\omega_2$ 呢？"，再根据新样本更像哪个来分类。
+- **判别式**直接回答"分界线在哪？"，不在意外围数据长什么样，只关心边界附近的样本。
+
+### 本篇定位
+
+本篇（Bayes）是生成式的典范——从概率密度出发，通过贝叶斯公式得到决策规则。接下来（线性分类器）将转向判别式路径，直接从数据学习决策边界，不再显式建模概率密度。两种范式各有所长，理解它们的差异是理解整个模式识别学科的关键视角。

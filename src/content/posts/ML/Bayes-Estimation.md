@@ -32,8 +32,6 @@ lang: ''
 
 最大似然估计的核心思想是：在给定数据的前提下，找到使得 **数据出现概率** $p(D_i|\theta_i)$ 最大的参数值 $\hat{\theta_i}$。
 
-对于某一类 $\omega_i$ 的数据集：$D_i = \{\mathbf{x}_j | y_j = \omega_i\}$
-
 似然$L(\theta_i) = p(D_i | \theta_i) = \prod_{j=1}^{N_i} p(\mathbf{x}_j | \omega_i; \theta_i)$。
 
 - 对数化 $l(\theta_i) = \ln p(D_i | \theta_i)= \sum_{j=1}^{N_i} \ln p(\mathbf{x}_j | \omega_i; \theta_i)$。
@@ -49,20 +47,25 @@ $$
 
 ### 最大后验估计（MAP）
 
-最大后验估计的核心思想是：在给定数据的前提下，结合对参数 $\theta_i$ 的先验，找到使得参数 $\theta_i$ 的 **后验概率** $p(\theta_i|D_i)$ 最大的参数值 $\hat{\theta_i}$。
+核心思想：在 MLE 的基础上，引入对参数 $\theta_i$ 的先验知识 $p(\theta_i)$，最大化**后验概率** $p(\theta_i|D_i)$ 而非似然：
 
-根据贝叶斯定理，后验概率可以写成：$p(\theta_i|D_i) = \frac{p(D_i|\theta_i)p(\theta_i)}{p(D_i)}\propto p(D_i|\theta_i)p(\theta_i)$。
+$$
+p(\theta_i|D_i) = \frac{p(D_i|\theta_i)p(\theta_i)}{p(D_i)} \propto p(D_i|\theta_i)p(\theta_i)
+$$
 
-似然函数 $L(\theta_i) = p(D_i|\theta_i)$，先验概率 $p(\theta_i)$。
+与 MLE 相比，目标函数仅多了一项 $\ln p(\theta_i)$，其余结构完全相同：
 
-- 对数化 $l(\theta_i) = \ln p(D_i|\theta_i) + \ln p(\theta_i)=\sum_{j=1}^{N_i} \ln p(\mathbf{x}_j | \omega_i; \theta_i) + \ln p(\theta_i)$。
-- 目标函数 $\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i) = \arg\max_{\theta_i} \ln p(D_i|\theta_i) + \ln p(\theta_i)$。
-- 计算：解方程 $\frac{\partial}{\partial \theta_i}l(\theta_i) = 0$
+$$
+l(\theta_i) = \underbrace{\ln p(D_i|\theta_i)}_{\text{MLE}} + \ln p(\theta_i)
+= \sum_{j=1}^{N_i} \ln p(\mathbf{x}_j | \omega_i; \theta_i) + \ln p(\theta_i)
+$$
 
-相比于 MLE，MAP 通过引入先验概率 $p(\theta_i)$ 来对参数进行 **正则化**，避免过拟合问题。
+$\hat{\theta_i} = \arg\max_{\theta_i} l(\theta_i)$，计算：解 $\frac{\partial}{\partial \theta_i}l(\theta_i) = 0$。
 
-- 当先验为高斯分布时，MAP等价于Ridge回归（L2正则化）
-- 当先验为拉普拉斯分布时，等价于Lasso回归（L1正则化）。
+先验 $p(\theta_i)$ 起到了**正则化**的作用：
+
+- 高斯先验 $\to$ Ridge回归（L2正则化）
+- 拉普拉斯先验 $\to$ Lasso回归（L1正则化）
 
 ### 贝叶斯估计（Bayesian Estimation）
 
@@ -80,7 +83,42 @@ $$
 p(\mathbf{x}|\omega_i) = p(\mathbf{x}|D_i) = \int p(\mathbf{x}|\theta_i)p(\theta_i|D_i)d\theta_i
 $$
 
+与 MAP 用 $\hat{\theta}$ 这一个点不同，Bayesian 估计里 $\theta$ 服从后验分布 $p(\theta_i|D_i)$，积分就是在对 $\theta$ 的**不确定性做平均**（边际化）。如果后验本身很尖（数据足够多），结果接近 MAP；如果后验很宽（数据少），积分会自动分散权重，不会过度自信。
+
 然后根据最小错误率准则，计算后验概率 $P(\omega_i|\mathbf{x}) \propto p(\mathbf{x}|D_i)P(\omega_i)$，选择后验概率最大的类别 $\omega_i$ 作为预测结果。
+
+
+## 附：偏差-方差分解（Bias-Variance Decomposition）
+
+MLE、MAP、Bayesian 三种估计方法的差异可以由偏差-方差分解来解释。对于参数 $\theta$ 的任意估计量 $\hat{\theta}$，其均方误差（MSE）可分解为：
+
+### 定义
+
+- **偏差**：$Bias(\hat{\theta}) = \mathbb{E}[\hat{\theta}] - \theta$，衡量估计的**系统性偏离**
+- **方差**：$Var(\hat{\theta}) = \mathbb{E}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])^2]$，衡量估计对样本的**敏感程度**
+
+### 分解公式
+
+$$
+\begin{aligned}
+MSE(\hat{\theta}) &= \mathbb{E}[(\hat{\theta} - \theta)^2] \\[1ex]
+&= \mathbb{E}\big[ (\hat{\theta} - \mathbb{E}[\hat{\theta}] + \mathbb{E}[\hat{\theta}] - \theta)^2 \big] \\[1ex]
+&= \underbrace{\mathbb{E}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])^2]}_{Var(\hat{\theta})} + 2\underbrace{\mathbb{E}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])]}_{=0}(\mathbb{E}[\hat{\theta}] - \theta) + \underbrace{(\mathbb{E}[\hat{\theta}] - \theta)^2}_{Bias(\hat{\theta})^2} \\[1ex]
+&= Var(\hat{\theta}) + Bias(\hat{\theta})^2
+\end{aligned}
+$$
+
+其中交叉项为 0 是因为 $\mathbb{E}[\hat{\theta} - \mathbb{E}[\hat{\theta}]] = 0$。
+
+### 与三种方法的关系
+
+| 方法 | 偏差 | 方差 | 说明 |
+|------|------|------|------|
+| **MLE** | 渐近无偏（$Bias \to 0$ 当 $N \to \infty$） | 高（完全由数据驱动） | 样本少时易过拟合 |
+| **MAP** | 有偏（被先验拉向 $p(\theta)$ 的峰值） | 比 MLE 低（先验起约束作用） | 先验是正则项，$N$ 增大时先验影响衰减 |
+| **Bayesian** | 不适用（无点估计） | 不适用（全分布） | 天然避免了"单点估计"的风险 |
+
+**核心权衡**：偏差和方差是跷跷板——降低一个通常会抬升另一个。MLE 追求无偏但方差大，MAP 引入偏差来压低方差，Bayesian 则跳出"点估计"框架不再做这个权衡。三种参数估计方法的递进正是在探索不同的偏差-方差折衷策略。
 
 ## 类条件概率的非参数估计
 
