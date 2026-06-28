@@ -28,7 +28,7 @@ $$
 
 ## GRU（Gated Recurrent Unit）门控循环单元
 
-![alt text](image-26.png)
+![alt text](assets/image-26.png)
 
 核心公式：在 **隐藏状态的更新** 中引入了两个门控机制：重置门 $r$（reset gate）和更新门 $z$（update gate）。
 
@@ -66,7 +66,7 @@ $$
 
 虽然引入了一个新的记忆单元，但只有隐状态会传递到输出层，而记忆单元完全属于内部信息。
 
-![alt text](image-27.png)
+![alt text](assets/image-27.png)
 
 - 输入门 $i^{(t)} = \sigma(W_{xi} x^{(t)} + W_{hi} h^{(t-1)} + b_i)$ 决定了多少新的信息需要被写入记忆单元
 - 遗忘门 $f^{(t)} = \sigma(W_{xf} x^{(t)} + W_{hf} h^{(t-1)} + b_f)$ 决定了多少旧的信息需要被遗忘

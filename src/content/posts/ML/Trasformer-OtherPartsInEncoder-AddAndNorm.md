@@ -18,7 +18,7 @@ Norm: 指层归一化（Layer Normalization）
 
 先看 Transformer 的一个标准 block，包含两次残差连接和两次层归一化：
 
-![alt text](image-28.png)
+![alt text](assets/image-28.png)
 
 ## 残差连接（Residual Connection）
 

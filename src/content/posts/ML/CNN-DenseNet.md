@@ -33,7 +33,7 @@ $$
 
 ## DenseNet 结构简介
 
-![alt text](image-16.png)
+![alt text](assets/image-16.png)
 
 ## 关键超参数：增长率（Growth Rate）
 

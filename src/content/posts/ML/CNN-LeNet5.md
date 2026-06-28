@@ -14,7 +14,7 @@ lang: ''
 
 LeNet5 是 Yann LeCun 等人在 1998 年提出的卷积神经网络架构，主要用于手写数字识别。它由以下层次结构组成：
 
-![alt text](image-3.png)
+![alt text](assets/image-3.png)
 
 ### C1 卷积层
 
@@ -43,7 +43,7 @@ LeNet5 是 Yann LeCun 等人在 1998 年提出的卷积神经网络架构，主�
 - 中间 9 个输出通道：各连接 4 个输入通道
 - 最后 1 个输出通道：连接 全部 6 个输入通道
 
-![alt text](image-4.png)
+![alt text](assets/image-4.png)
 
 这一层的参数量，根据公式：$\sum_{i=1}^{16} (M \times N \times C_{in,i} + 1)$，其中 $C_{in,i}$ 是第 $i$ 个输出通道连接的输入通道数，总共 1516 个参数。
 

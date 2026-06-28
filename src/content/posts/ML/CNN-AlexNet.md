@@ -53,7 +53,7 @@ $$
 
 图解如下：
 
-![alt text](image-5.png)
+![alt text](assets/image-5.png)
 
 :::
 

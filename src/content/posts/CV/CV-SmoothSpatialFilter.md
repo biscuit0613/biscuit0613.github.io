@@ -78,7 +78,7 @@ $$
 g(i,j) = \sum_{x=-3\sigma}^{3\sigma} \sum_{y=-3\sigma}^{3\sigma} G(x,y,\sigma) \cdot I(i+x,j+y)
 $$
 
-![alt text](image-2.png)
+![alt text](assets/image-2.png)
 
 性质：
 

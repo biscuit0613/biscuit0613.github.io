@@ -23,7 +23,7 @@ lang: ''
 
 单个神经元的结构如图
 
-![alt text](image-8.png)
+![alt text](assets/image-8.png)
 
 $$
 y=f(\mathbf{w}^T\mathbf{x})=f\left( \sum_{i=0}^{d+1} w_i x_i\right)

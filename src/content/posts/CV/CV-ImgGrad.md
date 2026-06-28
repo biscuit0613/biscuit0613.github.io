@@ -50,7 +50,7 @@ $$
 \theta = \arctan{\frac{I_y}{I_x}}  \quad\quad E_\theta(i,j|I) = \theta+\frac{\pi}{2}
 $$
 
-![alt text](image-3.png)
+![alt text](assets/image-3.png)
 
 图像的一阶微分算子 $\nabla$，就是把垂直水平方向的差分卷积核应用到图像上，得到每个像素点的梯度信息。常见的算子有Sobel、Prewitt等，它们在差分的基础上加入了权重，能够更好地抑制噪声。
 
@@ -76,4 +76,4 @@ $$
 K = \begin{bmatrix}1&1&1\\1&-8&1\\1&1&1\end{bmatrix} \quad\quad \nabla^2 I = I * K
 $$
 
-![alt text](image-4.png)
+![alt text](assets/image-4.png)

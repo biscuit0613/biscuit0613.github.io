@@ -32,7 +32,7 @@ lang: ''
 
 - 权向量 $\mathbf{w}$ 是垂直于分类面的向量（法向量），指向正类的一侧。如下图的两类二维数据点，黑色的权向量 $\mathbf{w}$ 垂直于分类面（红色虚线），指向黑色点所在的正类区域。
 
-![alt text](image-7.png)
+![alt text](assets/image-7.png)
 
 :::tip
 

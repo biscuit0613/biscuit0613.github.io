@@ -19,7 +19,7 @@ lang: ''
 - $\mathcal{F}(x)$ A比B新增的那些层，理论上要学习的潜在映射关系。
 - $y$ 整个残差块的输出（传统网络就是每一层的输出），未经过激活函数，经过Relu激活函数后传递给下一层。
 
-![alt text](image-13.png)
+![alt text](assets/image-13.png)
 
 理论上来说，越深的网络只要学习到更多层恒等映射，就能获得至少和浅层网络一样的性能，甚至更好。
 
@@ -52,7 +52,7 @@ lang: ''
 
 ## 一个经典的残差块
 
-![alt text](image-14.png)
+![alt text](assets/image-14.png)
 
 一个基本的残差单元（Basic Block）长右边这样：
 
@@ -68,7 +68,7 @@ x → Conv → BN → ReLU → Conv → BN → (+ x) → ReLU
 
 ### 何恺明的优化:预激活（Pre-activation）
 
-![alt text](image-15.png)
+![alt text](assets/image-15.png)
 
 原来的
 

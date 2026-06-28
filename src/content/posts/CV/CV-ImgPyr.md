@@ -72,7 +72,7 @@ $$
 
 其中 $upsample(G^{(i+1)})$ 是对 $G^{(i+1)}$ 进行上采样（插值+高斯模糊）得到的图像.
 
-![alt text](image-5.png)
+![alt text](assets/image-5.png)
 
 ### 拉普拉斯金字塔的特性
 

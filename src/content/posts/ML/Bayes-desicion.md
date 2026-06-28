@@ -66,7 +66,7 @@ $P(error_1 )=\int_{R_1} p( \mathbf{x}|\omega_2 ) P(\omega_2) d\mathbf{x}$。
 
 ### 图解
 
-![alt text](image-6.png)
+![alt text](assets/image-6.png)
 
 ### 最小错误率决策准则
 

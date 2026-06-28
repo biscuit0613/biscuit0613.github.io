@@ -20,7 +20,7 @@ MLP 要求输入是固定维度的向量，且所有特征之间是全连接关�
 
 一般神经网络的一个神经元：
 
-![neuron](image.png)
+![neuron](assets/image.png)
 
 神经元的输出为（一次前向传播）：
 
@@ -32,7 +32,7 @@ $f$ 是激活函数，$w_i$ 是权重，$x_i$ 是输入，$b$ 是偏置。
 
 CNN 的一个卷积层：
 
-![convolutional layer](image-1.png)
+![convolutional layer](assets/image-1.png)
 
 单纯卷积得到特征图Feature Map：
 
@@ -119,7 +119,7 @@ CNN通常使用多个卷积核来提取**不同类型的特征**
 - **最大池化（Max Pooling）**：取窗口内的最大值，保留最显著的特征。
 - **平均池化（Mean Pooling）**：取窗口内的平均值，平滑特征图，减少噪声。
 
-![alt text](image-2.png)
+![alt text](assets/image-2.png)
 
 池化的作用：
 

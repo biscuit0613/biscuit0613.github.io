@@ -37,7 +37,7 @@ $$
 \log P(y^{(1)}, \ldots, y^{(n_y)} \mid x^{(1)}, \ldots, x^{(n_x)})
 $$
 
-![alt text](image-24.png)
+![alt text](assets/image-24.png)
 
 ## Seq2Seq的瓶颈问题
 

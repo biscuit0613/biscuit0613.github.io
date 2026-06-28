@@ -16,8 +16,8 @@ lang: ''
 
 ## 双目的数学基础：对极几何（Epipolar Geometry）
 
-![alt text](image-9.png)
-![alt text](image-10.png)
+![alt text](assets/image-9.png)
+![alt text](assets/image-10.png)
 
 - $X$：空间点
 - $O_1,O_2$：两个相机的光心

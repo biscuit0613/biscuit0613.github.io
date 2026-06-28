@@ -73,7 +73,7 @@ padding常见类型
 - **Reflect Padding**：以边界像素为中心进行镜像反射填充。
 - **Circular Padding**：将图像视为周期性，边界像素与对面边界像素相连。
 
-![alt text](image.png)
+![alt text](assets/image.png)
 
 ## 可分离卷积核
 
@@ -83,7 +83,7 @@ padding常见类型
 
 复杂度分析：图片大小 $M\times N$，卷积核大小 $K\times K$，直接卷积复杂度为 $O(MN\times K^2)$，可分离卷积复杂度为 $O(MN\times 2K)$。
 
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
 ## 卷积从连续积分变成离散累加乘法的过程
 

@@ -12,7 +12,7 @@ lang: ''
 
 这里讲解码器的前馈网络（Feed Forward Network，FFN），它是 Transformer 编码器和解码器中每个子层的一个重要组成部分。也是 Transformer block 中的第二个子层（第一个子层是多头注意力）。
 
-![alt text](image-28.png)
+![alt text](assets/image-28.png)
 
 ## 逐位置
 

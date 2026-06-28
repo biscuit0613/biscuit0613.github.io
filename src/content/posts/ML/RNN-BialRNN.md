@@ -32,7 +32,7 @@ $$o^{(t)} = f(h^{(t)}, g^{(t)})$$
 
 这样每个时刻的输出都能同时利用**过去和未来**的上下文信息。
 
-![alt text](image-23.png)
+![alt text](assets/image-23.png)
 
 ### 与MRF/CRF的关联
 

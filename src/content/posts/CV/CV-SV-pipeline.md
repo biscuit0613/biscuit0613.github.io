@@ -37,7 +37,7 @@ lang: ''
 
 ## 从视差（Disparity）到深度（Depth）
 
-![alt text](image-11.png)
+![alt text](assets/image-11.png)
 
 图中的 $x$ 和下文的 $u$ 都是像素坐标，$X,Y$ 和 $Z$ 是三维空间坐标。立体坐标系应该是左手系，这里面 $d=u-u'$ 是视差，$B$ 是两台相机的物理间距，也叫基线。
 

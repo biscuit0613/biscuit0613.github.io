@@ -24,11 +24,11 @@ Inception给出的答案是：小孩子才做选择，我全都要！
 
 在一个Inception模块中，输入特征图会并行地经过四条不同的路径：
 
-![alt text](image-10.png)
+![alt text](assets/image-10.png)
 
 但如果直接堆叠这么多卷积（尤其是昂贵的5x5），计算量会非常大。CNN的计算量主要来源于特征维数（$C_{in}$,输入图像的 **通道数**）。为了解决这个问题，GoogLeNet引入了革命性的 “瓶颈层（Bottleneck）”。具体做法是：在3x3和5x5的卷积操作之前，先加一个 **1x1的卷积层** :
 
-![alt text](image-11.png)
+![alt text](assets/image-11.png)
 
 于是四条 **并行** 分支的计算过程变为：
 

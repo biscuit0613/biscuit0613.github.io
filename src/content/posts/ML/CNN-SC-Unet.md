@@ -14,7 +14,7 @@ lang: ''
 
 U-Net之所以叫U-Net，是因为它的结构图酷似一个大写的“U”，由完全对称的两半组成：
 
-![alt text](image-12.png)
+![alt text](assets/image-12.png)
 
 ### 左侧：编码器Encoder（收缩路径 / 下采样）
 

@@ -23,7 +23,7 @@ lang: ''
 - 最后一层卷积特征图 $\mathbf{X} \in \mathbb{R}^{C \times H \times W}$，其中 $C$ 是通道数，$H$ 是高度，$W$ 是宽度
 - $\mathbf{X}_c \in \mathbb{R}^{H \times W}$：第 $c$ 个通道的特征图
 
-![alt text](image-17.png)
+![alt text](assets/image-17.png)
 
 ### Squeeze（压缩）
 
@@ -74,4 +74,4 @@ $$
 
 ## 与主流网络结构结合
 
-![alt text](image-18.png)
+![alt text](assets/image-18.png)

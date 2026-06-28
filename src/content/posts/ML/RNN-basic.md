@@ -69,7 +69,7 @@ $$
 
 ## 计算图的展开（Unfolding）
 
-![alt text](image-19.png)
+![alt text](assets/image-19.png)
 
 $$
 h^{(t)} = f(h^{(t-1)}, x^{(t)}; \theta)\\
@@ -105,7 +105,7 @@ $g^{(t)}$ 是将整段历史输入序列压缩为当前隐藏状态的复合函�
 
 ### 模式一：隐藏层之间有循环连接，每步都有输出
 
-![alt text](image-20.png)
+![alt text](assets/image-20.png)
 
 结构特点：
 
@@ -148,7 +148,7 @@ $$
 
 ### 模式二：输出到隐藏层有循环连接，每步都有输出
 
-![alt text](image-21.png)
+![alt text](assets/image-21.png)
 
 结构特点：
 
@@ -182,7 +182,7 @@ $$h^{(t)} = f(y^{(t-1)}, x^{(t)}; \theta)$$
 
 这样每个时间步的计算变得**相互独立**，可以并行训练，避免了完整的BPTT。
 
-![alt text](image-25.png)
+![alt text](assets/image-25.png)
 
 但这带来一个问题：**训练和测试不一致**——训练时用真实值，测试时只能用预测值，分布可能存在偏差。改进方案是结合**课程学习**，训练初期多用真实值，后期逐步增加使用预测值的比例。
 
@@ -190,7 +190,7 @@ $$h^{(t)} = f(y^{(t-1)}, x^{(t)}; \theta)$$
 
 ### 模式三：隐藏层之间有循环连接，只在最后输出
 
-![alt text](image-22.png)
+![alt text](assets/image-22.png)
 
 结构特点：
 

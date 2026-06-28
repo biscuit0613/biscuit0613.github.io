@@ -14,7 +14,7 @@ ISP 是一套硬件或算法流程，负责将图像传感器（CMOS/CCD）输�
 
 ## 整体流程
 
-![alt text](image-6.png)
+![alt text](assets/image-6.png)
 
 ## CFA
 
@@ -42,11 +42,11 @@ B G B G ...
 
 "Simple interpolation"简单插值
 
-![alt text](image-7.png)
+![alt text](assets/image-7.png)
 
 遍历RAW图的每个像素点，缺哪个颜色（例如RAW图里的红色分量，缺蓝色和绿色分量），就用周围邻居的平均值补。
 
-![alt text](image-8.png)
+![alt text](assets/image-8.png)
 
 缺点
 

@@ -10,7 +10,7 @@ draft: false
 lang: ''
 ---
 
-![alt text](image-9.png)
+![alt text](assets/image-9.png)
 
 ## VGGnet 结构
 
