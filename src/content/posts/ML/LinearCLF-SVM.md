@@ -1,11 +1,11 @@
 ---
-title: 模式识别与机器学习：线性分类器-支持向量机
+title: 模式识别与机器学习：线性支持向量机
 published: 2026-05-28
 description: ''
 image: ''
 tags: []
 category: '模式识别与机器学习'
-order: 5
+order: 7
 draft: false 
 lang: ''
 ---
@@ -232,32 +232,7 @@ $$
 
 由于 $b^*$ 的值可能不唯一，实际可以通过所有满足 $0 < \alpha_i^* < C$ 的样本点来计算 $b^*$，然后取平均值。
 
-## 线性不可分时的SVM=引入核函数隐式映射到高维空间
-
-线性不可分时的SVM可以通过引入 **核函数** 来实现非线性分类。核函数 $K(\mathbf{x}_i, \mathbf{x}_j)$ 定义了输入空间中的两个样本点 $\mathbf{x}_i$ 和 $\mathbf{x}_j$ 在某个隐式映射到 **高维特征空间** 后的内积。
-
-还是省略对偶问题的推导细节，直接给出引入核函数后的对偶问题目标函数：
-
-$$
-\boxed{
-\begin{aligned}
-& \underset{\boldsymbol{\alpha}}{\text{min}} \quad L(\boldsymbol{\alpha}) = \frac{1}{2} \sum_{i=1}^{n} \sum_{j=1}^{n} \alpha_i \alpha_j y_i y_j K(\mathbf{x}_i, \mathbf{x}_j)-\sum_{i=1}^{n} \alpha_i  \\
-& \text{subject to} \quad \sum_{i=1}^{n} \alpha_i y_i = 0, \quad 0 \leq \alpha_i \leq C, \quad \forall i
-\end{aligned}
-}
-$$
-
-$$
-K(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j)
-$$
-
-- 其中 $\phi(\cdot)$ 是一个隐式映射函数，将输入空间中的样本点映射到一个高维特征空间。
-
-常用的核函数包括：
-
-- 多项式核：$K(\mathbf{x}_i, \mathbf{x}_j) = (\mathbf{x}_i^T \mathbf{x}_j + c)^d$
-
-- 高斯核（RBF）：$K(\mathbf{x}_i, \mathbf{x}_j) = \exp(-\dfrac{\|\mathbf{x}_i - \mathbf{x}_j\|_2^2}{2\sigma^2} )$
+核技巧可将线性 SVM 扩展为非线性分类器。核函数 $K(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j)$ 隐式地将样本映射到高维空间，只需将对偶问题中的内积 $\mathbf{x}_i^T \mathbf{x}_j$ 替换为 $K(\mathbf{x}_i, \mathbf{x}_j)$ 即可。该内容在核方法一章中展开。
 
 ## SVM不用增广
 
