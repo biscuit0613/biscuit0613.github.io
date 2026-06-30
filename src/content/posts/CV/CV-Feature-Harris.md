@@ -1,12 +1,12 @@
 ---
 title: Harris角点检测
 published: 2026-05-28
-description: ''
+description: '角点定义与数学推导（SSD→泰勒展开→结构张量M→特征值分析）、Harris响应函数R=det-α·tr²、算法流水线、旋转不变性与尺度敏感性'
 image: ''
 tags: []
 category: '计算机视觉'
 draft: false 
-order: 5
+order: 7
 lang: ''
 ---
 
@@ -144,3 +144,15 @@ $$
 - 对光照变化不敏感：因为响应函数依赖于梯度的平方
 - 对噪声敏感：因为计算梯度时会放大噪声，所以通常在计算结构张量前会先对图像进行高斯模糊。
 - **无法检测尺度变化**：因为窗口大小固定，无法适应不同尺度的角点。
+
+:::tip Harris 关键公式速查
+
+| 概念 | 公式 |
+|------|------|
+| 窗口移动灰度变化 | $E(u,v) = \sum w(x,y)[I(x+u,y+v)-I(x,y)]^2$ |
+| 泰勒展开近似 | $E(u,v) \approx [u\ v]\ M\ [u\ v]^T$ |
+| 结构张量 | $M = \sum w(x,y) \begin{bmatrix}I_x^2 & I_x I_y \\ I_x I_y & I_y^2\end{bmatrix}$ |
+| 响应函数 | $R = \det(M) - \alpha \cdot \text{tr}(M)^2 = \lambda_1\lambda_2 - \alpha(\lambda_1+\lambda_2)^2$ |
+| 判断 | $R>0$ 角点，$R \approx 0$ 平坦，$R<0$ 边缘 |
+
+:::
