@@ -132,7 +132,7 @@ export default defineConfig({
 			remarkEncrypt,
 		],
 		rehypePlugins: [
-			rehypeKatex,
+			[rehypeKatex, { strict: false }],
 			rehypeSlug,
 			rehypeMermaid,
 			[
