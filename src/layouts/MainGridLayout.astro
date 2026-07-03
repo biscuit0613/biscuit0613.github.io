@@ -112,10 +112,9 @@ const desktopShowSidebar =
 // 网格始终单列，sidebar + main 在 flex 容器内处理宽度动画
 const gridCols = "grid-cols-1";
 
-// 侧边栏类名 — flex 布局，hideSidebar 时由 sidebar-closed 控制
+// 侧边栏外层容器类名（flex item）— 控制显示/宽度/顺序
 const sidebarFlexOrder = sidebarPosition === "right" ? "md:order-1" : "md:order-0";
-const sidebarClass = `
-	onload-animation
+const sidebarSectionClass = `
 	${!mobileShowSidebar || hideSidebar ? "hidden" : ""}
 	md:block md:flex-shrink-0 md:w-[17.5rem]
 	${sidebarFlexOrder}
@@ -342,8 +341,8 @@ const transparentClass = shouldEnableTransparency
 
 
             <div class="col-span-2 flex flex-col-reverse gap-4 ${sidebarPosition === "right" ? "md:flex-row-reverse" : "md:flex-row"}">
-            <section id="sidebar-section" class:list={[hideSidebar ? "sidebar-closed" : ""]}>
-              <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+            <section id="sidebar-section" class={`${sidebarSectionClass} ${hideSidebar ? "sidebar-closed" : ""}`}>
+              <SideBar class={`onload-animation ${transparentClass}`} headings={headings}></SideBar>
             </section>
 
             <main id="swup-container" class={mainContentClass}>
