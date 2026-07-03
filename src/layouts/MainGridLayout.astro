@@ -1,5 +1,5 @@
 ---
-import BackToTop from "@components/control/BackToTop.astro";
+import FloatingActionMenu from "@components/control/FloatingActionMenu.svelte";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
@@ -364,7 +364,7 @@ const transparentClass = shouldEnableTransparency
             </div>
         </div>
 
-        <BackToTop></BackToTop>
+		<FloatingActionMenu client:only="svelte" />
     </div>
 </div>
 
