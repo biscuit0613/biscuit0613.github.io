@@ -112,12 +112,11 @@ const desktopShowSidebar =
 // 网格始终单列，sidebar + main 在 flex 容器内处理宽度动画
 const gridCols = "grid-cols-1";
 
-// 侧边栏外层容器类名（flex item）— 控制显示/宽度/顺序
-const sidebarFlexOrder = sidebarPosition === "right" ? "md:order-1" : "md:order-0";
+// 侧边栏外层容器类名（flex item）
 const sidebarSectionClass = `
+	order-1
 	${!mobileShowSidebar || hideSidebar ? "hidden" : ""}
-	md:block md:flex-shrink-0 md:w-[17.5rem]
-	${sidebarFlexOrder}
+	md:block md:flex-shrink-0 md:w-[17.5rem] ${sidebarPosition === "right" ? "md:order-1" : "md:order-0"}
 	${!tabletShowSidebar && !hideSidebar ? "md:hidden" : ""}
 	${!desktopShowSidebar && !hideSidebar ? "lg:hidden" : ""}
 `
@@ -125,11 +124,9 @@ const sidebarSectionClass = `
 	.replace(/\s+/g, " ");
 
 // 主内容区域类名 — flex-grow
-const mainFlexOrder = sidebarPosition === "right" ? "md:order-0" : "md:order-1";
 const mainContentClass = `
-	transition-swup-fade overflow-hidden
-	md:flex-1 md:min-w-0
-	${mainFlexOrder}
+	transition-swup-fade overflow-hidden order-0
+	md:flex-1 md:min-w-0 ${sidebarPosition === "right" ? "md:order-0" : "md:order-1"}
 `
 	.trim()
 	.replace(/\s+/g, " ");
@@ -340,7 +337,7 @@ const transparentClass = shouldEnableTransparency
             </a>}
 
 
-            <div class="col-span-2 flex flex-col-reverse gap-4 ${sidebarPosition === "right" ? "md:flex-row-reverse" : "md:flex-row"}">
+            <div class="col-span-2 flex flex-col gap-4 md:flex-row">
             <section id="sidebar-section" class={`${sidebarSectionClass} ${hideSidebar ? "sidebar-closed" : ""}`}>
               <SideBar class={`onload-animation ${transparentClass}`} headings={headings}></SideBar>
             </section>
