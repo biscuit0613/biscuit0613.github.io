@@ -346,3 +346,9 @@ html {
 :root:not(.dark) .custom-md spoiler {
   --_spoiler-mask: color-mix(in oklch, var(--primary) 55%, white 45%);
 }
+
+/* 防止 SVG 图标内的 <use href> 被 Swup/浏览器拦截为导航 */
+button svg.icon,
+button svg {
+	pointer-events: none;
+}
