@@ -2,12 +2,12 @@ import { execSync } from "node:child_process";
 import {
 	existsSync,
 	mkdirSync,
-	readFileSync,
 	readdirSync,
-	writeFileSync,
+	readFileSync,
 	unlinkSync,
+	writeFileSync,
 } from "node:fs";
-import { join, basename } from "node:path";
+import { basename, join } from "node:path";
 
 const TYPST_SRC = join(process.cwd(), "typst");
 const CACHE_DIR = join(process.cwd(), "node_modules", ".cache", "typst");
@@ -70,7 +70,9 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 	// Clean stale files from previous compilations
 	for (const f of readdirSync(outDir)) {
 		if (f.endsWith(".svg")) {
-			try { unlinkSync(join(outDir, f)); } catch {}
+			try {
+				unlinkSync(join(outDir, f));
+			} catch {}
 		}
 	}
 
@@ -96,7 +98,9 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 		})
 		.join("");
 
-	const plainText = extractTextFromSource(readFileSync(file.sourcePath, "utf-8"));
+	const plainText = extractTextFromSource(
+		readFileSync(file.sourcePath, "utf-8"),
+	);
 
 	return { html, pageCount: pages.length, plainText };
 }
@@ -110,17 +114,16 @@ export function compileSnippetToSvg(code: string): string {
 
 	if (!existsSync(outPath)) {
 		writeFileSync(srcPath, code, "utf-8");
-		execSync(
-			`${typstBin()} compile --format svg "${srcPath}" "${outPath}"`,
-			{ stdio: "pipe" },
-		);
+		execSync(`${typstBin()} compile --format svg "${srcPath}" "${outPath}"`, {
+			stdio: "pipe",
+		});
 	}
 
 	return readFileSync(outPath, "utf-8");
 }
 
 function extractTextFromSource(source: string): string {
-	let text = source
+	const text = source
 		.replace(/\/\/.*$/gm, "")
 		.replace(/\/\*[\s\S]*?\*\//g, "")
 		.replace(/`[^`]*`/g, "")

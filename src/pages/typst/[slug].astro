@@ -1,10 +1,10 @@
 ---
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
+	type CompiledSvg,
 	compileToSvg,
 	scanTypstFiles,
 	type TypstFile,
-	type CompiledSvg,
 } from "@utils/typst-compiler";
 
 export async function getStaticPaths() {
