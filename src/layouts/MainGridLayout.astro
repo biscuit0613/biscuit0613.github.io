@@ -31,6 +31,7 @@ interface Props {
 	setOGTypeArticle?: boolean;
 	headings?: MarkdownHeading[];
 	hideSidebar?: boolean;
+	wide?: boolean;
 }
 
 // 类型守卫函数
@@ -95,7 +96,7 @@ const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
 const finalMainPanelTop = siteConfig.banner.enable ? mainPanelTop : "5.5rem";
 
 // 检查侧边栏是否启用，动态调整网格布局
-const { hideSidebar } = Astro.props;
+const { hideSidebar, wide = false } = Astro.props;
 // 全局启用状态
 const globalSidebarEnabled = sidebarLayoutConfig.enable && !hideSidebar;
 // 侧边栏位置配置
@@ -326,7 +327,7 @@ const transparentClass = shouldEnableTransparency
 <!-- Main content -->
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!siteConfig.banner.enable ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
+    <div class:list={["relative mx-auto pointer-events-auto", wide ? "max-w-[90rem]" : "max-w-[var(--page-width)]"]}>
         <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
         >
             <!-- Banner image credit -->
@@ -343,7 +344,9 @@ const transparentClass = shouldEnableTransparency
             </a>}
 
 
-            {(mobileShowSidebar || tabletShowSidebar || desktopShowSidebar) && <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>}
+            <section id="sidebar-section" class:list={[!mobileShowSidebar && !tabletShowSidebar && !desktopShowSidebar ? "hidden" : ""]}>
+              {(mobileShowSidebar || tabletShowSidebar || desktopShowSidebar) && <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>}
+            </section>
 
             <main id="swup-container" class={mainContentClass}>
                 <div id="content-wrapper" class="onload-animation">
@@ -387,6 +390,18 @@ const transparentClass = shouldEnableTransparency
     </div>
 </div>
 </Layout>
+
+<script>
+	function toggleSidebar() {
+		const isTypst = document.querySelector("#swup-container [data-typst-root]");
+		const section = document.getElementById("sidebar-section");
+		if (!section) return;
+		section.classList.toggle("hidden", !!isTypst);
+	}
+
+	document.addEventListener("swup:contentReplaced", toggleSidebar);
+	toggleSidebar();
+</script>
 
 <style>
 /* Banner text styles */
