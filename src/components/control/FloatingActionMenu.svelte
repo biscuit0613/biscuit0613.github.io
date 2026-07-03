@@ -2,12 +2,10 @@
 	let open = $state(false);
 	let dragging = $state(false);
 	let snapRight = $state(true);
-	let offsetX = $state(0);
-	let offsetY = $state(0);
+	let offsetX = $state(24);
+	let offsetY = $state(24);
 	let atTop = $state(true);
-	let sidebarHidden = $state(false);
 
-	const SNAP = 16;
 	const ITEM_GAP = 56;
 
 	let dragState: {
@@ -16,7 +14,6 @@
 		baseX: number;
 		baseY: number;
 	} | null = null;
-	let fabEl: HTMLDivElement | undefined = $state(undefined);
 
 	function loadState() {
 		try {
@@ -24,10 +21,15 @@
 			if (raw) {
 				const p = JSON.parse(raw);
 				snapRight = p.right ?? true;
-				offsetX = p.x ?? 0;
-				offsetY = p.y ?? 0;
+				offsetX = p.x ?? 24;
+				offsetY = p.y ?? 24;
 			}
 		} catch {}
+		const sidebarPref = localStorage.getItem("fab-sidebar-hidden");
+		if (sidebarPref) {
+			const section = document.getElementById("sidebar-section");
+			if (section) section.classList.add("hidden");
+		}
 	}
 
 	function persist() {
@@ -37,19 +39,23 @@
 		);
 	}
 
+	function close() {
+		open = false;
+	}
+
 	function toggleOpen() {
 		open = !open;
 	}
 
-	function closeOutside(e: PointerEvent) {
-		const t = e.target as Node;
-		if (fabEl && !fabEl.contains(t)) open = false;
-	}
-
-	function startDrag(e: PointerEvent) {
+	function onPointerDown(e: PointerEvent) {
+		const t = e.target as HTMLElement | null;
+		if (!t?.closest("#fab-main")) {
+			if (open) close();
+			return;
+		}
 		dragging = true;
 		open = false;
-		const el = fabEl;
+		const el = document.getElementById("fab-main");
 		if (el) el.style.transition = "none";
 		dragState = {
 			startX: e.clientX,
@@ -59,56 +65,47 @@
 		};
 	}
 
-	function onMove(e: PointerEvent) {
+	function onPointerMove(e: PointerEvent) {
 		if (!dragState) return;
-		offsetX = dragState.baseX + (dragState.startX - e.clientX);
-		offsetY = dragState.baseY + (e.clientY - dragState.startY);
+		offsetX = Math.max(8, Math.min(window.innerWidth - 56, dragState.baseX + (dragState.startX - e.clientX)));
+		offsetY = Math.max(8, Math.min(window.innerHeight - 56, dragState.baseY + (e.clientY - dragState.startY)));
 	}
 
-	function endDrag() {
+	function onPointerUp() {
 		if (!dragState) return;
 		dragState = null;
 		dragging = false;
-		const el = fabEl;
+		const el = document.getElementById("fab-main");
 		if (el) el.style.transition = "";
 
 		const w = window.innerWidth;
-		const cx = w / 2;
-		const absX = snapRight ? w - offsetX : offsetX;
-		snapRight = absX >= cx;
-
-		const maxX = w - 48 - SNAP;
-		const maxY = window.innerHeight - 48 - SNAP;
-		offsetX = Math.max(SNAP, Math.min(maxX, offsetX));
-		offsetY = Math.max(SNAP, Math.min(maxY, offsetY));
+		snapRight = offsetX >= w / 2;
 		persist();
+	}
+
+	function onMainClick(e: MouseEvent) {
+		if (dragState) return;
+		const target = e.currentTarget as HTMLElement;
+		toggleOpen();
+	}
+
+	function onMainKeyDown(e: KeyboardEvent) {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			toggleOpen();
+		}
 	}
 
 	$effect(() => {
 		loadState();
-
-		const onDown = (e: PointerEvent) => {
-			const t = e.target as HTMLElement;
-			if (t.closest("#fab-main")) startDrag(e);
-			else closeOutside(e);
-		};
-
-		window.addEventListener("pointerdown", onDown);
-		window.addEventListener("pointermove", onMove);
-		window.addEventListener("pointerup", endDrag);
+		window.addEventListener("pointerdown", onPointerDown);
+		window.addEventListener("pointermove", onPointerMove);
+		window.addEventListener("pointerup", onPointerUp);
 		return () => {
-			window.removeEventListener("pointerdown", onDown);
-			window.removeEventListener("pointermove", onMove);
-			window.removeEventListener("pointerup", endDrag);
+			window.removeEventListener("pointerdown", onPointerDown);
+			window.removeEventListener("pointermove", onPointerMove);
+			window.removeEventListener("pointerup", onPointerUp);
 		};
-	});
-
-	$effect(() => {
-		if (!sidebarHidden) return;
-		const section = document.getElementById("sidebar-section");
-		if (section && !section.classList.contains("hidden")) {
-			section.classList.add("hidden");
-		}
 	});
 
 	$effect(() => {
@@ -122,35 +119,41 @@
 
 	function scrollTop() {
 		window.scroll({ top: 0, behavior: "smooth" });
-		open = false;
+		close();
 	}
 
 	function toggleSidebar() {
 		const section = document.getElementById("sidebar-section");
 		if (!section) return;
-		sidebarHidden = !section.classList.contains("hidden");
-		section.classList.toggle("hidden", sidebarHidden);
-		localStorage.setItem("fab-sidebar-hidden", sidebarHidden ? "1" : "");
-		open = false;
+		const hidden = section.classList.toggle("hidden");
+		localStorage.setItem("fab-sidebar-hidden", hidden ? "1" : "");
+		close();
 	}
 
 	const items = [
 		{ icon: "↑", label: "回到顶部", action: scrollTop, disabled: () => atTop },
 		{ icon: "☰", label: "侧边栏", action: toggleSidebar, disabled: () => false },
-		{ icon: "🌙", label: "暗色模式", action: () => (open = false), disabled: () => false },
 	] as const;
 </script>
 
 <div
-	bind:this={fabEl}
 	id="fab-root"
 	class="fab-root"
-	class:snap-left={!snapRight}
 	style:right={snapRight ? `${offsetX}px` : void 0}
 	style:left={snapRight ? void 0 : `${offsetX}px`}
 	style:bottom={`${offsetY}px`}
 >
-	<div id="fab-main" class="fab-main" class:open class:dragging>
+	<div
+		id="fab-main"
+		class="fab-main"
+		class:open
+		class:dragging
+		tabindex="0"
+		role="button"
+		aria-label="功能菜单"
+		onclick={onMainClick}
+		onkeydown={onMainKeyDown}
+	>
 		<div class="fab-glow-ring"></div>
 		<div class="fab-glass">
 			<div class="fab-spot fab-spot-1"></div>
@@ -164,9 +167,7 @@
 			class="fab-item"
 			class:visible={open}
 			class:disabled={item.disabled()}
-			style:transition-delay={open
-				? `${i * 50}ms`
-				: `${(items.length - 1 - i) * 30}ms`}
+			style:transition-delay={open ? `${i * 50}ms` : `${(items.length - 1 - i) * 30}ms`}
 			style:bottom={`${(i + 1) * ITEM_GAP + 8}px`}
 			onclick={item.action}
 		>
@@ -195,6 +196,10 @@
 		touch-action: none;
 	}
 
+	.fab-main:active {
+		cursor: grabbing;
+	}
+
 	.fab-main.dragging {
 		scale: 1.08;
 	}
@@ -210,14 +215,14 @@
 		inset: -3px;
 		border-radius: 50%;
 		background: conic-gradient(
-			from var(--fab-angle, 0deg),
+			from var(--fab-angle),
 			transparent 20%,
 			oklch(0.75 0.12 250 / 0.4) 40%,
 			oklch(0.85 0.08 210 / 0.25) 50%,
 			transparent 70%
 		);
 		animation: fab-spin 4s linear infinite;
-		transition: opacity 0.3s;
+		transition: opacity 0.3s, animation-duration 0.3s;
 		pointer-events: none;
 	}
 
@@ -233,9 +238,7 @@
 		background: oklch(0.92 0.02 250 / 0.55);
 		backdrop-filter: blur(16px);
 		-webkit-backdrop-filter: blur(16px);
-		box-shadow:
-			0 4px 20px oklch(0 0 0 / 0.15),
-			inset 0 1px 0 oklch(1 0 0 / 0.5);
+		box-shadow: 0 4px 20px oklch(0 0 0 / 0.15), inset 0 1px 0 oklch(1 0 0 / 0.5);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -245,9 +248,7 @@
 
 	:root.dark .fab-glass {
 		background: oklch(0.25 0.02 250 / 0.6);
-		box-shadow:
-			0 4px 20px oklch(0 0 0 / 0.35),
-			inset 0 1px 0 oklch(1 0 0 / 0.08);
+		box-shadow: 0 4px 20px oklch(0 0 0 / 0.35), inset 0 1px 0 oklch(1 0 0 / 0.08);
 	}
 
 	.fab-spot {
@@ -366,14 +367,14 @@
 		backdrop-filter: blur(8px);
 		-webkit-backdrop-filter: blur(8px);
 		opacity: 0;
-		transform: translateX(4px);
-		transition: opacity 0.12s, transform 0.12s;
+		translate: 4px -50%;
+		transition: opacity 0.12s, translate 0.12s;
 		pointer-events: none;
 	}
 
 	.fab-item:hover .fab-tooltip {
 		opacity: 1;
-		transform: translateX(0);
+		translate: 0 -50%;
 	}
 
 	@keyframes fab-spin {
