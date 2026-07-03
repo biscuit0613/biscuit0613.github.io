@@ -1,0 +1,65 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import {
+	compileToSvg,
+	scanTypstFiles,
+	type TypstFile,
+	type CompiledSvg,
+} from "@utils/typst-compiler";
+
+export async function getStaticPaths() {
+	const files = scanTypstFiles();
+	return files.map((file) => ({
+		params: { slug: file.slug },
+		props: { file, compiled: compileToSvg(file) },
+	}));
+}
+
+interface Props {
+	file: TypstFile;
+	compiled: CompiledSvg;
+}
+
+const { file, compiled } = Astro.props;
+---
+
+<MainGridLayout
+	title={file.meta.title}
+	description={file.meta.description}
+>
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative">
+		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+			<div class="typst-svg-wrapper" set:html={compiled.html} />
+
+			<div class="sr-only">
+				{compiled.plainText}
+			</div>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style is:global>
+	.typst-svg-wrapper {
+		max-width: 100%;
+		overflow-x: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.typst-svg-wrapper .typst-page + .typst-page {
+		margin-top: 2rem;
+	}
+
+	.typst-svg-wrapper svg {
+		max-width: 100%;
+		height: auto;
+		display: block;
+		box-shadow: 0 2px 12px oklch(0 0 0 / 0.08);
+		border-radius: 2px;
+	}
+
+	:root.dark .typst-svg-wrapper svg {
+		filter: invert(0.9) hue-rotate(180deg);
+	}
+</style>
