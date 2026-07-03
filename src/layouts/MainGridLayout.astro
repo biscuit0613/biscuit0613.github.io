@@ -109,54 +109,28 @@ const tabletShowSidebar =
 const desktopShowSidebar =
 	globalSidebarEnabled && widgetManager.shouldShowSidebar("desktop");
 
-// 动态网格布局 — hideSidebar 时固定两列（由 sidebar-collapsed 驱动过渡），否则按配置响应
-const gridTemplate =
-	sidebarPosition === "right" ? "1fr_17.5rem" : "17.5rem_1fr";
-const gridCols = hideSidebar
-	? `
-	grid-cols-1
-	md:grid-cols-[${gridTemplate}]
-	lg:grid-cols-[${gridTemplate}]
-`
-	: `
-	grid-cols-1
-	${tabletShowSidebar ? `md:grid-cols-[${gridTemplate}]` : "md:grid-cols-1"}
-	${desktopShowSidebar ? `lg:grid-cols-[${gridTemplate}]` : "lg:grid-cols-1"}
-`
-			.trim()
-			.replace(/\s+/g, " ");
+// 网格始终单列，sidebar + main 在 flex 容器内处理宽度动画
+const gridCols = "grid-cols-1";
 
-// 侧边栏容器类名 — hideSidebar 时不加 display: none，由 sidebar-closed 控制
+// 侧边栏类名 — flex 布局，hideSidebar 时由 sidebar-closed 控制
+const sidebarFlexOrder = sidebarPosition === "right" ? "md:order-1" : "md:order-0";
 const sidebarClass = `
-	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
+	onload-animation
 	${!mobileShowSidebar || hideSidebar ? "hidden" : ""}
-	${
-		tabletShowSidebar || hideSidebar
-			? `md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}`
-			: "md:hidden"
-	}
-	${
-		desktopShowSidebar || hideSidebar
-			? `lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPosition === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}`
-			: "lg:hidden"
-	}
+	md:block md:flex-shrink-0 md:w-[17.5rem]
+	${sidebarFlexOrder}
+	${!tabletShowSidebar && !hideSidebar ? "md:hidden" : ""}
+	${!desktopShowSidebar && !hideSidebar ? "lg:hidden" : ""}
 `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 主内容区域类名
+// 主内容区域类名 — flex-grow
+const mainFlexOrder = sidebarPosition === "right" ? "md:order-0" : "md:order-1";
 const mainContentClass = `
-	transition-swup-fade overflow-hidden w-full col-span-1
-	${
-		tabletShowSidebar || hideSidebar
-			? `${sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}`
-			: "md:col-span-1"
-	}
-	${
-		desktopShowSidebar || hideSidebar
-			? `${sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}`
-			: "lg:col-span-1"
-	}
+	transition-swup-fade overflow-hidden
+	md:flex-1 md:min-w-0
+	${mainFlexOrder}
 `
 	.trim()
 	.replace(/\s+/g, " ");
@@ -351,7 +325,7 @@ const transparentClass = shouldEnableTransparency
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!siteConfig.banner.enable ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class:list={["relative mx-auto pointer-events-auto", wide ? "max-w-[90rem]" : "max-w-[var(--page-width)]"]}>
-        <div id="main-grid" data-sidebar-pos={sidebarPosition} class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''} ${hideSidebar ? 'sidebar-collapsed' : ''}`}
+        <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
         >
             <!-- Banner image credit -->
             {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"
@@ -367,6 +341,7 @@ const transparentClass = shouldEnableTransparency
             </a>}
 
 
+            <div class="col-span-2 flex flex-col-reverse gap-4 ${sidebarPosition === "right" ? "md:flex-row-reverse" : "md:flex-row"}">
             <section id="sidebar-section" class:list={[hideSidebar ? "sidebar-closed" : ""]}>
               <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
             </section>
@@ -381,6 +356,7 @@ const transparentClass = shouldEnableTransparency
                     </div>
                 </div>
             </main>
+            </div>
 
             <div class="footer col-span-2 onload-animation block lg:hidden">
                 <Footer></Footer>
@@ -418,11 +394,9 @@ const transparentClass = shouldEnableTransparency
 	function toggleSidebar() {
 		const isTypst = document.querySelector("#swup-container [data-typst-root]");
 		const section = document.getElementById("sidebar-section");
-		const grid = document.getElementById("main-grid");
-		if (!section || !grid) return;
+		if (!section) return;
 		const closed = !!isTypst;
 		section.classList.toggle("sidebar-closed", closed);
-		grid.classList.toggle("sidebar-collapsed", closed);
 	}
 
 	document.addEventListener("swup:contentReplaced", toggleSidebar);
@@ -1176,23 +1150,13 @@ const transparentClass = shouldEnableTransparency
 
 /* 侧边栏平滑动画（桌面端） */
 @media (min-width: 768px) {
-	#main-grid {
-		transition: grid-template-columns 0.35s ease;
-	}
-	#main-grid[data-sidebar-pos="left"].sidebar-collapsed {
-		grid-template-columns: 0 1fr !important;
-	}
-	#main-grid[data-sidebar-pos="right"].sidebar-collapsed {
-		grid-template-columns: 1fr 0 !important;
-	}
-
 	#sidebar-section {
-		transition: max-width 0.35s ease, opacity 0.35s ease;
-		max-width: 17.5rem;
+		transition: width 0.35s ease, opacity 0.35s ease;
+		width: 17.5rem;
 		opacity: 1;
 	}
 	#sidebar-section.sidebar-closed {
-		max-width: 0;
+		width: 0;
 		opacity: 0;
 		overflow: hidden;
 	}

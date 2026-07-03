@@ -24,18 +24,10 @@ function load() {
 			offY = p.y ?? 24;
 		}
 	} catch {}
-	if (localStorage.getItem("fab-sidebar-hidden")) {
-		const s = document.getElementById("sidebar-section");
-		const g = document.getElementById("main-grid");
-		if (s && g) {
-			const cs = getComputedStyle(g);
-			const ncols = cs.gridTemplateColumns.split(/\s+/).length;
-			if (ncols >= 2) {
-				s.classList.add("sidebar-closed");
-				g.classList.add("sidebar-collapsed");
-			}
+		if (localStorage.getItem("fab-sidebar-hidden")) {
+			const s = document.getElementById("sidebar-section");
+			if (s) s.classList.add("sidebar-closed");
 		}
-	}
 }
 
 function save() {
@@ -111,18 +103,13 @@ function doTop() {
 	scroll({ top: 0, behavior: "smooth" });
 	close();
 }
-function doSidebar() {
-	const grid = document.getElementById("main-grid");
-	const section = document.getElementById("sidebar-section");
-	if (!grid || !section) return;
-	const cs = getComputedStyle(grid);
-	const ncols = cs.gridTemplateColumns.split(/\s+/).length;
-	if (ncols < 2) return;
-	const closed = section.classList.toggle("sidebar-closed");
-	grid.classList.toggle("sidebar-collapsed", closed);
-	localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
-	close();
-}
+	function doSidebar() {
+		const section = document.getElementById("sidebar-section");
+		if (!section) return;
+		const closed = section.classList.toggle("sidebar-closed");
+		localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
+		close();
+	}
 
 $effect(() => load());
 $effect(() => {
