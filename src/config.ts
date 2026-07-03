@@ -190,6 +190,11 @@ export const navBarConfig: NavBarConfig = {
 					url: "/albums/",
 					icon: "material-symbols:photo-library",
 				},
+				{
+					name: "简历",
+					url: "/typst/resume/",
+					icon: "material-symbols:badge",
+				},
 			],
 		},
 		{
@@ -217,6 +222,11 @@ export const navBarConfig: NavBarConfig = {
 					name: "时间线",
 					url: "/timeline/",
 					icon: "material-symbols:timeline",
+				},
+				{
+					name: "Typst 文档",
+					url: "/typst/",
+					icon: "material-symbols:description",
 				},
 			],
 		},

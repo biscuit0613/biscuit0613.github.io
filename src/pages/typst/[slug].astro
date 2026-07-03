@@ -1,9 +1,10 @@
 ---
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
-	type CompiledSvg,
 	compileToSvg,
+	getDocumentsByCategory,
 	scanTypstFiles,
+	type CompiledSvg,
 	type TypstFile,
 } from "@utils/typst-compiler";
 
@@ -21,6 +22,20 @@ interface Props {
 }
 
 const { file, compiled } = Astro.props;
+
+const allDocs = scanTypstFiles().map((f) => ({ ...f, compiled: compileToSvg(f) }));
+const siblings = file.meta.category
+	? getDocumentsByCategory(allDocs, file.meta.category)
+	: [];
+const idx = siblings.findIndex((s) => s.slug === file.slug);
+const prev = idx > 0 ? siblings[idx - 1] : null;
+const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
+
+const CATEGORY_LABELS: Record<string, string> = {
+	resume: "简历",
+	review: "复习资料",
+	demo: "功能展示",
+};
 ---
 
 <MainGridLayout
@@ -29,11 +44,57 @@ const { file, compiled } = Astro.props;
 >
 	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative">
 		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
-			<div class="typst-svg-wrapper" set:html={compiled.html} />
-
-			<div class="sr-only">
-				{compiled.plainText}
+			<!-- 面包屑 + 标题栏 -->
+			<div class="flex flex-wrap items-center gap-2 mb-4 text-sm text-neutral-500 dark:text-neutral-400">
+				<a href="/typst/" class="hover:text-[var(--primary)] transition-colors">Typst 文档</a>
+				{file.meta.category && (
+					<>
+						<span>/</span>
+						<a href={`/typst/category/${file.meta.category}/`} class="hover:text-[var(--primary)] transition-colors">
+							{CATEGORY_LABELS[file.meta.category] || file.meta.category}
+						</a>
+					</>
+				)}
+				<span>/</span>
+				<span class="text-black/60 dark:text-white/60">{file.meta.title}</span>
 			</div>
+
+			<h1 class="text-2xl font-bold mb-1 text-black/80 dark:text-white/80">
+				{file.meta.title}
+			</h1>
+			{file.meta.description && (
+				<p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
+					{file.meta.description}
+				</p>
+			)}
+
+			<!-- SVG 文档内容 -->
+			<div class="typst-svg-wrapper" set:html={compiled.html} />
+			<div class="sr-only">{compiled.plainText}</div>
+
+			<!-- 同分类 prev/next -->
+			{siblings.length > 1 && (
+				<div class="flex flex-col md:flex-row justify-between gap-4 mt-8 pt-6 border-t border-dashed border-[var(--line-divider)]">
+					{prev ? (
+						<a href={`/typst/${prev.slug}/`} class="btn-card rounded-2xl flex-1 px-4 py-3 flex items-center gap-3 hover:scale-[1.01] active:scale-[0.99] transition-transform">
+							<span class="text-2xl text-[var(--primary)]">‹</span>
+							<div class="overflow-hidden min-w-0">
+								<div class="text-xs text-neutral-400 dark:text-neutral-500">上一篇</div>
+								<div class="truncate text-sm font-medium text-black/70 dark:text-white/70">{prev.meta.title}</div>
+							</div>
+						</a>
+					) : <div class="flex-1" />}
+					{next ? (
+						<a href={`/typst/${next.slug}/`} class="btn-card rounded-2xl flex-1 px-4 py-3 flex items-center gap-3 justify-end text-right hover:scale-[1.01] active:scale-[0.99] transition-transform">
+							<div class="overflow-hidden min-w-0">
+								<div class="text-xs text-neutral-400 dark:text-neutral-500">下一篇</div>
+								<div class="truncate text-sm font-medium text-black/70 dark:text-white/70">{next.meta.title}</div>
+							</div>
+							<span class="text-2xl text-[var(--primary)]">›</span>
+						</a>
+					) : <div class="flex-1" />}
+				</div>
+			)}
 		</div>
 	</div>
 </MainGridLayout>

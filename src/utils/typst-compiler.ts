@@ -4,6 +4,7 @@ import {
 	mkdirSync,
 	readdirSync,
 	readFileSync,
+	statSync,
 	unlinkSync,
 	writeFileSync,
 } from "node:fs";
@@ -23,6 +24,9 @@ export interface TypstMeta {
 	description?: string;
 	published?: string;
 	tags?: string[];
+	category?: string;
+	pinned?: boolean;
+	order?: number;
 	draft?: boolean;
 }
 
@@ -33,12 +37,11 @@ export interface TypstFile {
 }
 
 export interface CompiledSvg {
-	/** HTML string of all SVG pages concatenated */
 	html: string;
-	/** Number of pages */
 	pageCount: number;
-	/** Plain text for search indexing */
 	plainText: string;
+	coverSvg: string;
+	coverAspect: number;
 }
 
 export function scanTypstFiles(): TypstFile[] {
@@ -66,20 +69,25 @@ export function scanTypstFiles(): TypstFile[] {
 export function compileToSvg(file: TypstFile): CompiledSvg {
 	const outDir = join(CACHE_DIR, "svg", file.slug);
 	mkdirSync(outDir, { recursive: true });
+	const cacheStamp = join(outDir, ".stamp");
 
-	// Clean stale files from previous compilations
-	for (const f of readdirSync(outDir)) {
-		if (f.endsWith(".svg")) {
+	// mtime-based cache — skip recompile if source unchanged
+	const needsCompile =
+		!existsSync(cacheStamp) ||
+		statSync(file.sourcePath).mtimeMs > Number(readFileSync(cacheStamp, "utf-8"));
+
+	if (needsCompile) {
+		for (const f of readdirSync(outDir)) {
 			try {
 				unlinkSync(join(outDir, f));
 			} catch {}
 		}
+		execSync(
+			`${typstBin()} compile --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
+			{ stdio: "pipe" },
+		);
+		writeFileSync(cacheStamp, String(statSync(file.sourcePath).mtimeMs));
 	}
-
-	execSync(
-		`${typstBin()} compile --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
-		{ stdio: "pipe" },
-	);
 
 	const pages = readdirSync(outDir)
 		.filter((f) => f.endsWith(".svg"))
@@ -93,16 +101,16 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 
 	const html = svgContents
 		.map((svg, i) => {
-			const pageClass = pages.length > 1 ? "typst-page" : "";
-			return `<div class="${pageClass}">${svg}</div>`;
+			const cls = pages.length > 1 ? "typst-page" : "";
+			return `<div class="${cls}">${svg}</div>`;
 		})
 		.join("");
 
-	const plainText = extractTextFromSource(
-		readFileSync(file.sourcePath, "utf-8"),
-	);
+	const coverSvg = svgContents[0] || "";
+	const coverAspect = parseViewBoxAspect(coverSvg);
+	const plainText = extractTextFromSource(readFileSync(file.sourcePath, "utf-8"));
 
-	return { html, pageCount: pages.length, plainText };
+	return { html, pageCount: pages.length, plainText, coverSvg, coverAspect };
 }
 
 export function compileSnippetToSvg(code: string): string {
@@ -122,8 +130,27 @@ export function compileSnippetToSvg(code: string): string {
 	return readFileSync(outPath, "utf-8");
 }
 
+export function getDocumentsByCategory(
+	docs: (TypstFile & { compiled: CompiledSvg })[],
+	category: string,
+) {
+	return docs
+		.filter((d) => d.meta.category === category)
+		.sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99));
+}
+
+function parseViewBoxAspect(svg: string): number {
+	const m = svg.match(/viewBox="[^"]*\s(\d+\.?\d*)\s(\d+\.?\d*)"/);
+	if (m) {
+		const w = Number.parseFloat(m[1]);
+		const h = Number.parseFloat(m[2]);
+		if (w > 0 && h > 0) return w / h;
+	}
+	return 210 / 297;
+}
+
 function extractTextFromSource(source: string): string {
-	const text = source
+	return source
 		.replace(/\/\/.*$/gm, "")
 		.replace(/\/\*[\s\S]*?\*\//g, "")
 		.replace(/`[^`]*`/g, "")
@@ -136,7 +163,6 @@ function extractTextFromSource(source: string): string {
 		.replace(/\n{2,}/g, "\n")
 		.replace(/\s+/g, " ")
 		.trim();
-	return text;
 }
 
 function hashStr(s: string): string {

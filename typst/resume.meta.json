@@ -2,5 +2,8 @@
 	"title": "简历",
 	"description": "Biscuit 的个人简历",
 	"published": "2026-07-01",
-	"tags": ["typst", "resume"]
+	"tags": ["typst", "resume"],
+	"category": "resume",
+	"pinned": true,
+	"order": 1
 }

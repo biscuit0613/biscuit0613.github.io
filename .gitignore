@@ -17,6 +17,12 @@ pnpm-debug.log*
 .env
 .env.production
 
+# build caches
+node_modules/.cache/
+
+# generated typst artifacts (PDF and compiled cache)
+typst/*.pdf
+
 # macOS-specific files
 .DS_Store
 
