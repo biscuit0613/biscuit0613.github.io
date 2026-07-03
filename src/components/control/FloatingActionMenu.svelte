@@ -1,94 +1,136 @@
 <script lang="ts">
-	let dragging = $state(false);
-	let open = $state(false);
-	let atTop = $state(true);
-	let snapRight = $state(true);
-	let offX = $state(24);
-	let offY = $state(24);
+let dragging = $state(false);
+let open = $state(false);
+let atTop = $state(true);
+let snapRight = $state(true);
+let offX = $state(24);
+let offY = $state(24);
 
-	let mainEl: HTMLDivElement | undefined = $state(undefined);
+let mainEl: HTMLDivElement | undefined = $state(undefined);
 
-	let _pid = -1;
-	let _bx = 24, _by = 24;
-	let _sx = 0, _sy = 0;
-	let _moved = false;
+let _pid = -1;
+let _bx = 24,
+	_by = 24;
+let _sx = 0,
+	_sy = 0;
+let _moved = false;
 
-	function load() {
-		try {
-			const p = JSON.parse(localStorage.getItem("fab-pos") ?? "null");
-			if (p) { snapRight = p.r ?? true; offX = p.x ?? 24; offY = p.y ?? 24; }
-		} catch {}
-		if (localStorage.getItem("fab-sidebar-hidden")) {
-			document.getElementById("sidebar-section")?.classList.add("hidden");
+function load() {
+	try {
+		const p = JSON.parse(localStorage.getItem("fab-pos") ?? "null");
+		if (p) {
+			snapRight = p.r ?? true;
+			offX = p.x ?? 24;
+			offY = p.y ?? 24;
 		}
-	}
-
-	function save() {
-		localStorage.setItem("fab-pos", JSON.stringify({ r: snapRight, x: offX, y: offY }));
-	}
-
-	function close() { open = false; }
-
-	function onDown(e: PointerEvent) {
-		const t = e.target instanceof Node ? e.target : null;
-		if (!t?.closest("#fab-main")) { close(); return; }
-		_sx = e.clientX; _sy = e.clientY;
-		_bx = offX; _by = offY;
-		_moved = false;
-		_pid = e.pointerId;
-		dragging = true;
-		close();
-		if (mainEl) {
-			mainEl.style.transition = "none";
-			mainEl.setPointerCapture(e.pointerId);
-		}
-	}
-
-	function onMove(e: PointerEvent) {
-		if (!dragging || e.pointerId !== _pid) return;
-		const dx = e.clientX - _sx;
-		const dy = e.clientY - _sy;
-		if (Math.abs(dx) > 4 || Math.abs(dy) > 4) _moved = true;
-		offX = Math.max(8, Math.min(innerWidth - 56, _bx - dx));
-		offY = Math.max(8, Math.min(innerHeight - 56, _by + dy));
-	}
-
-	function onUp(e: PointerEvent) {
-		if (!dragging || e.pointerId !== _pid) return;
-		dragging = false;
-		_pid = -1;
-		if (mainEl) {
-			mainEl.style.removeProperty("transition");
-			try { mainEl.releasePointerCapture(e.pointerId); } catch {}
-		}
-		if (_moved) {
-			snapRight = offX >= innerWidth / 2;
-			save();
-			_moved = false;
-		}
-	}
-
-	function onClick() {
-		if (_moved) { _moved = false; return; }
-		open = !open;
-	}
-
-	function doTop() { scroll({ top: 0, behavior: "smooth" }); close(); }
-	function doSidebar() {
+	} catch {}
+	if (localStorage.getItem("fab-sidebar-hidden")) {
 		const s = document.getElementById("sidebar-section");
-		if (!s) return;
-		const h = s.classList.toggle("hidden");
-		localStorage.setItem("fab-sidebar-hidden", h ? "1" : "");
-		close();
+		const g = document.getElementById("main-grid");
+		if (s && g) {
+			const cs = getComputedStyle(g);
+			const ncols = cs.gridTemplateColumns.split(/\s+/).length;
+			if (ncols >= 2) {
+				s.classList.add("sidebar-closed");
+				g.classList.add("sidebar-collapsed");
+			}
+		}
 	}
+}
 
-	$effect(() => load());
-	$effect(() => {
-		const h = () => atTop = scrollY < 100;
-		h();
-		addEventListener("scroll", h, { passive: true });
-		return () => removeEventListener("scroll", h);
-	});
+function save() {
+	localStorage.setItem(
+		"fab-pos",
+		JSON.stringify({ r: snapRight, x: offX, y: offY }),
+	);
+}
+
+function close() {
+	open = false;
+}
+
+function onDown(e: PointerEvent) {
+	const t = e.target instanceof Node ? e.target : null;
+	if (!t?.closest("#fab-main")) {
+		close();
+		return;
+	}
+	_sx = e.clientX;
+	_sy = e.clientY;
+	_bx = offX;
+	_by = offY;
+	_moved = false;
+	_pid = e.pointerId;
+	dragging = true;
+	close();
+	if (mainEl) {
+		mainEl.style.transition = "none";
+		mainEl.setPointerCapture(e.pointerId);
+	}
+}
+
+function onMove(e: PointerEvent) {
+	if (!dragging || e.pointerId !== _pid) return;
+	const dx = e.clientX - _sx;
+	const dy = e.clientY - _sy;
+	if (Math.abs(dx) > 4 || Math.abs(dy) > 4) _moved = true;
+	if (snapRight) {
+		offX = Math.max(8, Math.min(innerWidth - 56, _bx - dx));
+	} else {
+		offX = Math.max(8, Math.min(innerWidth - 56, _bx + dx));
+	}
+	offY = Math.max(8, Math.min(innerHeight - 56, _by - dy));
+}
+
+function onUp(e: PointerEvent) {
+	if (!dragging || e.pointerId !== _pid) return;
+	dragging = false;
+	_pid = -1;
+	if (mainEl) {
+		mainEl.style.removeProperty("transition");
+		try {
+			mainEl.releasePointerCapture(e.pointerId);
+		} catch {}
+	}
+	if (_moved) {
+		snapRight = offX >= innerWidth / 2;
+		save();
+		_moved = false;
+	}
+}
+
+function onClick() {
+	if (_moved) {
+		_moved = false;
+		return;
+	}
+	open = !open;
+}
+
+function doTop() {
+	scroll({ top: 0, behavior: "smooth" });
+	close();
+}
+function doSidebar() {
+	const grid = document.getElementById("main-grid");
+	const section = document.getElementById("sidebar-section");
+	if (!grid || !section) return;
+	const cs = getComputedStyle(grid);
+	const ncols = cs.gridTemplateColumns.split(/\s+/).length;
+	if (ncols < 2) return;
+	const closed = section.classList.toggle("sidebar-closed");
+	grid.classList.toggle("sidebar-collapsed", closed);
+	localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
+	close();
+}
+
+$effect(() => load());
+$effect(() => {
+	const h = () => (atTop = scrollY < 100);
+	h();
+	addEventListener("scroll", h, { passive: true });
+	return () => removeEventListener("scroll", h);
+});
 </script>
 
 <div

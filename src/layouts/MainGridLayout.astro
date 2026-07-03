@@ -109,31 +109,54 @@ const tabletShowSidebar =
 const desktopShowSidebar =
 	globalSidebarEnabled && widgetManager.shouldShowSidebar("desktop");
 
-// 动态网格布局类名 - 根据侧边栏位置调整列宽
-const gridCols = `
-	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
-	${tabletShowSidebar ? (sidebarPosition === "right" ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : "md:grid-cols-1"}
-	${desktopShowSidebar ? (sidebarPosition === "right" ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : "lg:grid-cols-1"}
+// 动态网格布局 — hideSidebar 时固定两列（由 sidebar-collapsed 驱动过渡），否则按配置响应
+const gridTemplate =
+	sidebarPosition === "right" ? "1fr_17.5rem" : "17.5rem_1fr";
+const gridCols = hideSidebar
+	? `
+	grid-cols-1
+	md:grid-cols-[${gridTemplate}]
+	lg:grid-cols-[${gridTemplate}]
 `
-	.trim()
-	.replace(/\s+/g, " ");
+	: `
+	grid-cols-1
+	${tabletShowSidebar ? `md:grid-cols-[${gridTemplate}]` : "md:grid-cols-1"}
+	${desktopShowSidebar ? `lg:grid-cols-[${gridTemplate}]` : "lg:grid-cols-1"}
+`
+			.trim()
+			.replace(/\s+/g, " ");
 
-// 侧边栏容器类名 - 根据位置调整grid-column
+// 侧边栏容器类名 — hideSidebar 时不加 display: none，由 sidebar-closed 控制
 const sidebarClass = `
 	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
-	${mobileShowSidebar ? "block" : "hidden"}
-	${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
-	${desktopShowSidebar ? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPosition === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}` : "lg:hidden"}
+	${!mobileShowSidebar || hideSidebar ? "hidden" : ""}
+	${
+		tabletShowSidebar || hideSidebar
+			? `md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}`
+			: "md:hidden"
+	}
+	${
+		desktopShowSidebar || hideSidebar
+			? `lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPosition === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}`
+			: "lg:hidden"
+	}
 `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 主内容区域类名 - 根据侧边栏位置调整grid-column
+// 主内容区域类名
 const mainContentClass = `
-	transition-swup-fade overflow-hidden w-full
-	${mobileShowSidebar ? "col-span-2" : "col-span-1"}
-	${tabletShowSidebar ? `${sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}` : "md:col-span-1"}
-	${desktopShowSidebar ? `${sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}` : "lg:col-span-1"}
+	transition-swup-fade overflow-hidden w-full col-span-1
+	${
+		tabletShowSidebar || hideSidebar
+			? `${sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}`
+			: "md:col-span-1"
+	}
+	${
+		desktopShowSidebar || hideSidebar
+			? `${sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}`
+			: "lg:col-span-1"
+	}
 `
 	.trim()
 	.replace(/\s+/g, " ");
@@ -328,7 +351,7 @@ const transparentClass = shouldEnableTransparency
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!siteConfig.banner.enable ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class:list={["relative mx-auto pointer-events-auto", wide ? "max-w-[90rem]" : "max-w-[var(--page-width)]"]}>
-        <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+        <div id="main-grid" data-sidebar-pos={sidebarPosition} class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''} ${hideSidebar ? 'sidebar-collapsed' : ''}`}
         >
             <!-- Banner image credit -->
             {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"
@@ -344,8 +367,8 @@ const transparentClass = shouldEnableTransparency
             </a>}
 
 
-            <section id="sidebar-section" class:list={[!mobileShowSidebar && !tabletShowSidebar && !desktopShowSidebar ? "hidden" : ""]}>
-              {(mobileShowSidebar || tabletShowSidebar || desktopShowSidebar) && <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>}
+            <section id="sidebar-section" class:list={[hideSidebar ? "sidebar-closed" : ""]}>
+              <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
             </section>
 
             <main id="swup-container" class={mainContentClass}>
@@ -395,8 +418,11 @@ const transparentClass = shouldEnableTransparency
 	function toggleSidebar() {
 		const isTypst = document.querySelector("#swup-container [data-typst-root]");
 		const section = document.getElementById("sidebar-section");
-		if (!section) return;
-		section.classList.toggle("hidden", !!isTypst);
+		const grid = document.getElementById("main-grid");
+		if (!section || !grid) return;
+		const closed = !!isTypst;
+		section.classList.toggle("sidebar-closed", closed);
+		grid.classList.toggle("sidebar-collapsed", closed);
 	}
 
 	document.addEventListener("swup:contentReplaced", toggleSidebar);
@@ -1146,5 +1172,32 @@ const transparentClass = shouldEnableTransparency
         min-height: 30px !important;
         max-height: 40px !important;
     }
+}
+
+/* 侧边栏平滑动画（桌面端） */
+@media (min-width: 768px) {
+	#main-grid {
+		transition: grid-template-columns 0.35s ease;
+	}
+	#main-grid[data-sidebar-pos="left"].sidebar-collapsed {
+		grid-template-columns: 0 1fr !important;
+	}
+	#main-grid[data-sidebar-pos="right"].sidebar-collapsed {
+		grid-template-columns: 1fr 0 !important;
+	}
+
+	#sidebar-section {
+		transition: max-width 0.35s ease, opacity 0.35s ease;
+		max-width: 17.5rem;
+		opacity: 1;
+	}
+	#sidebar-section.sidebar-closed {
+		max-width: 0;
+		opacity: 0;
+		overflow: hidden;
+	}
+	#sidebar-section.sidebar-closed > * {
+		overflow: hidden;
+	}
 }
 </style>
