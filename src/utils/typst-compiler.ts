@@ -74,7 +74,8 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 	// mtime-based cache — skip recompile if source unchanged
 	const needsCompile =
 		!existsSync(cacheStamp) ||
-		statSync(file.sourcePath).mtimeMs > Number(readFileSync(cacheStamp, "utf-8"));
+		statSync(file.sourcePath).mtimeMs >
+			Number(readFileSync(cacheStamp, "utf-8"));
 
 	if (needsCompile) {
 		for (const f of readdirSync(outDir)) {
@@ -108,7 +109,9 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 
 	const coverSvg = svgContents[0] || "";
 	const coverAspect = parseViewBoxAspect(coverSvg);
-	const plainText = extractTextFromSource(readFileSync(file.sourcePath, "utf-8"));
+	const plainText = extractTextFromSource(
+		readFileSync(file.sourcePath, "utf-8"),
+	);
 
 	return { html, pageCount: pages.length, plainText, coverSvg, coverAspect };
 }

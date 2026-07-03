@@ -7,8 +7,13 @@ import {
 } from "@utils/typst-compiler";
 
 export async function getStaticPaths() {
-	const docs = scanTypstFiles().map((f) => ({ ...f, compiled: compileToSvg(f) }));
-	const categories = [...new Set(docs.map((d) => d.meta.category).filter(Boolean))];
+	const docs = scanTypstFiles().map((f) => ({
+		...f,
+		compiled: compileToSvg(f),
+	}));
+	const categories = [
+		...new Set(docs.map((d) => d.meta.category).filter(Boolean)),
+	];
 	return categories.map((cat) => ({
 		params: { category: cat },
 		props: { category: cat, docs: getDocumentsByCategory(docs, cat) },
