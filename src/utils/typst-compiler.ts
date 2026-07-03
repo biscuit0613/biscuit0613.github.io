@@ -12,11 +12,18 @@ import { basename, join } from "node:path";
 
 const TYPST_SRC = join(process.cwd(), "typst");
 const CACHE_DIR = join(process.cwd(), "node_modules", ".cache", "typst");
+const FONTS_DIR = join(CACHE_DIR, "fonts");
 
-function typstBin(): string {
-	const local = join(process.cwd(), "node_modules", ".bin", "typst");
-	if (existsSync(local)) return local;
-	return "typst";
+function typstCmd(): string {
+	const bin = (() => {
+		const local = join(process.cwd(), "node_modules", ".bin", "typst");
+		return existsSync(local) ? local : "typst";
+	})();
+
+	const fontPath = join(FONTS_DIR, "NotoSerifCJKsc-Regular.otf");
+	const fontFlag = existsSync(fontPath) ? ` --font-path "${FONTS_DIR}"` : "";
+
+	return `${bin}${fontFlag}`;
 }
 
 export interface TypstMeta {
@@ -84,7 +91,7 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 			} catch {}
 		}
 		execSync(
-			`${typstBin()} compile --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
+			`${typstCmd()} compile --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
 			{ stdio: "pipe" },
 		);
 		writeFileSync(cacheStamp, String(statSync(file.sourcePath).mtimeMs));
@@ -125,7 +132,7 @@ export function compileSnippetToSvg(code: string): string {
 
 	if (!existsSync(outPath)) {
 		writeFileSync(srcPath, code, "utf-8");
-		execSync(`${typstBin()} compile --format svg "${srcPath}" "${outPath}"`, {
+		execSync(`${typstCmd()} compile --format svg "${srcPath}" "${outPath}"`, {
 			stdio: "pipe",
 		});
 	}
