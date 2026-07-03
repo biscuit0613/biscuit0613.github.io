@@ -30,6 +30,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	headings?: MarkdownHeading[];
+	hideSidebar?: boolean;
 }
 
 // 类型守卫函数
@@ -94,8 +95,9 @@ const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
 const finalMainPanelTop = siteConfig.banner.enable ? mainPanelTop : "5.5rem";
 
 // 检查侧边栏是否启用，动态调整网格布局
+const { hideSidebar } = Astro.props;
 // 全局启用状态
-const globalSidebarEnabled = sidebarLayoutConfig.enable;
+const globalSidebarEnabled = sidebarLayoutConfig.enable && !hideSidebar;
 // 侧边栏位置配置
 const sidebarPosition = sidebarLayoutConfig.position || "left";
 // 响应式配置：不同设备上的侧边栏显示状态
