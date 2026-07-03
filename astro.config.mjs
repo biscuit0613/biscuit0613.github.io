@@ -26,6 +26,7 @@ import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkEncrypt } from "./src/plugins/remark-encrypt.mjs";
 import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import { remarkTypst } from "./src/plugins/remark-typst.mjs";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://biscuit0613.github.io/",
@@ -124,6 +125,7 @@ export default defineConfig({
 			remarkSectionize,
 			parseDirectiveNode,
 			remarkMermaid,
+			remarkTypst,
 
 			// Must run LAST: encrypts password-protected posts and replaces body
 			// (plugins before it compute reading-time/excerpt on original content)
