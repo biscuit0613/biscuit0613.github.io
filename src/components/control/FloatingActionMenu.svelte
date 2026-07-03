@@ -9,8 +9,10 @@
 	let offY = $state(24);
 
 	// Drag tracking
-	let _dx = 0, _dy = 0; // base offset at drag start
-	let _sx = 0, _sy = 0; // pointer start
+	let _pid = -1;         // pointer id for capture
+	let _bx = 24, _by = 24; // base offset at drag start
+	let _sx = 0, _sy = 0;  // pointer start screen coords
+	let _moved = false;     // whether actual drag occurred
 
 	function load() {
 		try {
@@ -33,24 +35,46 @@
 		const target = e.target instanceof Node ? e.target : null;
 		if (!target?.closest("#fab-main")) { closeMenu(); return; }
 		_sx = e.clientX; _sy = e.clientY;
-		_dx = offX; _dy = offY;
+		_bx = offX; _by = offY;
+		_moved = false;
+		_pid = e.pointerId;
 		dragging = true;
 		closeMenu();
-		(document.getElementById("fab-main") as HTMLElement | null)?.style.setProperty("transition", "none");
+		const el = document.getElementById("fab-main");
+		if (el) {
+			el.style.transition = "none";
+			el.setPointerCapture(e.pointerId);
+		}
 	}
 
 	function onMove(e: PointerEvent) {
-		if (!dragging) return;
-		offX = Math.max(8, Math.min(innerWidth - 56, _dx + (_sx - e.clientX)));
-		offY = Math.max(8, Math.min(innerHeight - 56, _dy + (e.clientY - _sy)));
+		if (!dragging || e.pointerId !== _pid) return;
+		const dx = e.clientX - _sx;
+		const dy = e.clientY - _sy;
+		if (Math.abs(dx) > 4 || Math.abs(dy) > 4) _moved = true;
+		offX = Math.max(8, Math.min(innerWidth - 56, _bx - dx));
+		offY = Math.max(8, Math.min(innerHeight - 56, _by + dy));
 	}
 
-	function onUp() {
-		if (!dragging) return;
+	function onUp(e: PointerEvent) {
+		if (!dragging || e.pointerId !== _pid) return;
 		dragging = false;
-		(document.getElementById("fab-main") as HTMLElement | null)?.style.removeProperty("transition");
-		snapRight = offX >= innerWidth / 2;
-		save();
+		_pid = -1;
+		const el = document.getElementById("fab-main");
+		if (el) {
+			el.style.removeProperty("transition");
+			try { el.releasePointerCapture(e.pointerId); } catch {}
+		}
+		// Only snap+sava and swallow click when user actually dragged
+		if (_moved) {
+			snapRight = offX >= innerWidth / 2;
+			save();
+		}
+	}
+
+	function onMainClick(e: MouseEvent) {
+		if (_moved) { _moved = false; return; }
+		toggleMenu();
 	}
 
 	function doTop() { scroll({ top: 0, behavior: "smooth" }); closeMenu(); }
@@ -86,7 +110,7 @@
 	<div
 		class="fab-main" class:open class:dragging
 		role="button" tabindex="0" aria-label="功能菜单"
-		onclick={toggleMenu}
+		onclick={onMainClick}
 	>
 		<div class="fab-ring"></div>
 		<div class="fab-body">
