@@ -10,7 +10,7 @@
   title-align: center,
   num-columns: 2,
   column-gutter: 6pt,
-  font-size: 7.5pt,
+  font-size: 12pt,
   line-skip: 6.5pt,
   x-margin: 20pt,
   y-margin: 10pt,

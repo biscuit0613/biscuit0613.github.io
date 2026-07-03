@@ -45,7 +45,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 	wide={true}
 >
 	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative" data-typst-root>
-		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full overflow-visible">
 			<!-- 面包屑 + 标题栏 -->
 			<div class="flex flex-wrap items-center gap-2 mb-4 text-sm text-neutral-500 dark:text-neutral-400">
 				<a href="/typst/" class="hover:text-[var(--primary)] transition-colors">Typst 文档</a>
@@ -70,8 +70,10 @@ const CATEGORY_LABELS: Record<string, string> = {
 				</p>
 			)}
 
-			<!-- SVG 文档内容 -->
-			<div class="typst-svg-wrapper" set:html={compiled.html} />
+			<!-- SVG 文档内容：负 margin 抵消 card-base 的 padding，让 SVG 铺到卡片边缘 -->
+			<div class="-mx-6 md:-mx-9">
+				<div class="typst-svg-wrapper" set:html={compiled.html} />
+			</div>
 			<div class="sr-only">{compiled.plainText}</div>
 
 			<!-- 同分类 prev/next -->
