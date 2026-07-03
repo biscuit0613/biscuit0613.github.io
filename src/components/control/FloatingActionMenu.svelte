@@ -1,4 +1,8 @@
 <script lang="ts">
+import Icon from "@iconify/svelte";
+import AccessibilityIcon from '../../lib/icons/AccessibilityIcon.svelte';
+
+
 let dragging = $state(false);
 let open = $state(false);
 let atTop = $state(true);
@@ -9,13 +13,49 @@ let offY = $state(24);
 let mainEl: HTMLDivElement | undefined = $state(undefined);
 
 let _pid = -1;
-let _bx = 24,
-	_by = 24;
-let _sx = 0,
-	_sy = 0;
+let _bx = 24;
+let _by = 24;
+let _sx = 0;
+let _sy = 0;
 let _moved = false;
 
+// ===== 子按钮配置 =====
+const items = [
+	{
+		icon: "mingcute:up-small-line",
+		label: "回到顶部",
+		action: doTop,
+		dim: () => atTop,
+	},
+	{
+		icon: "material-symbols:menu-rounded",
+		label: "侧边栏",
+		action: doSidebar,
+		dim: () => false,
+	},
+];
+
+// ===== 轨道布局函数 =====
+const RADIUS = 72; // 轨道半径，可调
+const CENTER = 24; // 主按钮中心（48/2）
+const HALF = 20; // 子按钮半宽（40/2）
+
+function getOrbitStyle(index: number, total: number) {
+	if (total <= 1) return { left: CENTER - HALF, top: CENTER - RADIUS - HALF };
+
+	// 圆弧范围：从 -150° 到 -30°（即顶部左右各 60° 对称分布）
+	const startAngle = -Math.PI / 2 - Math.PI / 3; // -150°
+	const endAngle = -Math.PI / 2 + Math.PI / 3; // -30°
+	const angle = startAngle + (index / (total - 1)) * (endAngle - startAngle);
+
+	return {
+		left: CENTER + RADIUS * Math.cos(angle) - HALF,
+		top: CENTER + RADIUS * Math.sin(angle) - HALF,
+	};
+}
+
 function load() {
+	// 加载悬浮球位置
 	try {
 		const p = JSON.parse(localStorage.getItem("fab-pos") ?? "null");
 		if (p) {
@@ -24,10 +64,10 @@ function load() {
 			offY = p.y ?? 24;
 		}
 	} catch {}
-		if (localStorage.getItem("fab-sidebar-hidden")) {
-			const s = document.getElementById("sidebar-section");
-			if (s) s.classList.add("sidebar-closed");
-		}
+	// 加载侧边栏状态
+	if (localStorage.getItem("fab-sidebar-hidden")) {
+		document.getElementById("sidebar-section")?.classList.add("sidebar-closed");
+	}
 }
 
 function save() {
@@ -54,7 +94,7 @@ function onDown(e: PointerEvent) {
 	_moved = false;
 	_pid = e.pointerId;
 	dragging = true;
-	close();
+	// close();
 	if (mainEl) {
 		mainEl.style.transition = "none";
 		mainEl.setPointerCapture(e.pointerId);
@@ -85,38 +125,51 @@ function onUp(e: PointerEvent) {
 		} catch {}
 	}
 	if (_moved) {
-		snapRight = offX >= innerWidth / 2;
+		const wasRight = snapRight;
+		const newRight = offX >= innerWidth / 2;
+
+		if (newRight !== wasRight) {
+			// 方向变了，需要转换 offX 的参照系
+			if (newRight) {
+				// 从靠左变为靠右：左距离 → 右距离
+				offX = innerWidth - 56 - offX;
+			} else {
+				// 从靠右变为靠左：右距离 → 左距离
+				offX = innerWidth - 56 - offX;
+			}
+			snapRight = newRight;
+		}
 		save();
 		_moved = false;
+	} else {
+		// 纯点击（没有拖拽）→ 切换菜单
+		open = !open;
 	}
-}
-
-function onClick() {
-	if (_moved) {
-		_moved = false;
-		return;
-	}
-	open = !open;
 }
 
 function doTop() {
 	scroll({ top: 0, behavior: "smooth" });
 	close();
 }
-	function doSidebar() {
-		const section = document.getElementById("sidebar-section");
-		if (!section) return;
-		const closed = section.classList.toggle("sidebar-closed");
-		localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
-		close();
+function doSidebar() {
+	const section = document.getElementById("sidebar-section");
+	if (!section) return;
+	const closed = section.classList.toggle("sidebar-closed");
+	localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
+	close();
+}
+
+$effect(() => {
+	load();
+
+	function updateAtTop() {
+		atTop = window.scrollY < 100;
 	}
 
-$effect(() => load());
-$effect(() => {
-	const h = () => (atTop = scrollY < 100);
-	h();
-	addEventListener("scroll", h, { passive: true });
-	return () => removeEventListener("scroll", h);
+	updateAtTop();
+	window.addEventListener("scroll", updateAtTop, { passive: true });
+
+	return () => window.removeEventListener("scroll", updateAtTop);
 });
 </script>
 
@@ -140,26 +193,35 @@ $effect(() => {
 		onpointerdown={onDown}
 		onpointermove={onMove}
 		onpointerup={onUp}
-		onclick={onClick}
 		onkeydown={(e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open = !open; } }}
 	>
 		<div class="fab-ring"></div>
 		<div class="fab-body">
 			<div class="spot-a"></div>
 			<div class="spot-b"></div>
-			<span class="fab-x">{open ? "✕" : "＋"}</span>
+			<span class="fab-x">
+				<AccessibilityIcon 
+					size={20} 
+					color="oklch(.3 .04 250)" 
+					animate={open} 
+				/>
+			</span>
 		</div>
 	</div>
 
-	{#each [{ i: "↑", l: "回到顶部", a: doTop, d: () => atTop }, { i: "☰", l: "侧边栏", a: doSidebar, d: () => false }] as item, idx}
+	{#each  items as item, idx}
+		{@const pos = getOrbitStyle(idx, items.length)}
 		<button
-			class="fab-item" class:v={open} class:dim={item.d()}
-			style:bottom={`${54 * (idx + 1)}px`}
+			class="fab-item" class:v={open} class:dim={item.dim()}
+			style:left={`${pos.left}px`}
+			style:top={`${pos.top}px`}			
 			style:transition-delay={open ? `${idx * 50}ms` : `${(1 - idx) * 30}ms`}
-			onclick={item.a}
+			onclick={item.action}
 		>
-			<span class="fi-i">{item.i}</span>
-			<span class="fi-l">{item.l}</span>
+		<span class="fi-i">
+		<Icon icon={item.icon} style="width: 1rem; height: 1rem;" />
+		</span>
+		<span class="fi-l">{item.label}</span>
 		</button>
 	{/each}
 </div>
@@ -224,21 +286,52 @@ $effect(() => {
 	.fab-main.open .fab-x { transform: rotate(135deg); }
 	:root.dark .fab-x { color: oklch(.85 .03 250); }
 
+	/* 基础样式（位置、尺寸、背景、过渡等） */
 	.fab-item {
-		position: absolute; width: 40px; height: 40px; border-radius: 50%;
-		border: 0; padding: 0; cursor: pointer; z-index: 101;
-		display: flex; align-items: center; justify-content: center;
-		background: oklch(.93 .01 250 / .7);
-		backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-		box-shadow: 0 2px 10px oklch(0 0 0 / .1);
-		opacity: 0; transform: scale(.4) translateY(4px);
-		transition: opacity .18s cubic-bezier(.34,1.56,.64,1), transform .18s cubic-bezier(.34,1.56,.64,1), background .15s;
+	position: absolute; width: 40px; height: 40px; border-radius: 50%;
+	border: 0; padding: 0; cursor: pointer; z-index: 101;
+	display: flex; align-items: center; justify-content: center;
+	background: oklch(.93 .01 250 / .7);
+	backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+	box-shadow: 0 2px 10px oklch(0 0 0 / .1);
+	transition: opacity .18s cubic-bezier(.34,1.56,.64,1), transform .18s cubic-bezier(.34,1.56,.64,1), background .15s;
 	}
-	.fab-item.v { opacity: 1; transform: scale(1) translateY(0); }
-	.fab-item:hover { background: oklch(.88 .03 250 / .85); box-shadow: 0 4px 14px oklch(0 0 0 / .15); }
-	.fab-item.dim { opacity: .35; pointer-events: none; }
-	:root.dark .fab-item { background: oklch(.28 .02 250 / .65); box-shadow: 0 2px 10px oklch(0 0 0 / .25); }
-	:root.dark .fab-item:hover { background: oklch(.35 .03 250 / .75); }
+
+	/* 隐藏状态：没有 v 类时隐藏（用 !important 保证不被 dim 覆盖） */
+	.fab-item:not(.v) {
+	opacity: 0 !important;
+	transform: scale(.4) translateY(4px) !important;
+	pointer-events: none;
+	}
+
+	/* 显示状态：有 v 类时显示 */
+	.fab-item.v {
+	opacity: 1;
+	transform: scale(1) translateY(0);
+	pointer-events: auto;
+	}
+
+	/* dim 状态（只会在有 v 类时生效，因为没 v 时已被上面的 !important 覆盖） */
+	.fab-item.dim {
+	opacity: .35;
+	pointer-events: none;
+	}
+
+	/* 悬停效果 */
+	.fab-item:hover {
+	background: oklch(.88 .03 250 / .85);
+	box-shadow: 0 4px 14px oklch(0 0 0 / .15);
+	}
+
+	/* 暗色模式 */
+	:root.dark .fab-item {
+	background: oklch(.28 .02 250 / .65);
+	box-shadow: 0 2px 10px oklch(0 0 0 / .25);
+	}
+	:root.dark .fab-item:hover {
+	background: oklch(.35 .03 250 / .75);
+	}
+
 
 	.fi-i { font-size: 1rem; line-height: 1; }
 	.fi-l {
