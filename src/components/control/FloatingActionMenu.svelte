@@ -1,6 +1,11 @@
 <script lang="ts">
 import Icon from "@iconify/svelte";
 import AccessibilityIcon from '../../lib/icons/AccessibilityIcon.svelte';
+import {
+	AUTO_MODE, DARK_MODE, LIGHT_MODE,
+} from "@constants/constants.ts";
+import type { LIGHT_DARK_MODE } from "@/types/config.ts";
+import { applyThemeToDocument, getStoredTheme, setTheme } from "@utils/setting-utils.ts";
 
 
 let dragging = $state(false);
@@ -9,6 +14,7 @@ let atTop = $state(true);
 let snapRight = $state(true);
 let offX = $state(24);
 let offY = $state(24);
+let mode: LIGHT_DARK_MODE = $state(AUTO_MODE);
 
 let mainEl: HTMLDivElement | undefined = $state(undefined);
 
@@ -19,8 +25,10 @@ let _sx = 0;
 let _sy = 0;
 let _moved = false;
 
-// ===== 子按钮配置 =====
-const items = [
+// ===== 子按钮配置（响应式，icon/label 跟随 mode 变化） =====
+const seq: LIGHT_DARK_MODE[] = [LIGHT_MODE, DARK_MODE, AUTO_MODE];
+
+const items = $derived([
 	{
 		icon: "mingcute:up-small-line",
 		label: "回到顶部",
@@ -33,7 +41,21 @@ const items = [
 		action: doSidebar,
 		dim: () => false,
 	},
-];
+	{
+		icon: mode === LIGHT_MODE
+			? "material-symbols:wb-sunny-outline-rounded"
+			: mode === DARK_MODE
+				? "material-symbols:dark-mode-outline-rounded"
+				: "material-symbols:radio-button-partial-outline",
+		label: mode === LIGHT_MODE
+			? "浅色模式"
+			: mode === DARK_MODE
+				? "深色模式"
+				: "跟随系统",
+		action: toggleScheme,
+		dim: () => false,
+	},
+]);
 
 // ===== 轨道布局函数 =====
 const RADIUS = 72; // 轨道半径，可调
@@ -68,6 +90,8 @@ function load() {
 	if (localStorage.getItem("fab-sidebar-hidden")) {
 		document.getElementById("sidebar-section")?.classList.add("sidebar-closed");
 	}
+	// 加载主题
+	mode = getStoredTheme();
 }
 
 function save() {
@@ -158,6 +182,15 @@ function doSidebar() {
 	localStorage.setItem("fab-sidebar-hidden", closed ? "1" : "");
 	close();
 }
+function toggleScheme() {
+	let i = 0;
+	for (; i < seq.length; i++) {
+		if (seq[i] === mode) break;
+	}
+	mode = seq[(i + 1) % seq.length];
+	setTheme(mode);
+	close();
+}
 
 $effect(() => {
 	load();
@@ -169,7 +202,16 @@ $effect(() => {
 	updateAtTop();
 	window.addEventListener("scroll", updateAtTop, { passive: true });
 
-	return () => window.removeEventListener("scroll", updateAtTop);
+	const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)");
+	const onSchemeChange: Parameters<
+		typeof darkModePreference.addEventListener<"change">
+	>[1] = () => applyThemeToDocument(mode);
+	darkModePreference.addEventListener("change", onSchemeChange);
+
+	return () => {
+		window.removeEventListener("scroll", updateAtTop);
+		darkModePreference.removeEventListener("change", onSchemeChange);
+	};
 });
 </script>
 
