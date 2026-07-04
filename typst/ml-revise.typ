@@ -411,6 +411,129 @@ MLP（Multi-Layer Perceptron，多层感知机）就是神经网络的最初形�
   *典型计算题*：给一个分类小数据集（如天气 PlayTennis），手算某个特征的信息增益，选出最佳分裂特征。
 ])
 
+#concept-block(body: [
+  *典型计算题·详解*（决策树信息增益 — 经典 PlayTennis 完整手算）：
+
+  *数据集*（14 天，4 特征 → 是否打网球）：
+
+#tablem[
+  | Day | Outlook | Temperature | Humidity | Wind | Play |
+  |---|---|---|---|---|---|
+  | 1 | Sunny | Hot | High | Weak | No |
+  | 2 | Sunny | Hot | High | Strong | No |
+  | 3 | Overcast | Hot | High | Weak | Yes |
+  | 4 | Rain | Mild | High | Weak | Yes |
+  | 5 | Rain | Cool | Normal | Weak | Yes |
+  | 6 | Rain | Cool | Normal | Strong | No |
+  | 7 | Overcast | Cool | Normal | Strong | Yes |
+  | 8 | Sunny | Mild | High | Weak | No |
+  | 9 | Sunny | Cool | Normal | Weak | Yes |
+  | 10 | Rain | Mild | Normal | Weak | Yes |
+  | 11 | Sunny | Mild | Normal | Strong | Yes |
+  | 12 | Overcast | Mild | High | Strong | Yes |
+  | 13 | Overcast | Hot | Normal | Weak | Yes |
+  | 14 | Rain | Mild | High | Strong | No |
+]
+
+  *用到的公式*：
+  - $H(D) = - sum_(k=1)^K p_k log_2 p_k$（熵）
+  - $H(D|A) = sum_(j=1)^v (|D_j|) / (|D|) H(D_j)$（条件熵）
+  - $"Gain"(D, A) = H(D) - H(D|A)$（信息增益）
+
+  *符号对应关系*：
+  - $D$ = 当前节点数据集（根节点为全部 14 个样本）
+  - $D_j$ = 按特征 $A$ 的第 $j$ 个取值分出的子集
+  - $A$ = 候选分裂特征（Outlook / Temperature / Humidity / Wind）
+  - $|D_j| / |D|$ = 第 $j$ 个子集的权重（样本占比）
+  - $p_k$ = 第 $k$ 类（Yes/No）在当前数据集中的占比
+
+  *Step 1 — 根节点熵 $H(D)$*：
+  - $D$ = 全部 14 个样本，$K = 2$ 类 {Yes, No}
+  - $|D| = 14$，Yes 有 9 个，No 有 5 个
+
+  $H(D) = - 9/14 log_2 (9/14) - 5/14 log_2 (5/14)$ \
+  $= -0.6429 times (-0.6375) - 0.3571 times (-1.4855)$ \
+  $= 0.4098 + 0.5305 = 0.9403$
+
+  *Step 2 — 按 $A$ = Outlook 分裂*：
+  - 取值 $j = 1,2,3$：Sunny($|D_1|=5$), Overcast($|D_2|=4$), Rain($|D_3|=5$)
+  - 公式：$H(D | "Outlook") = sum_(j=1)^3 (|D_j| / |D|) H(D_j)$
+
+  ① $D_1$ = Sunny（5 天），Yes=2, No=3：
+  $H(D_1) = -2/5 log_2 (2/5) - 3/5 log_2 (3/5)$ \
+  $= -0.4 times (-1.3219) - 0.6 times (-0.7370)$ \
+  $= 0.5288 + 0.4422 = 0.9710$
+
+  ② Overcast（Yes=4, No=0）：
+  $H("Overcast") = -1 log_2 1 - 0 log_2 0 = 0$
+
+  ③ Rain（Yes=3, No=2）：
+  $H("Rain") = -3/5 log_2 (3/5) - 2/5 log_2 (2/5) = 0.9710$（对称）
+
+  $H(D | "Outlook") = 5/14 times 0.9710 + 4/14 times 0 + 5/14 times 0.9710$ \
+  $= 0.3468 + 0 + 0.3468 = 0.6936$ \
+  $"Gain"(D, "Outlook") = 0.9403 - 0.6936 = 0.2467$
+
+  *Step 3 — 按 $A$ = Temperature 分裂*：
+  - $j=1,2,3$：Hot($|D_1|=4$), Mild($|D_2|=6$), Cool($|D_3|=4$)
+
+  ① Hot（Yes=2, No=2）：
+  $H("Hot") = -2/4 log_2 (2/4) - 2/4 log_2 (2/4) = 2 times (-0.5 times -1) = 1.0$
+
+  ② Mild（Yes=4, No=2）：
+  $H("Mild") = -4/6 log_2 (4/6) - 2/6 log_2 (2/6)$ \
+  $= -0.6667 times (-0.5850) - 0.3333 times (-1.5850)$ \
+  $= 0.3900 + 0.5283 = 0.9183$
+
+  ③ Cool（Yes=3, No=1）：
+  $H("Cool") = -3/4 log_2 (3/4) - 1/4 log_2 (1/4)$ \
+  $= -0.75 times (-0.4150) - 0.25 times (-2) = 0.8113$
+
+  $H(D | "Temp") = 4/14 times 1.0 + 6/14 times 0.9183 + 4/14 times 0.8113$ \
+  $= 0.2857 + 0.3936 + 0.2318 = 0.9111$ \
+  $"Gain"(D, "Temp") = 0.9403 - 0.9111 = 0.0292$
+
+  *Step 4 — 按 $A$ = Humidity 分裂*：
+  - $j=1,2$：High($|D_1|=7$), Normal($|D_2|=7$)
+
+  ① High（Yes=3, No=4）：
+  $H("High") = -3/7 log_2 (3/7) - 4/7 log_2 (4/7)$ \
+  $= -0.4286 times (-1.2224) - 0.5714 times (-0.8074)$ \
+  $= 0.5239 + 0.4614 = 0.9852$
+
+  ② Normal（Yes=6, No=1）：
+  $H("Normal") = -6/7 log_2 (6/7) - 1/7 log_2 (1/7)$ \
+  $= -0.8571 times (-0.2224) - 0.1429 times (-2.8074)$ \
+  $= 0.1906 + 0.4011 = 0.5917$
+
+  $H(D | "Humidity") = 7/14 times 0.9852 + 7/14 times 0.5917$ \
+  $= 0.4926 + 0.2959 = 0.7885$ \
+  $"Gain"(D, "Humidity") = 0.9403 - 0.7885 = 0.1518$
+
+  *Step 5 — 按 $A$ = Wind 分裂*：
+  - $j=1,2$：Weak($|D_1|=8$), Strong($|D_2|=6$)
+
+  ① Weak（Yes=6, No=2）：
+  $H("Weak") = -6/8 log_2 (6/8) - 2/8 log_2 (2/8)$ \
+  $= -0.75 times (-0.4150) - 0.25 times (-2) = 0.8113$
+
+  ② Strong（Yes=3, No=3）：
+  $H("Strong") = -3/6 log_2 (3/6) - 3/6 log_2 (3/6) = 2 times (-0.5 times -1) = 1.0$
+
+  $H(D | "Wind") = 8/14 times 0.8113 + 6/14 times 1.0$ \
+  $= 0.4636 + 0.4286 = 0.8922$ \
+  $"Gain"(D, "Wind") = 0.9403 - 0.8922 = 0.0481$
+
+  *汇总对比*：
+
+  $"Gain"(D, "Outlook") = 0.2467$ ← 最大！\
+  $"Gain"(D, "Humidity") = 0.1518$ \
+  $"Gain"(D, "Wind") = 0.0481$ \
+  $"Gain"(D, "Temp") = 0.0292$ \
+
+  *结论*：根节点选 *Outlook* 分裂，Yes 集中在 Overcast，完成第一层划分。
+])
+
 #inline[📏 模型评估]
 
 #concept-block(body: [
@@ -540,6 +663,61 @@ MLP（Multi-Layer Perceptron，多层感知机）就是神经网络的最初形�
   $P(y=2 | bold(x)) ∝ frac(50, 150) times frac(1, sqrt(2 pi times 0.30)) "exp"(-frac((5.0-4.5)^2, 2 times 0.30)) times frac(1, sqrt(2 pi times 0.08)) "exp"(-frac((1.8-1.5)^2, 2 times 0.08))$
 
   *决策*：分别代入 $k=1,2,3$ 计算后验（取 log 避免下溢），选最大者。
+])
+
+#inline[📐 参数估计 MLE]
+
+#concept-block(body: [
+  *MLE 通用步骤*：
+  1. 写出似然函数 $L(theta) = product_(i=1)^n p(x_i | theta)$
+  2. 取对数 $ln L(theta) = sum ln p(x_i | theta)$（连乘→连加）
+  3. 对 $theta$ 求导，令为零 $(partial ln L)/(partial theta) = 0$
+  4. 解出 $hat(theta)$
+  5.（可选）求二阶导验证最大值
+
+  *① Bernoulli MLE（抛硬币）*：
+  - 数据：$x_i in {0,1}$，$P(x=1)=p$，$P(x=0)=1-p$
+  - 似然：$L(p) = product p^(x_i) (1-p)^(1-x_i)$
+  - 对数似然：$ln L = (sum x_i) ln p + (n - sum x_i) ln(1-p)$
+  - 求导：$(partial ln L)/(partial p) = (sum x_i)/p - (n - sum x_i)/(1-p) = 0$
+  - 解得：$hat(p)_"MLE" = (1/n) sum x_i = bar(x)$（正面向上的频率）
+
+  *② Gaussian MLE（均值和方差）*：
+  - 数据：$x_i ~ cal(N)(mu, sigma^2)$，i.i.d.
+  - 似然：$L(mu, sigma^2) = product 1/(sqrt(2 pi sigma^2)) "exp"(-(x_i - mu)^2/(2 sigma^2))$
+  - 对数似然：$ln L = -(n/2) ln(2 pi) - (n/2) ln sigma^2 - 1/(2 sigma^2) sum (x_i - mu)^2$
+  - 对 $mu$ 求导：$(partial ln L)/(partial mu) = 1/(sigma^2) sum (x_i - mu) = 0 =>  hat(mu) = bar(x)$
+  - 对 $sigma^2$ 求导（令 $tau = sigma^2$）：
+  $(partial ln L)/(partial tau) = -n/(2 tau) + 1/(2 tau^2) sum (x_i - mu)^2 = 0$
+  $=>  hat(sigma)^2_("MLE") = (1/n) sum (x_i - bar(x))^2$（有偏！）
+  - *无偏修正*：$s^2 = 1/(n-1) sum (x_i - bar(x))^2$
+])
+
+#concept-block(body: [
+  *③ Poisson MLE*：
+  - 数据：$x_i ~ "Pois"(lambda)$，$P(x) = lambda^x "e"^{-lambda} / x!$
+  - 似然：$L(lambda) = product lambda^(x_i) "e"^{-lambda} / x_i!$
+  - 对数似然：$ln L = (sum x_i) ln lambda - n lambda - sum ln(x_i!)$
+  - 求导：$(partial ln L)/(partial lambda) = (sum x_i)/lambda - n = 0$
+  - 解得：$hat(lambda)_"MLE" = (1/n) sum x_i = bar(x)$
+
+  *正态分布 MLE 的有偏性验证*：
+  对 $cal(N)(mu, sigma^2)$ 的方差 MLE：
+  $bb(E)[hat(sigma)^2_"MLE"] = (n-1)/n sigma^2 != sigma^2$
+  说明 MLE 方差估计有偏（低估），小样本时需用 $n-1$ 校正。
+
+  *典型计算题①*（Bernoulli MLE）：
+  抛硬币 10 次：正、反、正、正、反、正、正、反、正、正
+  → 正面 7 次，反面 3 次
+  $hat(p)_"MLE" = 7/10 = 0.7$
+  若抛 3 次全是正面：$hat(p)_"MLE" = 1$（明显过拟合！）
+
+  *典型计算题②*（Gaussian MLE）：
+  给定 5 个样本：2, 4, 6, 8, 10
+  $hat(mu)_"MLE" = (2+4+6+8+10)/5 = 6$
+  $hat(sigma)^2_"MLE" = (1/5)[(2-6)^2 + (4-6)^2 + (6-6)^2 + (8-6)^2 + (10-6)^2]$
+  $= (1/5)(16+4+0+4+16) = 40/5 = 8$
+  无偏修正：$s^2 = 40/4 = 10$
 ])
 
 #inline[⚙️ 已排除考点提示]

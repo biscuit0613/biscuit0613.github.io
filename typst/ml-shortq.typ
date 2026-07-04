@@ -192,6 +192,73 @@
 
 ])
 
+#inline[经典 CNN 网络结构]
+
+#concept-block(body: [
+  *LeNet-5（1998, LeCun）* — 开山之作
+  - 结构顺序：$bold(x) →$ Conv($5 times 5$, 6) → Tanh → Pool($2 times 2$, avg) → Conv($5 times 5$, 16) → Tanh → Pool($2 times 2$, avg) → FC(120) → FC(84) → Output(10)
+  - 全连接 + Sigmoid/Tanh，参数量 ≈ 60k，手写数字 MNIST
+  - 意义：首次证明 Conv+Pool+FC 端到端训练可行
+  → ［详见博客笔记］(/posts/ML/CNN-LeNet5)
+
+  *AlexNet（2012, Hinton）* — 深度学习引爆点
+  - 结构顺序：$bold(x) →$ Conv($11 times 11$, 96, S=4) → ReLU → LRN → Pool($3 times 3$, S=2，重叠池化) → Conv($5 times 5$, 256, P=2, G=2) → ReLU → LRN → Pool → Conv($3 times 3$, 384, P=1) → ReLU → Conv($3 times 3$, 384, P=1) → ReLU → Conv($3 times 3$, 256, P=1) → ReLU → Pool → FC(4096) → ReLU → Dropout → FC(4096) → ReLU → Dropout → FC(1000) → Softmax
+  - 首次引入 ReLU + Dropout(p=0.5) + LRN + 数据增强
+  - 参数量 ≈ 60M，双 GPU 分组卷积
+  → ［详见博客笔记］(/posts/ML/CNN-AlexNet)
+
+  *VGGNet（2014, Oxford）* — 深度 + 简单
+  - 结构顺序（VGG-16）：$bold(x) →$ Conv($3 times 3$, 64) → Conv($3 times 3$, 64) → Pool($2 times 2$) → Conv($3 times 3$, 128) → Conv($3 times 3$, 128) → Pool → Conv($3 times 3$, 256) ×3 → Pool → Conv($3 times 3$, 512) ×3 → Pool → Conv($3 times 3$, 512) ×3 → Pool → FC(4096) → FC(4096) → FC(1000) → Softmax
+  - 全部 $3 times 3$ 卷积 + $2 times 2$ 池化，通道数每池化翻倍 64→128→256→512
+  - 两层 $3 times 3$ 等价 $5 times 5$ 感受野，但参数量 $2 times 3^2 C^2$ vs $5^2 C^2$ 更少
+  - 参数量 ≈ 138M，其中 FC 层占 ≈ 90%
+  - 严重依赖初始化：使用 *Xavier / Kaiming（He）初始化* 才能收敛
+  → ［详见博客笔记］(/posts/ML/CNN-VGGnet)
+])
+
+#concept-block(body: [
+  *GoogLeNet / Inception v1（2014, Google）* — 宽度维度 + 多尺度
+  - 整体流水线：卷积 → Inception 模块堆叠(×9) → 全局平均池化 → FC(1000) → Softmax
+
+  *Inception 模块结构*（3a 为例）—— 数据经 4 条并行分支后拼接：
+  $bold(x)$（上一层输出，如 $28 times 28 times 192$）：
+  
+  ┌─ 分支①：Conv($1 times 1$, 64) → ReLU \
+  ├─ 分支②：Conv($1 times 1$, 96) → ReLU → Conv($3 times 3$, 128) → ReLU \
+  ├─ 分支③：Conv($1 times 1$, 16) → ReLU → Conv($5 times 5$, 32) → ReLU \
+  └─ 分支④：Pool($3 times 3$, max, S=1) → Conv($1 times 1$, 32) → ReLU \
+  $->$ 沿通道拼接（Concat）→ $28 times 28 times 256$
+
+  - 分支②/③ 先用 $1 times 1$ 降维再大核卷积 → *bottleneck 结构*
+  - 分支④ 先 Pool 再 $1 times 1$ → 池化分支变得可学习
+  - 去掉全连接层（全局平均池化替代）→ 参数量仅 ≈ 5M
+  - V2/V3 改进：$5 times 5$ → 2 层 $3 times 3$；$3 times 3$ → $1 times 3$ + $3 times 1$ 非对称分解
+  → ［详见博客笔记］(/posts/ML/CNN-GooLeNet)
+
+  *ResNet（2015, Microsoft, Kaiming He）* — 深度极限
+  - 核心创新：残差连接 $bold(y) = cal(F)(bold(x)) + bold(x)$
+  - 解决退化问题（层数增→训练误差反升，非过拟合而是优化困难）
+
+  *Basic Block 结构顺序*（ResNet-18/34）：
+  $bold(x) →$ Conv($3 times 3$) → BN → ReLU → Conv($3 times 3$) → BN → $(+ bold(x))$ → ReLU
+
+  *Bottleneck Block 结构顺序*（ResNet-50/101/152）：
+  $bold(x) →$ Conv($1 times 1$，降维) → BN → ReLU → Conv($3 times 3$) → BN → ReLU → Conv($1 times 1$，升维) → BN → $(+ bold(x))$ → ReLU
+
+  *Pre-activation 变体（何恺明改进）*：
+  $bold(x) →$ BN → ReLU → Conv($3 times 3$) → BN → ReLU → Conv($3 times 3$) → $(+ bold(x))$
+  - BN/ReLU 移到卷积*之前*，加和后再无 ReLU → shortcut 路径完全无阻碍
+  - 梯度：$(partial bold(y))/(partial bold(x)) = 1 + (partial cal(F))/(partial bold(x))$ → 即使 $cal(F)$ 梯度为 0，恒等路径仍回传恒定梯度
+
+  *He Kaiming 初始化（何恺明初始化）*：
+  - 针对 ReLU 设计的初始化方法，权重的方差设为 $"Var"(w) = 2 / n_("in")$
+  - 相比 Xavier 初始化（方差 $1 / n_("in")$），He 初始化考虑了 ReLU 将一半神经元置零的特性
+  - 前向/反向信号方差在各层保持稳定 → 避免梯度消失/爆炸
+  - ResNet 论文中配套使用，成为 ReLU 网络的默认初始化
+
+  → ［详见博客笔记］(/posts/ML/CNN-ResNet)
+])
+
 #inline[Batch Norm vs Layer Norm]
 
 #concept-block(body: [
@@ -465,16 +532,60 @@
   - 数据少时生成式好，数据多时判别式好
 ])
 
-#inline[贝叶斯估计（仅概念）]
+#inline[参数估计]
 
 #concept-block(body: [
-  *贝叶斯估计 vs 极大似然*：
-  - MLE：$hat(theta) = op("argmax")_theta P(D | theta)$，点估计
-  - 贝叶斯：$p(theta | D) ∝ P(D | theta) p(theta)$，后验分布
-  - MLE 容易过拟合（小样本），贝叶斯通过先验正则化
-  - 当样本 $n -> infinity$ 时，两者趋于一致
+  *点估计 vs 区间估计*：
+  - 点估计：用一个数值 $hat(theta)$ 估计未知参数 $theta$（MLE、MAP、矩估计）
+  - 区间估计：给出一个区间 $[hat(theta)_L, hat(theta)_U]$ 以一定置信水平覆盖 $theta$
 
-  *共轭先验*：先验和后验属于同一分布族
-  - Beta（伯努利/二项）、Dirichlet（多项）、Gaussian-Gaussian
-  - 优点：后验有闭式解，迭代更新方便
+  *MLE（极大似然估计）*：
+  $hat(theta)_"MLE" = op("argmax")_theta P(D | theta) = op("argmax")_theta product p(x_i | theta)$
+  - 频率学派：$theta$ 是未知常数，数据是随机的
+  - 等价于最小化交叉熵（分类问题）或 MSE（高斯回归）
+  - 性质：一致（$n -> infinity$ 时收敛到真值）、渐近正态、参数变换不变性
+  - 局限：小样本易过拟合（如抛 3 次正面 → 估计 $p=1$）
+
+  *MAP（最大后验估计）*：
+  $hat(theta)_"MAP" = op("argmax")_theta P(D | theta) p(theta)$
+  - 贝叶斯学派：$theta$ 是随机变量，引入先验 $p(theta)$
+  - 先验可视为正则项：$p(theta) prop "exp"(-lambda ||theta||_2^2)$ → L2 正则化（高斯先验）
+  - 先验 $p(theta) prop "exp"(-lambda ||theta||_1)$ → L1 正则化（拉普拉斯先验）
+  - 当 $n -> infinity$ 时 MAP $->$ MLE（先验被数据淹没）
+
+  *全贝叶斯估计*：
+  $p(theta | D) = P(D | theta) p(theta) / p(D)$
+  - 得到后验*分布*而非点估计
+  - 预测时积分：$p(y | D) = integral p(y | theta) p(theta | D) d theta$
+  - 用共轭先验得到闭式解：Beta-Bernoulli、Dirichlet-Multinomial、Gaussian-Gaussian
+])
+
+#concept-block(body: [
+  *估计量的评价标准*：
+#tablem[
+  | 性质 | 定义 | 说明 |
+  |---|---|---|
+  | 无偏性 | $bb(E)[hat(theta)] = theta$ | 期望等于真值，样本方差 $s^2$ 无偏，MLE 方差 $hat(sigma)^2$ 有偏 |
+  | 一致性 | $hat(theta) ->_p theta$ | $n -> infinity$ 时依概率收敛到真值，MLE 一致 |
+  | 有效性 | $"Var"(hat(theta)_1) < "Var"(hat(theta)_2)$ | 相同样本下方差更小的更有效，CRLB 为下界 |
+]
+
+  *Cramér-Rao 下界（CRLB）*：
+  $"Var"(hat(theta)) >= 1 / (n I(theta))$
+  其中 $I(theta) = bb(E)[(partial ln p(x|theta) / partial theta)^2]$ 为 Fisher 信息量
+
+  *矩估计（MoM）*：
+  - 用样本矩 $bar(x) = (1/n) sum x_i$ 和 $bar(x^2) = (1/n) sum x_i^2$ 等去匹配理论矩 $bb(E)[X]$, $bb(E)[X^2]$
+  - 解方程组得到参数估计
+  - 优点：计算简单（不需优化）；缺点：不一定有效，可能得到不合理值
+
+  *MLE vs MoM vs MAP*：
+#tablem[
+  | 维度 | MLE | MoM | MAP |
+  |---|---|---|---|
+  | 需优化？ | 是（求导/数值优化） | 否（解方程） | 是 |
+  | 需先验？ | 否 | 否 | 是 |
+  | 小样本表现 | 易过拟合 | 可能无偏但方差大 | 稳健（先验正则化） |
+  | 渐近性 | 一致、有效 | 一致、不一定有效 | 一致 |
+]
 ])
