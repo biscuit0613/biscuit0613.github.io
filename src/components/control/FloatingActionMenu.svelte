@@ -242,11 +242,7 @@ $effect(() => {
 			<div class="spot-a"></div>
 			<div class="spot-b"></div>
 			<span class="fab-x">
-				<AccessibilityIcon 
-					size={20} 
-					color="oklch(.3 .04 250)" 
-					animate={open} 
-				/>
+				<AccessibilityIcon size={20} animate={open} />
 			</span>
 		</div>
 	</div>
@@ -336,8 +332,10 @@ $effect(() => {
 	background: oklch(.93 .01 250 / .7);
 	backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 	box-shadow: 0 2px 10px oklch(0 0 0 / .1);
+	color: oklch(.3 .04 250);
 	transition: opacity .18s cubic-bezier(.34,1.56,.64,1), transform .18s cubic-bezier(.34,1.56,.64,1), background .15s;
 	}
+	:root.dark .fab-item { color: oklch(.85 .03 250); }
 
 	/* 隐藏状态：没有 v 类时隐藏（用 !important 保证不被 dim 覆盖） */
 	.fab-item:not(.v) {
