@@ -249,18 +249,14 @@
 
 							// 可折叠展开功能：检测 SVG 是否超出 wrapper 高度
 							const wrapper = element.closest(".mermaid-wrapper");
-							if (wrapper) {
-								requestAnimationFrame(() => {
-									const svgHeight = svgElement?.getBoundingClientRect().height || 0;
-									const wrapperHeight = wrapper.getBoundingClientRect().height;
-									// wrapper 的实际 max-height 来自 CSS，对比渲染高度
-									const style = getComputedStyle(wrapper);
-									const maxH = parseFloat(style.maxHeight);
-									if (maxH > 0 && svgHeight > maxH - 20) {
-										wrapper.dataset.collapsible = "true";
+							if (wrapper && svgElement) {
+								setTimeout(() => {
+									const svgRect = svgElement.getBoundingClientRect();
+									const wrapRect = wrapper.getBoundingClientRect();
+									if (svgRect.height > wrapRect.height + 5) {
 										setupExpandBtn(wrapper);
 									}
-								});
+								}, 100);
 							}
 
 							// 渲染成功，跳出重试循环
