@@ -24,6 +24,8 @@ import "katex/dist/katex.css";
 import "../styles/mobile-navbar.css";
 import "../styles/wallpaper-navbar-transparent.css";
 
+
+
 interface Props {
 	title?: string;
 	banner?: string;
@@ -1559,3 +1561,80 @@ if (!window.swup) {
 	document.addEventListener("swup:enable", setupGalleryWithSwup);
 }
 </script>
+
+<style is:global>
+.custom-md img {
+	max-height: 60vh;
+	width: auto;
+	height: auto;
+	border-radius: 0.75rem;
+}
+
+.mermaid-wrapper {
+	position: relative;
+	padding: 1.5rem;
+	text-align: center;
+	max-height: 50vh;
+	overflow: hidden;
+	transition: max-height 0.4s ease;
+}
+.mermaid-wrapper.expanded {
+	max-height: none;
+}
+.mermaid-fade {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 4.5rem;
+	background: linear-gradient(to top, var(--card-bg), transparent);
+	pointer-events: none;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+	z-index: 1;
+}
+.expanded > .mermaid-fade {
+	opacity: 0;
+	pointer-events: none;
+}
+.mermaid-expand-btn {
+	position: absolute;
+	bottom: 0.6rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.3rem 0.85rem;
+	border-radius: 999px;
+	background: var(--card-bg);
+	border: 1px solid var(--line-divider);
+	color: var(--text-color-secondary);
+	cursor: pointer;
+	font-size: 0.8rem;
+	font-weight: 500;
+	line-height: 1.4;
+	transition: all 0.2s ease;
+	opacity: 0;
+	white-space: nowrap;
+	user-select: none;
+}
+.mermaid-wrapper:hover .mermaid-expand-btn,
+.mermaid-wrapper:focus-within .mermaid-expand-btn {
+	opacity: 1;
+}
+.mermaid-expand-btn:hover {
+	color: var(--primary);
+	border-color: var(--primary);
+}
+.expanded .mermaid-expand-btn {
+	opacity: 1;
+}
+@media (max-width: 768px) {
+	.mermaid-wrapper {
+		padding: 1rem;
+		max-height: 40vh;
+	}
+}
+</style>
