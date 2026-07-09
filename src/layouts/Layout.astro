@@ -1562,6 +1562,47 @@ if (!window.swup) {
 }
 </script>
 
+<script is:inline>console.log("TEST_INLINE_SCRIPT");
+function initMermaidExpand() {
+	const wrappers = document.querySelectorAll(".mermaid-wrapper");
+	for (const w of wrappers) {
+		if (w.dataset.expandInit) continue;
+		w.dataset.expandInit = "1";
+		const ro = new ResizeObserver(() => {
+			const s = w.querySelector("svg");
+			if (!s) return;
+			const sr = s.getBoundingClientRect();
+			const wr = w.getBoundingClientRect();
+			if (sr.height <= wr.height + 5) return;
+			if (w.querySelector(".mermaid-expand-btn")) return;
+			ro.disconnect();
+			const f = document.createElement("div");
+			f.className = "mermaid-fade";
+			const b = document.createElement("button");
+			b.className = "mermaid-expand-btn";
+			b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> \u5c55\u5f00';
+			b.onclick = function(e) {
+				e.stopPropagation();
+				w.classList.toggle("expanded");
+				const ex = w.classList.contains("expanded");
+				b.innerHTML = ex
+					? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg> \u6536\u8d77'
+					: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> \u5c55\u5f00';
+			};
+			w.appendChild(f);
+			w.appendChild(b);
+		});
+		ro.observe(w);
+	}
+}
+if (document.readyState === "loading") {
+	document.addEventListener("DOMContentLoaded", initMermaidExpand);
+} else {
+	initMermaidExpand();
+}
+document.addEventListener("astro:page-load", initMermaidExpand);
+</script>
+
 <style is:global>
 .custom-md img {
 	max-height: 60vh;
