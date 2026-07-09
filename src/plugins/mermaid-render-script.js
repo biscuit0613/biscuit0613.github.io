@@ -104,13 +104,24 @@
 			// 初始化 Mermaid 配置
 			window.mermaid.initialize({
 				startOnLoad: false,
-				theme: "default",
+				theme: "base",
 				themeVariables: {
 					fontFamily: "inherit",
-					fontSize: "16px",
+					fontSize: "14px",
+					primaryBorderColor: "#94a3b8",
+					lineColor: "#94a3b8",
+					tertiaryColor: "#f1f5f9",
+				},
+				flowchart: {
+					useMaxWidth: true,
+					htmlLabels: true,
+					padding: 12,
+				},
+				sequence: {
+					useMaxWidth: true,
+					actorMargin: 60,
 				},
 				securityLevel: "loose",
-				// 添加错误处理配置
 				errorLevel: "warn",
 				logLevel: "error",
 			});
@@ -158,20 +169,36 @@
 			const isDark = htmlElement.classList.contains("dark");
 			const theme = isDark ? "dark" : "default";
 
-			// 更新 Mermaid 主题（只需要更新一次）
+			// 更新 Mermaid 主题
 			window.mermaid.initialize({
 				startOnLoad: false,
-				theme: theme,
+				theme: "base",
 				themeVariables: {
 					fontFamily: "inherit",
-					fontSize: "16px",
-					// 强制应用主题变量
-					primaryColor: isDark ? "#ffffff" : "#000000",
-					primaryTextColor: isDark ? "#ffffff" : "#000000",
-					primaryBorderColor: isDark ? "#ffffff" : "#000000",
-					lineColor: isDark ? "#ffffff" : "#000000",
-					secondaryColor: isDark ? "#333333" : "#f0f0f0",
-					tertiaryColor: isDark ? "#555555" : "#e0e0e0",
+					fontSize: "14px",
+					primaryColor: isDark ? "#1e293b" : "#f8fafc",
+					primaryTextColor: isDark ? "#e2e8f0" : "#1e293b",
+					primaryBorderColor: isDark ? "#475569" : "#94a3b8",
+					lineColor: isDark ? "#64748b" : "#94a3b8",
+					secondaryColor: isDark ? "#334155" : "#f1f5f9",
+					tertiaryColor: isDark ? "#1e293b" : "#f8fafc",
+					background: isDark ? "#0f172a" : "#ffffff",
+					mainBkg: isDark ? "#1e293b" : "#f8fafc",
+					nodeBorder: isDark ? "#475569" : "#cbd5e1",
+					clusterBkg: isDark ? "#0f172a" : "#f1f5f9",
+					clusterBorder: isDark ? "#334155" : "#cbd5e1",
+					titleColor: isDark ? "#e2e8f0" : "#1e293b",
+					edgeLabelBackground: isDark ? "#1e293b" : "#ffffff",
+					nodeTextColor: isDark ? "#e2e8f0" : "#1e293b",
+				},
+				flowchart: {
+					useMaxWidth: true,
+					htmlLabels: true,
+					padding: 12,
+				},
+				sequence: {
+					useMaxWidth: true,
+					actorMargin: 60,
 				},
 				securityLevel: "loose",
 				errorLevel: "warn",
@@ -218,6 +245,22 @@
 								} else {
 									svgElement.style.filter = "none";
 								}
+							}
+
+							// 可折叠展开功能：检测 SVG 是否超出 wrapper 高度
+							const wrapper = element.closest(".mermaid-wrapper");
+							if (wrapper) {
+								requestAnimationFrame(() => {
+									const svgHeight = svgElement?.getBoundingClientRect().height || 0;
+									const wrapperHeight = wrapper.getBoundingClientRect().height;
+									// wrapper 的实际 max-height 来自 CSS，对比渲染高度
+									const style = getComputedStyle(wrapper);
+									const maxH = parseFloat(style.maxHeight);
+									if (maxH > 0 && svgHeight > maxH - 20) {
+										wrapper.dataset.collapsible = "true";
+										setupExpandBtn(wrapper);
+									}
+								});
 							}
 
 							// 渲染成功，跳出重试循环
@@ -315,6 +358,30 @@
 
 			document.head.appendChild(script);
 		});
+	}
+
+	// 可折叠展开：为超出高度的 wrapper 注入展开按钮
+	function setupExpandBtn(wrapper) {
+		if (wrapper.querySelector(".mermaid-expand-btn")) return;
+
+		const fade = document.createElement("div");
+		fade.className = "mermaid-fade";
+
+		const btn = document.createElement("button");
+		btn.className = "mermaid-expand-btn";
+		btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> 展开`;
+
+		btn.onclick = (e) => {
+			e.stopPropagation();
+			wrapper.classList.toggle("expanded");
+			const isExpanded = wrapper.classList.contains("expanded");
+			btn.innerHTML = isExpanded
+				? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg> 收起`
+				: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> 展开`;
+		};
+
+		wrapper.appendChild(fade);
+		wrapper.appendChild(btn);
 	}
 
 	// 主初始化函数
