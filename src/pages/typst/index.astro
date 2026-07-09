@@ -5,13 +5,18 @@ import { compileToSvg, scanTypstFiles } from "@utils/typst-compiler";
 const docs = scanTypstFiles().map((f) => ({ ...f, compiled: compileToSvg(f) }));
 
 const categories = [
-	...new Set(docs.map((d) => d.meta.category).filter(Boolean)),
+	...new Set(
+		docs
+			.map((d) => d.meta.category)
+			.filter((c): c is string => c !== undefined),
+	),
 ];
 
 const CATEGORY_LABELS: Record<string, string> = {
 	resume: "简历",
 	review: "复习资料",
 	demo: "功能展示",
+	presentation: "幻灯片",
 };
 ---
 

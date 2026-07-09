@@ -1,4 +1,5 @@
 ---
+import Slideshow from "@components/Slideshow.svelte";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
 	type CompiledSvg,
@@ -38,6 +39,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 	resume: "简历",
 	review: "复习资料",
 	demo: "功能展示",
+	presentation: "幻灯片",
 };
 ---
 
@@ -72,6 +74,18 @@ const CATEGORY_LABELS: Record<string, string> = {
 					{file.meta.description}
 				</p>
 			)}
+
+			{
+				file.meta.category === "presentation" && (
+					<div class="mb-6">
+						<Slideshow
+							title={file.meta.title}
+							pageSvgs={compiled.pageSvgs}
+							client:only="svelte"
+						/>
+					</div>
+				)
+			}
 
 			<!-- SVG 文档内容：负 margin 抵消 card-base 的 padding，让 SVG 铺到卡片边缘 -->
 			<div class="-mx-6 md:-mx-9">

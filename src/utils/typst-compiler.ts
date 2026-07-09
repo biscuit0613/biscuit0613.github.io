@@ -8,7 +8,7 @@ import {
 	unlinkSync,
 	writeFileSync,
 } from "node:fs";
-import { basename, join } from "node:path";
+import { basename, join, relative } from "node:path";
 
 const TYPST_SRC = join(process.cwd(), "typst");
 const CACHE_DIR = join(process.cwd(), "node_modules", ".cache", "typst");
@@ -44,21 +44,26 @@ export interface TypstFile {
 
 export interface CompiledSvg {
 	html: string;
+	pageSvgs: string[];
 	pageCount: number;
 	plainText: string;
 	coverSvg: string;
 	coverAspect: number;
 }
 
-export function scanTypstFiles(): TypstFile[] {
-	if (!existsSync(TYPST_SRC)) return [];
-
-	return readdirSync(TYPST_SRC)
-		.filter((f) => f.endsWith(".typ"))
-		.map((f) => {
-			const slug = basename(f, ".typ");
-			const metaPath = join(TYPST_SRC, `${slug}.meta.json`);
-			const meta: TypstMeta = { title: slug };
+function scanDir(dir: string, root: string): TypstFile[] {
+	const results: TypstFile[] = [];
+	for (const entry of readdirSync(dir, { withFileTypes: true })) {
+		if (entry.name.startsWith(".")) continue;
+		const fullPath = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			if (entry.name === "templates") continue;
+			results.push(...scanDir(fullPath, root));
+		} else if (entry.name.endsWith(".typ")) {
+			const relPath = relative(root, fullPath);
+			const slug = relPath.replace(/\.typ$/, "");
+			const metaPath = join(dir, `${basename(entry.name, ".typ")}.meta.json`);
+			const meta: TypstMeta = { title: basename(entry.name, ".typ") };
 			if (existsSync(metaPath)) {
 				try {
 					const parsed = JSON.parse(readFileSync(metaPath, "utf-8"));
@@ -67,9 +72,15 @@ export function scanTypstFiles(): TypstFile[] {
 					console.warn(`[typst] invalid meta: ${metaPath}`);
 				}
 			}
-			return { slug, sourcePath: join(TYPST_SRC, f), meta };
-		})
-		.filter((f) => !f.meta.draft);
+			results.push({ slug, sourcePath: fullPath, meta });
+		}
+	}
+	return results;
+}
+
+export function scanTypstFiles(): TypstFile[] {
+	if (!existsSync(TYPST_SRC)) return [];
+	return scanDir(TYPST_SRC, TYPST_SRC).filter((f) => !f.meta.draft);
 }
 
 export function compileToSvg(file: TypstFile): CompiledSvg {
@@ -90,7 +101,7 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 			} catch {}
 		}
 		execSync(
-			`${typstBin()} compile${fontFlag()} --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
+			`${typstBin()} compile${fontFlag()} --root "${process.cwd()}" --format svg --pages 1- "${file.sourcePath}" "${join(outDir, "{p}.svg")}"`,
 			{ stdio: "pipe" },
 		);
 		writeFileSync(cacheStamp, String(statSync(file.sourcePath).mtimeMs));
@@ -119,7 +130,14 @@ export function compileToSvg(file: TypstFile): CompiledSvg {
 		readFileSync(file.sourcePath, "utf-8"),
 	);
 
-	return { html, pageCount: pages.length, plainText, coverSvg, coverAspect };
+	return {
+		html,
+		pageSvgs: svgContents,
+		pageCount: pages.length,
+		plainText,
+		coverSvg,
+		coverAspect,
+	};
 }
 
 export function compileSnippetToSvg(code: string): string {
@@ -131,9 +149,12 @@ export function compileSnippetToSvg(code: string): string {
 
 	if (!existsSync(outPath)) {
 		writeFileSync(srcPath, code, "utf-8");
-		execSync(`${typstBin()} compile${fontFlag()} --format svg "${srcPath}" "${outPath}"`, {
-			stdio: "pipe",
-		});
+		execSync(
+			`${typstBin()} compile${fontFlag()} --root "${process.cwd()}" --format svg "${srcPath}" "${outPath}"`,
+			{
+				stdio: "pipe",
+			},
+		);
 	}
 
 	return readFileSync(outPath, "utf-8");

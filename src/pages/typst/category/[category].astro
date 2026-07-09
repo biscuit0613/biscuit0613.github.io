@@ -12,7 +12,11 @@ export async function getStaticPaths() {
 		compiled: compileToSvg(f),
 	}));
 	const categories = [
-		...new Set(docs.map((d) => d.meta.category).filter(Boolean)),
+		...new Set(
+			docs
+				.map((d) => d.meta.category)
+				.filter((c): c is string => c !== undefined),
+		),
 	];
 	return categories.map((cat) => ({
 		params: { category: cat },
@@ -33,6 +37,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 	resume: "简历",
 	review: "复习资料",
 	demo: "功能展示",
+	presentation: "幻灯片",
 };
 const catLabel = CATEGORY_LABELS[category] || category;
 ---
