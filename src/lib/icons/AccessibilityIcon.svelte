@@ -1,27 +1,27 @@
 <script lang="ts">
-	interface IconProps {
-		color?: string;
-		size?: number;
-		strokeWidth?: number;
-		animate?: boolean;
-		class?: string;
-	}
+interface IconProps {
+	color?: string;
+	size?: number;
+	strokeWidth?: number;
+	animate?: boolean;
+	class?: string;
+}
 
-	let {
-		color = 'currentColor',
-		size = 24,
-		strokeWidth = 2,
-		animate = false,
-		class: className = ''
-	}: IconProps = $props();
+let {
+	color = "currentColor",
+	size = 24,
+	strokeWidth = 2,
+	animate = false,
+	class: className = "",
+}: IconProps = $props();
 
-	function handleMouseEnter() {
-		if (animate) return;
-		animate = true;
-		setTimeout(() => {
-			animate = false;
-		}, 1400);
-	}
+function handleMouseEnter() {
+	if (animate) return;
+	animate = true;
+	setTimeout(() => {
+		animate = false;
+	}, 1400);
+}
 </script>
 
 <div class={className} aria-label="accessibility" role="img" onmouseenter={handleMouseEnter}>

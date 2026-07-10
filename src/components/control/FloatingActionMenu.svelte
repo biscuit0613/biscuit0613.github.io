@@ -1,12 +1,13 @@
 <script lang="ts">
+import { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants.ts";
 import Icon from "@iconify/svelte";
-import AccessibilityIcon from '../../lib/icons/AccessibilityIcon.svelte';
 import {
-	AUTO_MODE, DARK_MODE, LIGHT_MODE,
-} from "@constants/constants.ts";
+	applyThemeToDocument,
+	getStoredTheme,
+	setTheme,
+} from "@utils/setting-utils.ts";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
-import { applyThemeToDocument, getStoredTheme, setTheme } from "@utils/setting-utils.ts";
-
+import AccessibilityIcon from "../../lib/icons/AccessibilityIcon.svelte";
 
 let dragging = $state(false);
 let open = $state(false);
@@ -42,16 +43,18 @@ const items = $derived([
 		dim: () => false,
 	},
 	{
-		icon: mode === LIGHT_MODE
-			? "material-symbols:wb-sunny-outline-rounded"
-			: mode === DARK_MODE
-				? "material-symbols:dark-mode-outline-rounded"
-				: "material-symbols:radio-button-partial-outline",
-		label: mode === LIGHT_MODE
-			? "浅色模式"
-			: mode === DARK_MODE
-				? "深色模式"
-				: "跟随系统",
+		icon:
+			mode === LIGHT_MODE
+				? "material-symbols:wb-sunny-outline-rounded"
+				: mode === DARK_MODE
+					? "material-symbols:dark-mode-outline-rounded"
+					: "material-symbols:radio-button-partial-outline",
+		label:
+			mode === LIGHT_MODE
+				? "浅色模式"
+				: mode === DARK_MODE
+					? "深色模式"
+					: "跟随系统",
 		action: toggleScheme,
 		dim: () => false,
 	},
