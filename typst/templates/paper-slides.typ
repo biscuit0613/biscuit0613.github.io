@@ -76,9 +76,8 @@
 #let card(title: "", body) = {
   block(fill: note-fill, inset: (x: 10pt, y: 8pt), radius: 4pt)[
     #if title != "" [
-      #text(size: block-head-size, weight: "bold", fill: accent)[#title]
-      #v(0.2em)
-    ]
+      #text(size: block-head-size, weight: "bold", fill: accent)[#title]\ 
+      ]
     #set text(size: block-body-size)
     #body
   ]
