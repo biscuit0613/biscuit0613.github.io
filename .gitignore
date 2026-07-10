@@ -22,6 +22,7 @@ node_modules/.cache/
 
 # generated typst artifacts (PDF and compiled cache)
 typst/*.pdf
+typst/presentations/*.pdf
 
 # macOS-specific files
 .DS_Store
