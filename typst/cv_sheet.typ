@@ -1621,7 +1621,7 @@ Transformer 包含编码器（Encoder）和解码器（Decoder），主要由注
 
 给定带标签数据集 $cal(D) = {(x_i, y_i)}_(i=1)^N$，最小化经验风险：
 
-#formula[$ L = 1/N sum_(i=1)^N ell(f(x_i), y_i) $]
+#formula[$ L = 1/N sum_(i=1)^N {ell}(f(x_i), y_i) $]
 
 其中 $ell$ 为损失函数（如交叉熵或均方误差）。
 
@@ -1643,7 +1643,7 @@ Transformer 包含编码器（Encoder）和解码器（Decoder），主要由注
 
 标签不完全、不精确（仅粗粒度标签 $hat(y)_i$），损失加入约束项：
 
-#formula[$ L = 1/N sum_(i=1)^N ell(f(x_i), hat(y)_i) + L_"constraint" $]
+#formula[$ L = 1/N sum_(i=1)^N {ell}(f(x_i), hat(y)_i) + L_"constraint" $]
 
 == 主动学习（Active Learning）
 
@@ -1679,7 +1679,7 @@ Transformer 包含编码器（Encoder）和解码器（Decoder），主要由注
 
 在时间步 $t$ 收到新样本 $(x_t, y_t)$ 后立即更新模型：
 
-#formula[$ theta_(t+1) = theta_t - eta_t nabla ell(theta_t; x_t, y_t) $]
+#formula[$ theta_(t+1) = theta_t - eta_t nabla {ell}(theta_t; x_t, y_t) $]
 
 == 增量学习 / 持续学习（Continual Learning）
 
@@ -1841,7 +1841,7 @@ torchvision.utils.save_image
 
 #strong[5. RepLKNet：]大卷积核 + 结构重参数化（训练多分支、推理融合）
 
-#strong[6. 监督学习：]$L = 1/N sum ell(f(x_i), y_i)$
+#strong[6. 监督学习：]$L = 1/N sum {ell}(f(x_i), y_i)$
 
 #strong[7. 对比学习 InfoNCE：]$L_"InfoNCE" = -sum_i log (exp(bold(z)_i dot bold(z)_(i^+) / tau)) / (sum_(j != i) exp(bold(z)_i dot bold(z)_j / tau))$
 

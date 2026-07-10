@@ -189,7 +189,7 @@ Transformer 包含编码器（Encoder）和解码器（Decoder），主要由注
 
 #strong[5. RepLKNet：]大卷积核 + 结构重参数化（训练多分支、推理融合）
 
-#strong[6. 监督学习：]$L = 1/N sum ell(f(x_i), y_i)$
+#strong[6. 监督学习：]$L = 1/N sum {ell}(f(x_i), y_i)$
 
 #strong[7. 对比学习 InfoNCE：]$L_"InfoNCE" = -sum_i log (exp(bold(z)_i dot bold(z)_(i^+) / tau)) / (sum_(j != i) exp(bold(z)_i dot bold(z)_j / tau))$
 
