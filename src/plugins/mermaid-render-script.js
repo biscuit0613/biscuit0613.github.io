@@ -97,6 +97,73 @@
 		});
 	}
 
+	function wrapFlowchartLabelText(text, maxChars = 10) {
+		if (!text || text.includes("<br")) {
+			return text;
+		}
+
+		const separators = [" + ", "+", "/", "：", ":", "，", "、", " "];
+		for (const separator of separators) {
+			if (!text.includes(separator)) continue;
+
+			const parts = text.split(separator).map((part) => part.trim()).filter(Boolean);
+			if (parts.length < 2) continue;
+
+			const lines = [];
+			let currentLine = "";
+			for (const part of parts) {
+				const nextLine = currentLine
+					? `${currentLine}${separator}${part}`
+					: part;
+				if (currentLine && nextLine.length > maxChars) {
+					lines.push(currentLine);
+					currentLine = part;
+				} else {
+					currentLine = nextLine;
+				}
+			}
+
+			if (currentLine) {
+				lines.push(currentLine);
+			}
+
+			if (lines.length > 1) {
+				return lines.join("<br/>");
+			}
+		}
+
+		if (text.length <= maxChars) {
+			return text;
+		}
+
+		const chunks = [];
+		for (let i = 0; i < text.length; i += maxChars) {
+			chunks.push(text.slice(i, i + maxChars));
+		}
+		return chunks.join("<br/>");
+	}
+
+	function preprocessMermaidCode(code) {
+		if (!code) {
+			return code;
+		}
+
+		const firstLine = code.trimStart().split("\n", 1)[0]?.trim() || "";
+		if (!/^(flowchart|graph)\b/.test(firstLine)) {
+			return code;
+		}
+
+		return code
+			.replace(/\[([^\[\]\n]+)\]/g, (match, label) => {
+				const wrapped = wrapFlowchartLabelText(label);
+				return wrapped === label ? match : `[${wrapped}]`;
+			})
+			.replace(/\{([^{}\n]+)\}/g, (match, label) => {
+				const wrapped = wrapFlowchartLabelText(label);
+				return wrapped === label ? match : `{${wrapped}}`;
+			});
+	}
+
 	async function initializeMermaid() {
 		try {
 			await waitForMermaid();
@@ -105,9 +172,11 @@
 			window.mermaid.initialize({
 				startOnLoad: false,
 				theme: "base",
+				htmlLabels: true,
+				markdownAutoWrap: true,
 				themeVariables: {
 					fontFamily: "inherit",
-					fontSize: "14px",
+					fontSize: "10px",
 					primaryBorderColor: "#94a3b8",
 					lineColor: "#94a3b8",
 					tertiaryColor: "#f1f5f9",
@@ -116,6 +185,7 @@
 					useMaxWidth: true,
 					htmlLabels: true,
 					padding: 12,
+					wrappingWidth: 200,
 				},
 				sequence: {
 					useMaxWidth: true,
@@ -173,9 +243,11 @@
 			window.mermaid.initialize({
 				startOnLoad: false,
 				theme: "base",
+				htmlLabels: true,
+				markdownAutoWrap: true,
 				themeVariables: {
 					fontFamily: "inherit",
-					fontSize: "14px",
+					fontSize: "10px",
 					primaryColor: isDark ? "#1e293b" : "#f8fafc",
 					primaryTextColor: isDark ? "#e2e8f0" : "#1e293b",
 					primaryBorderColor: isDark ? "#475569" : "#94a3b8",
@@ -195,6 +267,7 @@
 					useMaxWidth: true,
 					htmlLabels: true,
 					padding: 12,
+					wrappingWidth: 200,
 				},
 				sequence: {
 					useMaxWidth: true,
@@ -213,11 +286,13 @@
 
 					while (attempts < maxAttempts) {
 						try {
-							const code = element.getAttribute("data-mermaid-code");
+							const rawCode = element.getAttribute("data-mermaid-code");
 
-							if (!code) {
+							if (!rawCode) {
 								break;
 							}
+
+							const code = preprocessMermaidCode(rawCode);
 
 							// 显示加载状态
 							element.innerHTML =
