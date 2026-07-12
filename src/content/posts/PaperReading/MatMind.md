@@ -69,9 +69,31 @@ $$\mathcal{L}_{\text{all}} = \alpha \cdot \mathcal{L}_{\text{kno}} + \beta \cdot
 
 - $\alpha, \beta$ 在验证集上通过 Pareto 前沿确定。
 
-**联合训练要分两步 warm-up**： 回归头参数是随机初始化的，而 backbone 的 36 层 Transformer 已经过充分训练。如果一上来就联合训练，回归头的随机梯度噪声会破坏 backbone 已有的表征结构，导致微调初期模型"忘记"已经学会的科学知识。论文的做法是：**第一步冻结 backbone，只训练回归头**，直到它的预测信号稳定；**第二步才解冻所有参数联合优化**。
+**联合训练要分两步**： 回归头参数是随机初始化的，而 backbone 的 36 层 Transformer 已经过充分训练。如果一上来就联合训练，回归头的随机梯度噪声会破坏 backbone 已有的表征结构，导致微调初期模型"忘记"已经学会的科学知识。论文的做法是：**第一步冻结 backbone，只训练回归头**，直到它的预测信号稳定；**第二步才解冻所有参数联合优化**。
 
-反向传播时，$\mathcal{L}_{\text{pre}}$ 的梯度会穿过回归头一直传到 36 层 backbone，促使 hidden state 朝"更有利于数值预测"的方向调整。同时 $\mathcal{L}_{\text{kno}}$ 的梯度也在拉 hidden state 朝"更有利于语言推理"的方向调整。两者互相牵制。
+```text
+Step 1 (warm-up):     Step 2 (联合):
+
+输入 CIF               输入 CIF
+  ↓                      ↓
+backbone (36层)         backbone (36层)
+  ↓ freeze, ❌梯度       ↓ unfreeze, ✅梯度
+mean_pooling            mean_pooling
+  ↓                      ↓
+Linear(4096→1) ✅梯度   Linear(4096→1) ✅梯度
+  ↓                      ↓
+预测值                  预测值
+```
+
+前向传播两次一模一样——都是 CIF → backbone 36层 → mean_pooling → Linear → 预测值。
+
+反向传播：
+
+- Step 1 — loss.backward()：梯度从预测值流到 Linear 的 $W,b$ 就停了，因为 backbone.parameters() 的 requires_grad=False。backbone 权重不变。
+- Step 2 — loss.backward()：梯度从预测值一路穿过 Linear → mean_pooling → backbone 36 层，所有参数都更新。
+PyTorch 里 loss.backward() 不管参数冻不冻都会算梯度，但 optimizer.step() 只更新 requires_grad=True 的参数。
+
+step2 反向传播时，$\mathcal{L}_{\text{pre}}$ 的梯度会穿过回归头一直传到 36 层 backbone，促使 hidden state 朝"更有利于数值预测"的方向调整。同时 $\mathcal{L}_{\text{kno}}$ 的梯度也在拉 hidden state 朝"更有利于语言推理"的方向调整。两者互相牵制。
 
 Stage 1 + Stage 2 做完后，MatMind 能做：
 

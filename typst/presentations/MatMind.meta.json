@@ -1,0 +1,9 @@
+{
+    "title": "MatMind",
+    "description": "材料科学基座模型：构效关系 + 双头架构 + 物理强化学习 — 中科院上海硅酸盐所 / 自动化所",
+    "published": "2026-07-12",
+    "tags": ["typst", "slides", "touying", "matmind", "materials-science"],
+    "category": "presentation",
+    "pinned": false,
+    "order": 2
+}
