@@ -36,3 +36,5 @@ yarn.lock
 # ide
 .idea
 *.iml
+
+typst/presentations/*.md
