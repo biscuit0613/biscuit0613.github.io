@@ -1,0 +1,177 @@
+---
+title: '从 word2vec 到 LLM：NLP 表示学习演进路线'
+published: 2026-07-18
+description: '梳理词嵌入、预训练范式与语言模型的发展脉络，建立 NLP 知识体系与 minimind 训练流程的对应关系'
+image: ''
+tags: [NLP, LLM, word2vec, BERT, Pre-training, SFT, minimind]
+category: '09-自然语言处理'
+order: 5
+draft: false
+lang: ''
+---
+
+## 1. 演进全景
+
+```
+2013 ─ word2vec ──── 静态词向量，分布式表示
+  │
+2014 ─ GloVe ─────── 全局共现统计，矩阵分解视角
+  │
+2016 ─ fastText ──── 子词嵌入，n-gram 解决 OOV
+  │
+2017 ─ Transformer ─ 自注意力机制，取代 RNN
+  │
+2018 ─ BERT ──────── 预训练+微调，双向上下文
+  │      GPT-1 ──── 预训练+微调，单向因果
+  │
+2019 ─ GPT-2 ────── 零样本能力，规模效应初现
+  │      RoBERTa ─── 更大规模预训练，移除 NSP
+  │
+2020 ─ GPT-3 ────── In-Context Learning，175B
+  │
+2022 ─ ChatGPT ───── RLHF，对话能力
+  │
+2023 ─ LLaMA/GPT-4 ─ 开源 LLM，多模态
+  │
+2024 ─ minimind ──── 小模型全流程复现
+```
+
+## 2. 三次范式跃迁
+
+### 跃迁一：从符号到向量（2013，word2vec）
+
+**之前**：词是离散的符号（one-hot），无法表达语义关系。
+
+**之后**：词是连续空间中的向量，语义由向量间的几何关系（距离、方向）编码。
+
+**核心突破**：证明了一个词的意思可以通过它的邻居（上下文）来学习，且这种学习可以产生有意义的几何结构（king - man + woman ≈ queen）。
+
+[word2vec 详解](/posts/nlp/01-word2vec/)
+
+### 跃迁二：从静态到上下文相关（2018，BERT）
+
+**之前**：每个词只有一个固定向量，无论上下文如何变化。
+
+**之后**：词的表示是句子中所有词交互计算的结果，同一个词在不同上下文中完全不同的向量。
+
+**核心突破**：Transformer 的 self-attention 机制让每个 token 能够"关注"句子中的任何其他 token，产生动态的、上下文相关的表示。结合大规模预训练，模型学会了通用的语言理解能力。
+
+[BERT 详解](/posts/nlp/03-bert-pretrain/)
+
+### 跃迁三：从微调到涌现（2020，GPT-3）
+
+**之前**：预训练模型需要为每个下游任务做微调。
+
+**之后**：足够大的模型可以通过提示词（prompt）和上下文示例直接执行任务，无需梯度更新。
+
+**核心突破**：规模本身产生了质变——当模型参数达到 175B 时，涌现出了 In-Context Learning 能力，模型可以在不更新权重的情况下，仅通过提示中的几个示例来学习新任务。
+
+## 3. 两条技术路线
+
+| 维度 | Encoder-Only（BERT） | Decoder-Only（GPT/minimind） |
+|:---|:---|:---|
+| 注意力 | 双向（看到所有 token） | 因果（只看到过去的 token） |
+| 预训练 | MLM（完形填空） | CLM（预测下一个词） |
+| 擅长 | 理解（分类、NER、QA） | 生成（对话、续写、翻译） |
+| 微调形式 | 添加分类头 | 指令格式的序列生成 |
+| 代表 | BERT、RoBERTa、DeBERTa | GPT-4、LLaMA、Qwen、minimind |
+
+**为什么 LLM 选择了 Decoder-Only？**
+
+1. **统一性**：因果语言模型目标（预测下一个 token）可以统一所有 NLP 任务——分类、生成、翻译、问答都可以转化为"给定前缀，生成后续"的形式
+2. **可扩展性**：Decoder-Only 的训练效率更高——不需要像 MLM 那样只对 15% 的 token 计算损失，而是对所有 token 都计算
+3. **涌现能力**：随着规模增长，Decoder-Only 模型展现出了 Encoder-Only 模型没有的涌现能力（如 In-Context Learning、Chain-of-Thought）
+
+## 4. 现行的训练流程
+
+一个现代 LLM 的全生命周期通常包含以下阶段，与 minimind 的训练流程完全对应：
+
+| 阶段 | 目标 | 数据 | 对应 minimind 脚本 |
+|:---|:---|:---|:---|
+| **Tokenizer 训练** | 构建子词词表 | 大规模文本语料 | BPE 分词器 |
+| **预训练** | 学习通用语言知识 | 海量无标注文本 | `train_pretrain.py` |
+| **SFT** | 学习指令遵循格式 | 高质量指令-回复对 | `train_full_sft.py` |
+| **RLHF/DPO** | 对齐人类偏好 | 偏好对比数据 | `train_dpo.py` 等 |
+
+### 4.1 Tokenizer 训练
+
+使用 BPE 算法从语料中学习子词词表：
+
+- 字符级初始化 → 迭代合并高频对 → 得到指定大小的词表
+- minimind 词表大小：6400
+- 详见 [GloVe 与 BPE 章节](/posts/nlp/02-glove-bpe/#42-bpebyte-pair-encoding)
+
+### 4.2 预训练
+
+让模型在海量无标注文本上学习语言统计规律：
+
+- 任务：给定前文，预测下一个 token（因果语言模型）
+- 损失：交叉熵损失 $\mathcal{L} = -\frac{1}{N} \sum_{i} \log P(w_i \mid w_{<i})$
+- 这是模型"学习语言"的阶段，类似 BERT 的 MLM 预训练，但使用因果注意力
+
+### 4.3 SFT
+
+用高质量的指令-回复数据微调模型，使其学会遵循指令：
+
+- 输入格式：`<|im_start|>user\n 问题 <|im_end|>\n<|im_start|>assistant\n 回答 <|im_end|>`
+- 只在 assistant 回复部分计算损失（user 部分不参与梯度更新）
+- 这是模型"学会对话"的阶段
+
+### 4.4 对齐（RLHF/DPO）
+
+让模型的输出更符合人类偏好（有用、无害、诚实）：
+
+- DPO：直接比较偏好数据中的 chosen 和 rejected 回复，无需奖励模型
+- 数学本质：最大化 chosen 回复与 rejected 回复之间的概率差距
+- 这是模型"学会做人"的阶段
+
+## 5. 知识体系总览
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     数学基础                              │
+│  线性代数 → 概率论 → 信息论（交叉熵/KL散度）→ 优化理论    │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────┐
+│                   词表示学习                              │
+│  one-hot → word2vec → GloVe → BPE/子词嵌入（本节）      │
+│  静态向量 → 分布式假设 → 全局共现 → OOV 解决              │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────┐
+│                   序列建模                                │
+│  RNN → LSTM/GRU → Seq2Seq → Attention → Transformer     │
+│  （已有笔记：RNN 系列 + Transformer 系列）                │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────┐
+│                   预训练范式                              │
+│  BERT（MLM + NSP）→ GPT（CLM）→ 预训练+微调              │
+│  （本节 + BERT 微调实践）                                │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────┐
+│                   对齐与优化                              │
+│  SFT → RLHF（PPO/GRPO）→ DPO                            │
+│  （已有笔记：GRPO/PPO，即将完成：minimind 实践）          │
+└─────────────────────────────────────────────────────────┘
+```
+
+## 6. 后续学习路径
+
+NLP 基础至此告一段落。接下来的学习应该转向 **minimind 项目实践**，将理论知识落实到代码中：
+
+1. **minimind 项目概览**：理解整体架构和训练流程
+2. **预训练实现**：Tokenization → 前向传播 → 损失计算 → 反向传播
+3. **SFT 实现**：对话格式构建 → 损失掩码 → 训练循环
+4. **DPO 实现**：偏好数据格式 → 对比损失 → 策略梯度
+
+这四篇将直接对应 minimind 的 `train_pretrain.py`、`train_full_sft.py`、`train_dpo.py` 三个核心脚本，需要逐行代码注释。
+
+## 参考文献
+
+- Bengio, Y., et al. (2003). A Neural Probabilistic Language Model. *JMLR 2003*.
+- Mikolov, T., et al. (2013). Efficient Estimation of Word Representations in Vector Space. *arXiv:1301.3781*.
+- Devlin, J., et al. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. *NAACL 2019*.
+- Brown, T., et al. (2020). Language Models are Few-Shot Learners. *NeurIPS 2020*.
