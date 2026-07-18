@@ -5,7 +5,7 @@ description: '贝叶斯的基础，MLE,MAP,生成式模型（朴素贝叶斯）�
 image: ''
 tags: []
 category: '06-优化算法'
-draft: false 
+draft: true
 lang: ''
 ---
 
