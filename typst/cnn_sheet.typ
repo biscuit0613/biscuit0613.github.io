@@ -6,7 +6,7 @@
 #set heading(numbering: none)
 #set math.equation(numbering: none)
 
-#let img(name) = image("../src/content/posts/ML/assets/" + name)
+#let img(name) = image("../src/content/posts/cnn/assets/" + name)
 
 #let tip(body) = {
   block(
