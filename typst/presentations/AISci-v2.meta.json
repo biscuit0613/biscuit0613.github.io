@@ -1,0 +1,9 @@
+{
+	"title": "AISci-v2",
+	"description": "双模式全自动科研实验框架 — Classic 四阶段流水线 + Evolution 种群演化 + Dashboard 实时监控",
+	"published": "2026-08-01",
+	"tags": ["typst", "slides", "touying", "ai-scientist", "agent", "evolution", "dashboard"],
+	"category": "presentation",
+	"pinned": false,
+	"order": 4
+}
