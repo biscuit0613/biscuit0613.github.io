@@ -7,7 +7,7 @@
 #set math.equation(numbering: none)
 
 #let cvimg(name) = image("../src/content/posts/computer-vision/assets/" + name)
-#let camimg(name) = image("../src/content/posts/camera/" + name)
+#let camimg(name) = image("../src/content/posts/misc/" + name)
 
 #let tip(body) = {
   block(
