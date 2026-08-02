@@ -6,7 +6,7 @@
 #set heading(numbering: none)
 #set math.equation(numbering: none)
 
-#let cvimg(name) = image("../src/content/posts/CV/assets/" + name)
+#let cvimg(name) = image("../src/content/posts/computer-vision/assets/" + name)
 #let camimg(name) = image("../src/content/posts/camera/" + name)
 
 #let tip(body) = {
