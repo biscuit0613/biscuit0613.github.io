@@ -6,7 +6,7 @@ image: ''
 tags: []
 category: '08-计算机视觉'
 order: 18
-draft: false
+draft: true
 lang: ''
 ---
 
@@ -37,13 +37,13 @@ lang: ''
 
 :::tip 本系列 GAN 篇章索引
 
-| 篇章 | 内容 | 衔接 |
-|------|------|------|
-| CV-GAN-Theory.md | GAN收敛性 + WGAN | 为什么 GAN 能学分布 |
-| CV-GAN-Variants.md | DCGAN → cGAN | 架构演进基础 |
-| CV-GAN-StyleGAN.md | Mapping/Synthesis/AdaIN | 引出解耦隐空间 |
-| CV-GAN-LatentSpace.md | Z/W/W+/F/N | 隐空间全谱系 |
-| CV-GAN-Inversion.md | PULSE/pSp/GPEN | 怎么把图片映射进去 |
-| CV-GAN-Edit.md | I2S/GANSpace/StyleCLIP | 进去之后能做什么 |
+| 篇章                  | 内容                    | 衔接                |
+| --------------------- | ----------------------- | ------------------- |
+| CV-GAN-Theory.md      | GAN收敛性 + WGAN        | 为什么 GAN 能学分布 |
+| CV-GAN-Variants.md    | DCGAN → cGAN            | 架构演进基础        |
+| CV-GAN-StyleGAN.md    | Mapping/Synthesis/AdaIN | 引出解耦隐空间      |
+| CV-GAN-LatentSpace.md | Z/W/W+/F/N              | 隐空间全谱系        |
+| CV-GAN-Inversion.md   | PULSE/pSp/GPEN          | 怎么把图片映射进去  |
+| CV-GAN-Edit.md        | I2S/GANSpace/StyleCLIP  | 进去之后能做什么    |
 
 :::
