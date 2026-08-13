@@ -22,7 +22,7 @@ Norm: 指层归一化（Layer Normalization）
 
 ## 残差连接（Residual Connection）
 
-对于一个子层（SubLayer，可以是多头注意力或前馈网络），把他的输出记作 $S\mathcal{F}(X_{in})$，那么残差连接的输出 $X_{out}$ 就是：
+对于一个子层（SubLayer，可以是多头注意力或前馈网络），把他的输出记作 $\mathcal{F}(X_{in})$，那么残差连接的输出 $X_{out}$ 就是：
 
 $$
 X_{out} = X_{in} + \mathcal{F}(X_{in})
@@ -34,31 +34,31 @@ $$
 
 层归一化对**单个样本**的所有**特征维度**进行标准化（注意区分Batch Norm是对同一批次所有样本的同一个特征做标准化）。
 
-一个子层的输入 $X_{in}\in\mathbb{R}^{n, d}$，那么层归一化的计算公式为：（对于输入序列的一行$\mathbf{x}_i\in\mathbb{R}^{1, d}$，索引j遍历所有特征维度）
+为与自注意力和 FFN 章节保持一致，以下采用列优先表示：$X_{in}\in\mathbb{R}^{d\times n}$，每一列 $\mathbf{x}_i\in\mathbb{R}^{d}$ 是第 $i$ 个 token 的表示。LayerNorm 对每一列内部的 $d$ 个特征独立归一化；索引 $j$ 遍历特征维度。
 
 $$
-\mu_i = \frac{1}{d}\sum_{j=1}^{d} x_{ij}, \quad \sigma^2_i = \frac{1}{d}\sum_{j=1}^{d} (x_{ij} - \mu_i)^2\\[1ex]
-\hat{x}_{ij} = \frac{x_{ij} - \mu_i}{\sqrt{\sigma^2_i + \epsilon}}, \quad LN(x_{ij}) = \gamma \hat{x}_{ij} + \beta
+\mu_i = \frac{1}{d}\sum_{j=1}^{d} x_{ji}, \quad \sigma^2_i = \frac{1}{d}\sum_{j=1}^{d} (x_{ji} - \mu_i)^2\\[1ex]
+\hat{x}_{ji} = \frac{x_{ji} - \mu_i}{\sqrt{\sigma^2_i + \epsilon}}, \quad \operatorname{LN}(\mathbf{x}_i) = \boldsymbol{\gamma}\odot\hat{\mathbf{x}}_i + \boldsymbol{\beta}
 $$
 
-其中 $\mu_i$ 和 $\sigma^2_i$ 分别是第 $i$ 个样本在特征维度上的均值和方差，$\epsilon$ 是一个小常数以避免除零错误，$\gamma$ 和 $\beta$ 是可学习的缩放和偏移参数。
+其中 $\mu_i$ 和 $\sigma^2_i$ 分别是第 $i$ 个 token 在特征维度上的均值和方差，$\epsilon$ 是一个小常数以避免除零错误，$\boldsymbol{\gamma},\boldsymbol{\beta}\in\mathbb{R}^{d}$ 是可学习的逐特征缩放与偏移参数。
 
 拓展到整个输入矩阵 $X_{in}$，层归一化的每一步和最终输出可以表示为：
 
 :::tip
 
-在实际的代码中，算完均值向量之后会进行广播变成 $n\times d$ 的矩阵，求方差时和 $X_{in}$ 做差,逐元素平方再求逐行均值，最后再广播回去。这样可以充分利用矩阵运算的并行性。
+在实际代码中，均值和方差会沿特征维度计算并广播到所有 $d$ 行；这样可以充分利用矩阵运算的并行性。
 
 :::
 
 $$
-\mathbf{\mu} = [\mu_1, \mu_2, \ldots, \mu_n]^T(n\times1\rightarrow n\times d) \quad \mathbf{\sigma}^2 = [\sigma^2_1, \sigma^2_2, \ldots, \sigma^2_n]^T\\[1ex]
-\hat{X}_{in} = \frac{X_{in} - \mathbf{\mu}}{\sqrt{\mathbf{\sigma}^2 + \epsilon}} \quad LN(X_{in}) = \gamma\odot\hat{X}_{in} + \beta
+\boldsymbol{\mu} = [\mu_1, \mu_2, \ldots, \mu_n]\in\mathbb{R}^{1\times n}, \quad \boldsymbol{\sigma}^2 = [\sigma^2_1, \sigma^2_2, \ldots, \sigma^2_n]\in\mathbb{R}^{1\times n}\\[1ex]
+\hat{X}_{in} = \frac{X_{in} - \mathbf{1}_d\boldsymbol{\mu}}{\sqrt{\mathbf{1}_d(\boldsymbol{\sigma}^2 + \epsilon)}} \quad \operatorname{LN}(X_{in}) = (\boldsymbol{\gamma}\mathbf{1}_n^T)\odot\hat{X}_{in} + \boldsymbol{\beta}\mathbf{1}_n^T
 $$
 
 - $\odot$ 表示逐元素乘法（Hadamard Product）
-- $\gamma$ 和 $\beta$ 是 $1\times d$ 的向量，分别表示每个特征维度的缩放和偏移参数。
-- 这俩参数在计算时会广播成 $n\times d$ 的矩阵。
+- $\boldsymbol{\gamma}$ 和 $\boldsymbol{\beta}$ 是 $d$ 维向量，分别表示每个特征维度的缩放和偏移参数。
+- 它们在计算时会沿 token 维度广播成 $d\times n$ 的矩阵。
 
 ### 为什么不用 Batch Norm（批归一化）？
 
@@ -94,12 +94,12 @@ Pre-Norm的优势：它将所有子层（注意力/FFN）的输入都“摆正�
 
 ### Pre-LN 架构的梯度分析
 
-对于多头注意力子层$\mathcal{F}$，假设输入为 $X_l$，输出为 $X_{l+1}$，残差连接为 $X_{l+2} = X_l + \mathcal{F}(\mathcal{LN}(X_{in}))$。
+对于多头注意力子层 $\mathcal{F}$，设第 $l$ 层的输入为 $X_l$，则 Pre-LN 残差更新为 $X_{l+1}=X_l+\mathcal{F}(\mathcal{LN}(X_l))$。
 
-损失函数 $L$ 对 $X_{l+2}$ 的梯度为 $\frac{\partial L}{\partial X_{l+2}}$，那么对 $X_l$ 的梯度为：
+损失函数 $L$ 对 $X_{l+1}$ 的梯度为 $\frac{\partial L}{\partial X_{l+1}}$，那么对 $X_l$ 的梯度为：
 
 $$
-\frac{\partial L}{\partial X_l} = \frac{\partial L}{\partial X_{l+2}} \cdot \left( I + \frac{\partial \mathcal{F}(\mathcal{LN}(X_l))}{\partial X_l} \right)
+\frac{\partial L}{\partial X_l} = \frac{\partial L}{\partial X_{l+1}} \cdot \left( I + \frac{\partial \mathcal{F}(\mathcal{LN}(X_l))}{\partial X_l} \right)
 $$
 
 这个公式说明了梯度可以直接通过残差连接的 $I$ 项传递，而不受 $\mathcal{F}$ 的影响，更不受 $\mathcal{LN}$ 的影响，从而保证了梯度的稳定性。

@@ -10,20 +10,22 @@ draft: false
 lang: ''
 ---
 
+**词嵌入向量（Word Embedding）** 是将词语映射到低维稠密实数向量空间的一种表示方法，常见模型包括 Word2Vec、GloVe、FastText，以及现在主流的上下文相关嵌入（如 BERT、GPT 系列），后者同一个词在不同上下文中会得到不同的向量表示。
+
 :::tip[符号约定]
 
-| 符号                                                  | 含义                      | 示例                            |
-| ----------------------------------------------------- | ------------------------- | ------------------------------- |
-| $\mathcal{V}$                                         | 词汇表                    | $\vert\mathcal{V}\vert = 10^4$  |
-| $V$                                                   | 词汇表大小                | $V = \vert\mathcal{V}\vert$     |
-| $d$                                                   | 词向量维度                | $d = 300$（典型值）             |
-| $w_t$                                                 | 位置 $t$ 处的中心词       | $w_t = \text{"apple"}$          |
-| $w_{t+j}$                                             | 位置 $t+j$ 处的上下文词   | $w_{t-1} = \text{"eat"}$        |
-| $m$                                                   | 上下文窗口大小            | $m = 2$（两侧各 2 个词）        |
-| $\mathbf{v}_w \in \mathbb{R}^d$                       | 词 $w$ 作为中心词的向量   | 输入向量                        |
-| $\mathbf{u}_w \in \mathbb{R}^d$                       | 词 $w$ 作为上下文词的向量 | 输出向量                        |
-| $\mathbf{W}_{\text{in}} \in \mathbb{R}^{d \times V}$  | 输入嵌入矩阵              | 每一列是一个词的 $\mathbf{v}_w$ |
-| $\mathbf{W}_{\text{out}} \in \mathbb{R}^{V \times d}$ | 输出嵌入矩阵              | 每一行是一个词的 $\mathbf{u}_w$ |
+| 符号                                                  | 含义                          | 示例                            |
+| ----------------------------------------------------- | ----------------------------- | ------------------------------- |
+| $\mathcal{V}$                                         | 词汇表                        | $\vert\mathcal{V}\vert = 10^4$  |
+| $V$                                                   | 词汇表大小                    | $V = \vert\mathcal{V}\vert$     |
+| $d$                                                   | 词嵌入向量维度                | $d = 300$（典型值）             |
+| $w_t$                                                 | 位置 $t$ 处的中心词           | $w_t = \text{"apple"}$          |
+| $w_{t+j}$                                             | 位置 $t+j$ 处的上下文词       | $w_{t-1} = \text{"eat"}$        |
+| $m$                                                   | 上下文窗口大小                | $m = 2$（两侧各 2 个词）        |
+| $\mathbf{v}_w \in \mathbb{R}^d$                       | 词 $w$ 作为中心词的嵌入向量   | 输入向量                        |
+| $\mathbf{u}_w \in \mathbb{R}^d$                       | 词 $w$ 作为上下文词的嵌入向量 | 输出向量                        |
+| $\mathbf{W}_{\text{in}} \in \mathbb{R}^{d \times V}$  | 输入嵌入矩阵                  | 每一列是一个词的 $\mathbf{v}_w$ |
+| $\mathbf{W}_{\text{out}} \in \mathbb{R}^{V \times d}$ | 输出嵌入矩阵                  | 每一行是一个词的 $\mathbf{u}_w$ |
 
 :::
 
@@ -74,12 +76,12 @@ Skip-gram 的目标是：
 
 **给定中心词 $w_t$，预测其上下文窗口内的词 $w_{t+j}$**（$j \in \{-m, \dots, -1, 1, \dots, m\}$）。
 
-Skip-gram 需要训练的参数是两套词向量矩阵：
+Skip-gram 需要训练的参数是两套词嵌入向量矩阵：
 
 - 输入嵌入矩阵 $\mathbf{W}_{\text{in}} \in \mathbb{R}^{d \times V}$（每列是中心词向量 $\mathbf{v}_w$）
 - 输出嵌入矩阵 $\mathbf{W}_{\text{out}} \in \mathbb{R}^{V \times d}$（每行是上下文词向量 $\mathbf{u}_w$）
 
-每个词 $w$ 对应两个向量：作为中心词时的 $\mathbf{v}_w$ 和作为上下文词时的 $\mathbf{u}_w$。总参数量为 $2 \cdot V \cdot d$。实际使用中通常取 $\mathbf{W}_{\text{in}}$（或 $\frac{\mathbf{v}_w + \mathbf{u}_w}{2}$）作为最终词向量。
+每个词 $w$ 对应两个嵌入向量：作为中心词时的 $\mathbf{v}_w$ 和作为上下文词时的 $\mathbf{u}_w$。总参数量为 $2 \cdot V \cdot d$。实际使用中通常取 $\mathbf{W}_{\text{in}}$（或 $\frac{\mathbf{v}_w + \mathbf{u}_w}{2}$）作为最终词向量。
 
 ### 2.1 模型结构以及前向传播
 
@@ -95,9 +97,9 @@ $$
 \mathbf{h} = \mathbf{W}_{\text{in}}\mathbf{x} = \mathbf{v}_{w_t}
 $$
 
-因为 $\mathbf{x}$ 是 one-hot 的，隐藏层向量 $\mathbf{h}$ 本质上就是从 $\mathbf{W}_{\text{in}}$ 中"查表"取出词 $w_t$ 对应的列向量 $\mathbf{v}_{w_t}$。这正是 **embedding lookup** 操作。
+因为 $\mathbf{x}$ 是 one-hot 的，隐藏层向量 $\mathbf{h}$ 本质上就是从 $\mathbf{W}_{\text{in}}$ 中"查表"取出词 $w_t$ 对应的列向量 $\mathbf{v}_{w_t}$。这是 **embedding lookup** 操作。
 
-隐藏层 $\mathbf{h}$ 就是中心词的嵌入向量 $\mathbf{v}_{w_t}$，一个 $d$ 维的稠密向量，没有激活函数。
+隐藏层 $\mathbf{h}$ 就是中心词的嵌入向量 $\mathbf{v}_{w_t}$，一个 $d$ 维的稠密向量，
 和普通神经网络不同:
 
 - 没有偏置项：$\mathbf{h} = \mathbf{W}_{\text{in}} \mathbf{x}$，无 $+b$
@@ -204,8 +206,6 @@ $$
 $$
 P(w_o \mid w_t) = \frac{\exp(\mathbf{u}_{w_o}^T \mathbf{v}_{w_t})}{\sum_{w \in \mathcal{V}} \exp(\mathbf{u}_{w}^T \mathbf{v}_{w_t})}
 $$
-
-### 2.2 前向传播可视化
 
 <div class="sg-root">
 <style>
@@ -553,7 +553,7 @@ $$
 </script>
 </div>
 
-### 2.3 损失函数
+### 2.2 损失函数与参数更新
 
 Skip-gram 的训练目标很朴素：**让模型看到中心词 $w_t$ 时，预测出真实上下文词 $w_o$ 的概率尽可能大**。
 
@@ -600,7 +600,7 @@ $\mathbf{u}_{w_o}^T \mathbf{v}_{w_t}$ 是两个向量的内积。如果中心词
 训练的目标是：让真实共现的词对 $(\mathbf{v}_{w_t}, \mathbf{u}_{w_o})$ 内积变大，让随机词对的内积变小。
 :::
 
-### 2.4 梯度推导
+#### 梯度推导
 
 对 $\mathbf{v}_{w_t}$（中心词向量）求梯度。损失函数由两项组成：
 
@@ -654,9 +654,7 @@ $$
 - **对于真实上下文词 $w_o$**：$P(w_o \mid w_t) - 1 < 0$，梯度为负，$\mathbf{u}_{w_o}$ 向 $\mathbf{v}_{w_t}$ 靠拢。
 - **对于其他词 $w \neq w_o$**：$P(w \mid w_t) > 0$，梯度为正，$\mathbf{u}_w$ 远离 $\mathbf{v}_{w_t}$。
 
-### 2.5 反向传播与参数更新
-
-#### 前向传播留下了什么？
+#### 参数更新
 
 反向传播需要前向传播的中间结果。具体来说：
 
@@ -666,8 +664,6 @@ $$
 | $\mathbf{v}_{w_t}$（中心词向量，即隐藏层 $\mathbf{h}$） | 所有 $\frac{\partial J}{\partial \mathbf{u}_w}$ 的梯度中共用                                             |
 | $\mathbf{u}_{w_o}$（真实上下文词的输出向量）            | $\frac{\partial J}{\partial \mathbf{v}_{w_t}}$ 的第一项直接用到                                          |
 
-#### 参数更新
-
 训练时，对每个 (中心词, 上下文词) 对，用梯度下降同时更新两个矩阵：
 
 $$
@@ -676,8 +672,6 @@ $$
 $$
 
 注意 $\mathbf{W}_{\text{out}}$ 中的**每一行** $\mathbf{u}_w$ 都会被更新——因为每个词都参与了 softmax 分母的计算。这也是 softmax 计算量大的根源。
-
-#### 交互式可视化
 
 <div class="sg-root">
 <style>
@@ -1103,8 +1097,6 @@ CBOW 将多个上下文词的信息聚合到一个向量中，训练速度比 Sk
 | --------- | --------------- | --------------- | ---------------- | :------: |
 | Skip-gram | 1 个中心词      | $2m$ 个上下文词 | 稀有词、小数据集 |    慢    |
 | CBOW      | $2m$ 个上下文词 | 1 个中心词      | 高频词、大数据集 |    快    |
-
-### 3.1 可训练参数
 
 CBOW 的参数结构与 Skip-gram **完全相同**——仍然需要训练两套词向量：
 
