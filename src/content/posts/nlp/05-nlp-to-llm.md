@@ -158,20 +158,4 @@ lang: ''
 └─────────────────────────────────────────────────────────┘
 ```
 
-## 6. 后续学习路径
 
-NLP 基础至此告一段落。接下来的学习应该转向 **minimind 项目实践**，将理论知识落实到代码中：
-
-1. **minimind 项目概览**：理解整体架构和训练流程
-2. **预训练实现**：Tokenization → 前向传播 → 损失计算 → 反向传播
-3. **SFT 实现**：对话格式构建 → 损失掩码 → 训练循环
-4. **DPO 实现**：偏好数据格式 → 对比损失 → 策略梯度
-
-这四篇将直接对应 minimind 的 `train_pretrain.py`、`train_full_sft.py`、`train_dpo.py` 三个核心脚本，需要逐行代码注释。
-
-## 参考文献
-
-- Bengio, Y., et al. (2003). A Neural Probabilistic Language Model. *JMLR 2003*.
-- Mikolov, T., et al. (2013). Efficient Estimation of Word Representations in Vector Space. *arXiv:1301.3781*.
-- Devlin, J., et al. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. *NAACL 2019*.
-- Brown, T., et al. (2020). Language Models are Few-Shot Learners. *NeurIPS 2020*.

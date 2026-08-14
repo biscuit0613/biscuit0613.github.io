@@ -27,6 +27,7 @@ pnpm preview      # local preview of built site
 
 - **`src/config.ts`** — Central blog config (site info, banner, theme, sidebar, etc.).
 - **`src/content/posts/`** — Blog posts (Markdown with frontmatter).
+- **`docs/AGENT-writing.md`** — Internal knowledge-map and writing reference; not published as a post.
 - **`src/content/spec/`** — Special pages: `friends.md`, `about.md`.
 - **`src/pages/`** — Route pages (anime, albums, archive, diary, projects, skills, timeline, 404, RSS).
 - **`src/plugins/`** — Custom remark/rehype plugins (Mermaid, admonitions, GitHub cards, excerpt, reading time).
