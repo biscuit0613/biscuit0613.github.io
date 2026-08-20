@@ -110,11 +110,13 @@ python train_pretrain.py \
 | 9924 | 2.2545 | 0 min  |
 
 Loss 下降趋势平滑，说明模型在有效学习中文语言的统计规律。最终 loss 2.25 意味着模型对每个 token 的平均困惑度（perplexity）约为 $e^{2.25} \approx 9.5$，即平均从约 10 个候选词中选一个。
+原始日志见
+[log-pretrain.txt](https://github.com/biscuit0613/minimind/blob/master/log-pretrain.txt)。
 
 ### 输出
 
 ```
-out/pretrain_768.pth  (132MB, 68.83M 参数)
+out/pretrain_768.pth  (约 131.3 MiB, 63.91M 参数)
 ```
 
 ## 第二阶段：SFT（监督微调）
@@ -162,8 +164,11 @@ SFT 与预训练的核心区别在于 **损失掩码（Loss Mask）**：
 ### SFT输出
 
 ```
-out/full_sft_768.pth  (132MB, 68.83M 参数)
+out/full_sft_768.pth  (约 131.3 MiB, 63.91M 参数)
 ```
+
+本次训练共 14152 步，最终记录 loss 为 1.8913。原始日志见
+[sft-log.txt](https://github.com/biscuit0613/minimind/blob/master/sft-log.txt)。
 
 ## 第三阶段：DPO（偏好优化）
 
@@ -223,18 +228,21 @@ DPO 与 SFT 的关键区别：
 ### DPO 输出
 
 ```
-out/dpo_768.pth  (132MB, 68.83M 参数)
+out/dpo_768.pth  (约 131.3 MiB, 63.91M 参数)
 ```
+
+本次训练共 2146 步，最终记录 DPO loss 为 0.5031。原始日志见
+[dpo-log.txt](https://github.com/biscuit0613/minimind/blob/master/dpo-log.txt)。
 
 ## 权重文件汇总
 
-| 文件               | 阶段     | 大小  | 参数量 |
-| ------------------ | -------- | ----- | ------ |
-| `pretrain_768.pth` | 预训练   | 132MB | 68.83M |
-| `full_sft_768.pth` | 监督微调 | 132MB | 68.83M |
-| `dpo_768.pth`      | 偏好优化 | 132MB | 68.83M |
+| 文件               | 阶段     | 大小          | 参数量 | 公开状态 |
+| ------------------ | -------- | ------------- | ------ | -------- |
+| `pretrain_768.pth` | 预训练   | 约 131.3 MiB | 63.91M | 本地保留 |
+| `full_sft_768.pth` | 监督微调 | 约 131.3 MiB | 63.91M | [Hugging Face](https://huggingface.co/biscuitzzz/minimind-full-sft-lora) |
+| `dpo_768.pth`      | 偏好优化 | 约 131.3 MiB | 63.91M | 本地保留 |
 
-三个文件大小完全相同，因为模型结构未变，只是参数值不同。文件以 half 精度（float16）存储，每个参数占 2 字节，$68.83 \times 10^6 \times 2 \text{ bytes} \approx 132 \text{ MB}$。
+三个文件使用相同模型结构，只是参数值不同，因此文件大小基本一致。目前公开仓库只提供 SFT 和 LoRA 权重，不声称 Pre-training 与 DPO 权重已上传。
 
 ## 本地推理测试
 

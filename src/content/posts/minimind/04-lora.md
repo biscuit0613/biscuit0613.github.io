@@ -1,11 +1,12 @@
 ---
 title: MiniMind 训练实战 （四）LoRA 微调与推理部署
 published: 2026-08-14
-description: ''
+description: '使用宠物问答数据对 MiniMind 64M 模型进行 LoRA 微调，并通过前后样例分析领域适配中的能力退化'
 image: ''
-tags: []
-category: ''
-draft: false 
+tags: [minimind, LLM, LoRA, 参数高效微调]
+category: '10-MiniMind项目'
+order: 4
+draft: false
 lang: ''
 ---
 
@@ -47,7 +48,10 @@ dataset/lora_pet_large.jsonl
 
 训练结果：
 
-最终 loss：约 2.4389LoRA 权重：out/lora_pet_large_768.pth
+最终 loss：约 2.4389。
+
+LoRA 权重：`out/lora_pet_large_768.pth`，已上传至
+[Hugging Face](https://huggingface.co/biscuitzzz/minimind-full-sft-lora)。
   
 推理命令：
 

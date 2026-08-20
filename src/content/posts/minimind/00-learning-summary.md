@@ -16,7 +16,8 @@ lang: ''
 | 模型前向传播笔记    | [从 Token IDs 到训练 Loss](/posts/minimind/01-model-forward-pass/)                 | 逐段追踪模型主干和语言模型损失                 |
 | Attention 笔记      | [Attention 的完整张量流](/posts/minimind/02-attention-forward-pass/)               | 逐段解释 Q/K/V、RoPE、GQA、KV Cache            |
 | 训练实践笔记        | [从预训练到偏好对齐](/posts/minimind/03-training-pipeline/)                        | 记录环境、参数、日志、权重和问题               |
-| 训练权重            | [个人 Hugging Face 链接](https://huggingface.co/biscuitzzz/minimind-full-sft-lora) | 仅上传本人实际训练的权重，并附模型卡和训练说明 |
+| LoRA 实践笔记       | [LoRA 微调与结果分析](/posts/minimind/04-lora/)                                    | 记录数据、配置和能力退化现象                   |
+| 训练权重            | [个人 Hugging Face 链接](https://huggingface.co/biscuitzzz/minimind-full-sft-lora) | 本人训练的 SFT 与 LoRA 权重                    |
 
 ## 学习内容
 
@@ -32,6 +33,6 @@ lang: ''
 
 ## 实践摘要
 
-我在 A100-80GB 环境下完成了 64M 配置的 Pre-training、SFT 和 DPO 实验，以及lora微调实验，并保存了各阶段权重。详细参数、日志、耗时、权重文件和推理测试见[训练实践笔记](/posts/minimind/03-training-pipeline/)。
+我在 A100-80GB 环境下完成了 64M 配置的 Pre-training、SFT、DPO 和 LoRA 实验，并保存了各阶段权重。三阶段训练参数和日志见[训练实践笔记](/posts/minimind/03-training-pipeline/)，LoRA 配置和结果对比见[LoRA 实践笔记](/posts/minimind/04-lora/)。
 
 本次实验主要用于验证训练链路和理解代码机制。受数据规模、训练步数和评测设置限制，loss 下降不能直接等同于模型能力提升。
