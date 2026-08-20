@@ -248,11 +248,11 @@ export const profileConfig: ProfileConfig = {
 		// 	icon: "mdi:git",
 		// 	url: "https://gitee.com/matsuzakayuki",
 		// },
-		{
-			name: "GitHub",
-			icon: "fa6-brands:github",
-			url: "https://github.com/biscuit0613.github.io",
-		},
+			{
+				name: "GitHub",
+				icon: "fa6-brands:github",
+				url: "https://github.com/biscuit0613/biscuit0613.github.io",
+			},
 	],
 	// Umami统计部份，记得在layout插入Umami的head标签
 	umami: {
