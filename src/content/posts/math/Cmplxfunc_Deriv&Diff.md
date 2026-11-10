@@ -1,0 +1,302 @@
+---
+title: 复变函数：导数（微分）与解析
+published: 2025-08-19
+description: 复变函数可导，可微与解析，柯西黎曼条件
+tags: [复变分析]
+category: '复变函数'
+author: biscuit
+draft: false
+---
+
+-[复变函数的导数](#复变函数的导数)
+  -[定义](#复变函数导数的定义)
+  -[可导条件](#可导性的判定)
+  -[性质](#可导性质)
+-[复变函数的微分](#复变函数的微分)
+  -[定义](#复变函数可微定义)
+  -[可微条件](#复变函数的微分)
+-[复变函数的解析性](#复变函数的解析函数)
+  -[定义](#复变函数解析定义)
+  -[性质](#解析性的继承)
+-[柯西－－黎曼条件](#柯西黎曼条件)
+  -[可微（可导）＆实部虚部](#定理一复变函数可微可导与实部虚部函数的联系)
+  -[解析&实部虚部（解析判定）](#定理二复变函数解析与实部虚部函数的联系解析性的判定定理)
+-[连续，可导，可微的关系](#连续可导和可微的关系)
+
+## 复变函数的导数
+
+### 复变函数导数的定义
+
+**某点处可导**：与实变函数类似，$\omega=f(z)$ 是复平面上区域$D$内有定义的单值函数，并且 $z_0\in D$。记 $\Delta z=z-z_0$ 如果极限
+$$
+\lim_{z\to z_0}{\frac{f(z)-f(z_0)}{\Delta z}}
+$$
+**存在且唯一**，则称 $f(z)$ 在 $z_0$ 点处可导，该极限值称为 $f(z)$ 在 $z_0$ 点的导数，记作：
+$$
+f^{\prime}(z)\text{或}\frac{d\omega}{dz}\vert_{z=z_0}
+$$
+**区域内可导**：如果 $f(z)$ 在 $D$ 内处处可导，则 $f(z)$ 在 $D$ 内可导
+
++ $\Delta z=\Delta x+i\Delta y=(x-x_0)+i(y-y_0)$，和一元函数不同，一元函数 $\Delta x$
+ 只能沿着实轴逼近零，而复变函数 $\Delta z$
+ 可以沿着复平面上任一曲线逼近0，和二元函数的偏导数的定义类似，通常考察沿平行于实轴和虚轴方向逼近于 0。
++ 可导性要求沿所有路径趋近**极限值相同**，否则导数不存在。
+
+### 可导性的判定
+
+1. 根据定义
+   $$
+   \text{$f(z)$在$z_0$处可导}
+    \iff f(z_0+\Delta z)-f(z_0)=f^{\prime}(z_0)\Delta z+\rho(\Delta z)\Delta z\tag{1}
+    $$  
+    其中，$\lim_{\Delta z\to0}{\rho(\Delta z)}=0$
+    也就是 $|\rho(\Delta z)\Delta z|=o(|\Delta z|),\Delta z\to 0$
+
+2. 根据复变函数可导的充要条件：
+   1. 实部函数 $u(x,y)$ 和虚部函数 $v(x,y)$ 在点 $(x_0,y_0)$ 处可微
+   2. $f(z)=u(x,y)+iv(x,y),z=x+iy$ 实部虚部函数满足柯西黎曼条件：
+    $$
+    \left\{\begin{matrix}
+    \begin{align*}
+    \frac{\partial u}{\partial x}&=\frac{\partial v}{\partial y}\\[10bp]
+    \frac{\partial u}{\partial y}&=-\frac{\partial v}{\partial x}
+    \end{align*}
+    \end{matrix}\right.
+    $$
+
+### 可导性质
+
+1. 四则运算保持可导性，导数的四则运算与实变函数相同
+2. 复合保持函数可导性，并且遵从链导法则：与实变函数相同。
+
+## 复变函数的微分
+
+### 复变函数可微定义
+
+结合（1）式，回想实变函数对微分的定义：微分是增量的**线性主部**，如果 $\Delta y=y^{\prime}(x_0)(\Delta x)+o(\Delta x)$ ,那么微分就是 $y^{\prime}(x_0)\Delta x$  
+对于复变函数：设函数 $\omega=f(z)$ 在点 $z_0$ 处**可导**，那么（1）式中的 $f^{\prime}(z_0)\Delta z，(\Delta z\neq 0）$ 为函数增量的线性主部，也就是在 $z_0$ 点的微分，记作
+$$
+d\omega=f^{\prime}(z_0)\Delta z
+$$
+也称函数在 $z_0$ 点可微。
+
++ 复变函数的微分与函数增量之间也相差一个 $\Delta z$ 的高阶无穷小
+
++ 复变函数的可导与可微本质上是等价的，二者判定方式相同。
+
+---
+
+>e.g. $f(z)=\overline{z}$ 在全部复平面都不可微：
+
+$$
+\begin{alignedat}{2}
+&\quad\text{在0处，}\\
+ &\qquad\qquad\lim_{z\to 0}{\frac{f(z)-f(0)}{z}}&&=\lim_{z\to 0}{\frac{\
+  \overline{z}}{z}}=\lim_{z\to 0}{\frac{x-iy}{x+iy}}\\
+  &\qquad\qquad\qquad \lim_{\begin{matrix}
+    x=0\\y\to 0
+  \end{matrix}}{\frac{-iy}{iy}}&&=-1\\
+  &\qquad\qquad\qquad\quad\lim_{\begin{matrix}
+    x\to 0\\y=0
+  \end{matrix}}{\frac{x}{x}}&&=1\\
+  \quad\quad&\text{沿不同路径得到的极限值}&&\text{不一样}\\
+  &\quad\text{在z$\neq$0处，}&&\\
+  &\lim_{\Delta z\to 0}{\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}}&&=\lim_{\Delta z\to 0}{\frac{\overline {z_0+\Delta z}-z_0}{\Delta z}}\\
+  &\qquad\qquad \qquad&&=\lim_{\Delta z\to 0}{\frac{\overline {\Delta z}}{\Delta z}}=\lim_{z\to 0}{\frac{\overline{z}}{z}}\\
+  \quad\quad&\text{回到第一种情况，无极限}&&
+\end{alignedat}
+$$
+
+>e.g.2:f(z)=Re z处处不可导
+
+$$
+\begin{align*}
+f^\prime(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+&=\lim_{\Delta z\to 0}{\frac{Re(z+\Delta z)-Re(z)}{\Delta z}}\\
+&=\lim_{\Delta z\to 0}{\frac{Re\Delta z}{\Delta}}\\
+&=\lim_{\begin{matrix}
+  \Delta x\to 0\\\Delta y\to 0
+\end{matrix}}{\frac{\Delta x}{\Delta x+i\Delta y}}\\
+\end{align*}
+$$
+
+>e.g.3:讨论$f(z)=|z|^2$的可导性
+
+$$
+\begin{align*}
+  f^{\prime}(z)&=\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+  &=\lim_{\Delta z\to 0}\frac{(z+\Delta z)\overline{(z+\Delta z)}-z\overline{z}}{\Delta z}\\[10bp]
+  \because \overline{(z+\Delta z)}&=\overline{z}+\overline{\Delta z}\\
+  &=\lim_{\Delta z\to 0}\frac{\overline{z}\cdot\Delta z+z\cdot\overline{\Delta z}+\Delta z\cdot\overline{\Delta z}}{\Delta z}\\
+  &=\lim_{\Delta z\to 0}{z\frac{\overline{\Delta z}}{\Delta z}+\overline{z}+\overline{\Delta z}}\\
+  &=\lim_{\Delta x\to 0,\Delta y\to 0}{z\frac{\Delta x-i\Delta y}{\Delta x+i\Delta y}+x-i y}\\
+  &=\begin{cases}
+    0\,z=0\\ no \;defined,z\neq0
+  \end{cases}
+\end{align*}
+$$
+
++ 哪怕实部虚部函数都是可微，组成的复变函数也可能处处不可微
+
+## 复变函数的解析函数
+
+### 复变函数解析定义
+
+**某点处解析**：如果 $f(z)$ 在 $z_0$ 的**某邻域内**可导，那么称 $f(z)$ 在 $z_0$ 处**解析**，反之称为不解析。
+
+**奇点**：如果 $f(z)$ 在 $z_0$ 的某邻域内处处可导，但是在 $z_0$ 处不可导，则 $z_0$ 被称为奇点。
+
+**区域内解析**：如果 $f(z)$ 在区域 $D$ 内处处解析，那么称 $f(z)$ 在区域 $D$ 内解析，或称 $f(z)$ 是区域 $D$ 内的一个**解析函数**（**全纯函数**或**正则函数**）
+
++ 从点的角度出发，解析比可导（可微）更严格， $z_0$ 处解析 $\Rightarrow z_0$ 的某个邻域内处处可导，$z_0$ 处可导 $\nRightarrow$ 解析
++ 从**区域**角度出发，解析和可导（可微）**等价**。区域 $D$ 可导 $\Leftrightarrow$ 区域 $D$ 解析
+
+### 解析性的继承
+
+四则运算保留函数的解析性
+
+求导保留函数的解析性
+
+## 柯西——黎曼条件
+
+柯西黎曼条件借助复变函数实部虚部两个实函数的可微与可导描述复合函数的可微与可导
+
+柯西黎曼条件的推导：
+$$
+\begin{align*}
+&\lim_{\Delta z\to 0}{\frac{f(z+\Delta z)-f(z)}{\Delta z}}\\
+&=\lim_{\begin{matrix}\Delta x\to 0\\\Delta y\to 0\end{matrix}}{\frac{u(x+\Delta x,y+\Delta y)+iv(x+\Delta x,y+\Delta y)-(u(x,y)+iv(x,y))}{\Delta x+i\Delta y}}\\[20bp]
+&\text{结合之前说的在可导的情况下$\Delta x\to 0,\Delta y\to 0$有很多路径，选取最特殊的\textbf{实轴虚轴}}\\
+&=\lim_{\begin{matrix}\Delta x= 0\\\Delta y\to 0\end{matrix}}{\frac{u(x,y+\Delta y)+iv(x,y+\Delta y)-(u(x,y)+iv(x,y))}{i\Delta y}}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x= 0\\\Delta y\to 0\end{matrix}}{\frac{[u(x,y+\Delta y)-u(x,y)]+[iv(x,y+\Delta y)-iv(x,y)]}{i\Delta y}}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x= 0\\\Delta y\to 0\end{matrix}}{\frac{i[u(x,y+\Delta y)-u(x,y)]-[v(x,y+\Delta y)-v(x,y)]}{-\Delta y}}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x= 0\\\Delta y\to 0\end{matrix}}-{i\frac{\partial u}{\partial y}}+{\frac{\partial v}{\partial y}}\tag{a}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x\to 0\\\Delta y= 0\end{matrix}}{\frac{u(x+\Delta x,y)+iv(x+\Delta x,y)-(u(x,y)+iv(x,y))}{\Delta x}}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x\to 0\\\Delta y= 0\end{matrix}}{\frac{[u(x,y+\Delta y)-u(x,y)]+[iv(x+\Delta x,y)-iv(x,y)]}{\Delta x}}\\[20bp]
+&=\lim_{\begin{matrix}\Delta x\to 0\\\Delta y= 0\end{matrix}}{\frac{\partial u}{\partial x}}+i{\frac{\partial v}{\partial x}}\tag{a}\\[20bp]
+&\text{ab两式相等，一一对应得}\\
+&\left\{\begin{matrix}
+\begin{align*}
+\frac{\partial u}{\partial x}&=\frac{\partial v}{\partial y}\\[10bp]
+\frac{\partial u}{\partial y}&=-\frac{\partial v}{\partial x}
+\end{align*}
+\end{matrix}\right.
+\end{align*}
+$$  
+
+从推导过程里可以看出这玩意是可微（可导）的一个**必要**条件
+
+### 定理一：复变函数可微（可导）与实部虚部函数的联系
+
+$f(z)=u(x,y)+iv(x,y)$ 在区域 $D$ 内有定义，那么 $f(z)=u(x,y)+iv(x,y)$ 在 $z_0(x_0,y_0)$ **可微（可导）** 的 **充分必要条件** 是：
+
+  1. $u(x,y),v(x,y)$ 在 **点** $z_0(x_0,y_0)$ 处 **可微**（或者更严格：u，v 一阶偏导连续）
+
+  2. 在点 $z_0$ 处满足柯西黎曼条件：
+
+$$
+\left\{\begin{matrix}
+\begin{align*}
+\frac{\partial u}{\partial x}&=\frac{\partial v}{\partial y}=a\\[10bp]
+\frac{\partial u}{\partial y}&=-\frac{\partial v}{\partial x}=-b
+\end{align*}
+\end{matrix}
+\right.  
+$$
+
+:::tip[tip:速记]
+复变函数实质上是二维函数的线性组合，并且映射是 $\mathbf{F}:\mathbb{C}^2\to\mathbb{C}^2,\mathbf{x}=(x,y),\mathbf{F}(\mathbf{x})=(u(x,y),v(x,y))$
+
+所以柯西黎曼的这两个式子可以用雅各比行列式的形式速记：(主对角线相等，副对角线相等添负号)，下面解释其雅各比矩阵的具体含义
+$$
+|J|=\begin{vmatrix}\frac{\partial( u\,, v)}{\partial( x\,,y)}\end{vmatrix}
+=\begin{vmatrix}
+\frac{\partial u}{\partial x}&\frac{\partial u}{\partial y}\\[10bp]
+\frac{\partial v}{\partial x}&\frac{\partial v}{\partial y}
+\end{vmatrix}
+\overset{\text{代入C-R}}{\underset{}{=}}\begin{vmatrix}
+\frac{\partial u}{\partial x}&-\frac{\partial v}{\partial x}\\[10bp]
+\frac{\partial v}{\partial x}&\frac{\partial u}{\partial x}
+\end{vmatrix}
+=\begin{vmatrix}
+a&-b\\[10bp]
+b&a
+\end{vmatrix}
+$$
+此时对应了一个复数的矩阵表示。 $|J|=a^2+b^2\neq0$ （也是导数模的平方）
+:::
+
+此时
+$$
+f^{\prime}(z)=\left\{\begin{matrix}\begin{align*}\frac{\partial u}{\partial x}+i\frac{\partial v}{\partial x}\\[10bp]
+\frac{\partial u}{\partial x}-i\frac{\partial u}{\partial y}\\[10bp]
+\frac{\partial v}{\partial y}+i\frac{\partial v}{\partial x}\\[10bp]
+\frac{\partial v}{\partial x}-i\frac{\partial u}{\partial y}
+\end{align*}
+\end{matrix}\right.
+$$
+说明若复变函数可微，其**导数**可以由其**实部虚部二元函数的偏导**确定。
+
++ 建议复习多元函数连续偏导可微之间的关系。
++ 实战中表示 $f^{\prime}(z)$ 需灵活选择，实部虚部函数可以用两个也可以用一个。
+
+### 定理二：复变函数解析与实部虚部函数的联系（解析性的判定定理）
+
+设函数 $f(z)=u(x,y)+iv(x,y)$ 在区域 $D$ 内有定义，那么 $f(z)=u(x,y)+iv(x,y)$ 在区域 $D$ 内 **解析** 的 **充分必要条件** 是：
+
+  1. $u(x,y),v(x,y)$ 在 **区域** $D$ 内 **可微**（或者更严格：u，v 一阶偏导连续）
+
+  2. 在 **区域** $D$ 内处处满足柯西黎曼条件
+
+## 连续，可导和可微的关系
+
+对于复变函数，
+
+可导 $\rightarrow$ 连续，反之未必
+
+可导和可微本质上等价，微分就是导数·增量
+$$
+d\omega=f^{\prime}(z_0)\Delta z\Leftrightarrow f^{\prime}(z)=\frac{d\omega}{dz}\vert_{z=z_0}
+$$
+
++ 欲证可导性，需要讨论重极限。优先考虑导数是否存在，是否唯一（延实轴虚轴趋近导数是否相等）
+
+## 解析函数与调和函数
+
+### 调和函数的定义
+
+对于函数 $\Phi(x,y)$ ,若在区域D内有二阶连续偏导数，且满足**拉普拉斯方程**
+
+$$
+\boxed{\frac{\partial^2 \Phi}{\partial x^2}+\frac{\partial^2 \Phi}{\partial y^2}=0}\\[10bp]
+\text{简记为拉普拉斯算子：}\\[5bp]
+\Delta = \frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}\\[5bp]
+\Delta \Phi=0
+$$
+
+则称函数 $\Phi(x,y)$ 为区域D内的**调和函数**。
+
+### 解析函数与调和函数的关系
+
+**从解析到调和**:任何在区域D 内解析的函数，其实部和虚部均为区域D 内的调和函数。
+
+共轭调和函数：对于函数 $f(z)=u(x,y)+iv(x,y)$ ，如果 $f(z)$ 解析，则称其虚部函数v是实部函数u的**共轭调和函数**
+
+那么反过来，如果给定一个调和函数 $u(x,y)$，能否找到一个共轭调和函数 $v(x,y)$，使得 $u(x,y)+iv(x,y)$ 成为解析函数呢？
+
+**从调和到解析**:答案是肯定的。在单连通区域内，我们可以通过线积分的方式获得共轭调和函数。构造如下积分：
+$$
+\boxed{v(x,y)=\int_{(x_0,y_0)}^{(x,y)}-\frac{\partial u}{\partial y}dx+\frac{\partial u}{\partial x}dy}
+$$
+
+这样构造与路径无关(证明很简单， $\frac{\partial^2 u}{\partial x^2},\frac{\partial^2 u}{\partial y^2}$ 这两个二阶偏导数因为复函数解析所以满足调和函数的条件 $\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}$ ，恰好又满足格林公式的条件 $\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=\frac{\partial^2 u}{\partial y^2}-(-\frac{\partial^2 u}{\partial x^2})＝0$。)，且u,v满足柯西黎曼方程。而且这两个函数一阶偏导显然连续，由复变函数解析的充要条件，这两个函数构成的复变函数一定是解析的。
+
+常见的快速判断函数是否解析的方法：
+
+整式处处解析。
+
+有理函数：除了分母为零的点，其余都解析。
+
+指数、三角、对数函数：在定义域内解析。
+
+复合函数：如果每一层都解析，那整体也解析。

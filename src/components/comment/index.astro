@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { commentConfig } from "@/config";
+import Twikoo from "./Twikoo.astro";
+
+interface Props {
+	post: CollectionEntry<"posts">;
+}
+
+const { slug } = Astro.props.post;
+
+const path = `/posts/${slug}`;
+
+let commentService = "";
+if (commentConfig?.enable && commentConfig?.twikoo) {
+	commentService = "twikoo";
+}
+---
+{commentConfig?.enable && (
+  <div class="card-base p-6 mb-4">
+    {commentService === 'twikoo' && <Twikoo path={path} />}
+    {commentService === '' && null}
+  </div>
+)}

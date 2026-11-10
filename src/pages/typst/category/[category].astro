@@ -1,0 +1,179 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import {
+	compileToSvg,
+	getDocumentsByCategory,
+	scanTypstFiles,
+} from "@utils/typst-compiler";
+
+export async function getStaticPaths() {
+	const docs = scanTypstFiles().map((f) => ({
+		...f,
+		compiled: compileToSvg(f),
+	}));
+	const categories = [
+		...new Set(
+			docs
+				.map((d) => d.meta.category)
+				.filter((c): c is string => c !== undefined),
+		),
+	];
+	return categories.map((cat) => ({
+		params: { category: cat },
+		props: { category: cat, docs: getDocumentsByCategory(docs, cat) },
+	}));
+}
+
+interface Props {
+	category: string;
+	docs: (Awaited<ReturnType<typeof scanTypstFiles>>[number] & {
+		compiled: ReturnType<typeof compileToSvg>;
+	})[];
+}
+
+const { category, docs } = Astro.props;
+
+const CATEGORY_LABELS: Record<string, string> = {
+	resume: "简历",
+	review: "复习资料",
+	demo: "功能展示",
+	presentation: "幻灯片",
+};
+const catLabel = CATEGORY_LABELS[category] || category;
+---
+
+<MainGridLayout
+	title={catLabel}
+	description={`Typst ${catLabel}`}
+	hideSidebar={true}
+	wide={true}
+>
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative" data-typst-root>
+		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+			<div class="flex items-center gap-3 mb-8">
+				<a
+					href="/typst/"
+					class="text-sm text-neutral-500 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors"
+				>
+					← Typst 文档
+				</a>
+				<span class="text-neutral-300 dark:text-neutral-600">/</span>
+				<h1 class="text-2xl font-bold text-black/90 dark:text-white/90">
+					{catLabel}
+				</h1>
+			</div>
+
+			{
+				docs.length === 0 ? (
+					<p class="text-neutral-500 dark:text-neutral-400">暂无文档。</p>
+				) : (
+					<div class="typst-card-grid">
+						{docs.map(({ slug, meta, compiled }) => (
+							<a
+								href={`/typst/${slug}/`}
+								class="typst-card group"
+								style={`--cover-aspect: ${compiled.coverAspect}`}
+							>
+								<div class="typst-card-cover">
+									<div set:html={compiled.coverSvg} />
+								</div>
+								<div class="typst-card-footer">
+									<h3 class="typst-card-title">{meta.title}</h3>
+									{meta.description && (
+										<p class="typst-card-desc">{meta.description}</p>
+									)}
+									<div class="typst-card-meta">
+										{meta.published && <time>{meta.published}</time>}
+										{meta.order && <span>#{meta.order}</span>}
+									</div>
+								</div>
+							</a>
+						))}
+					</div>
+				)
+			}
+		</div>
+	</div>
+</MainGridLayout>
+
+<style is:global>
+	.typst-card-grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	}
+
+	.typst-card {
+		display: flex;
+		flex-direction: column;
+		border-radius: 0.75rem;
+		overflow: hidden;
+		background: var(--card-bg, oklch(1 0 0));
+		box-shadow: 0 1px 4px oklch(0 0 0 / 0.06);
+		transition: transform 0.2s, box-shadow 0.2s;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.typst-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 16px oklch(0 0 0 / 0.1);
+	}
+
+	.typst-card-cover {
+		position: relative;
+		aspect-ratio: var(--cover-aspect, 0.707);
+		overflow: hidden;
+		background: #fff;
+	}
+
+	.typst-card-cover svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	:root.dark .typst-card-cover svg {
+		filter: invert(0.9) hue-rotate(180deg);
+	}
+
+	.typst-card-footer {
+		padding: 0.75rem 1rem;
+	}
+
+	.typst-card-title {
+		font-size: 1rem;
+		font-weight: 700;
+		margin: 0 0 0.25rem;
+		color: oklch(0.2 0 0);
+	}
+
+	:root.dark .typst-card-title {
+		color: oklch(0.85 0 0);
+	}
+
+	.typst-card-desc {
+		font-size: 0.8rem;
+		color: oklch(0.55 0 0);
+		margin: 0 0 0.5rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	:root.dark .typst-card-desc {
+		color: oklch(0.6 0 0);
+	}
+
+	.typst-card-meta {
+		display: flex;
+		gap: 0.75rem;
+		font-size: 0.75rem;
+		color: oklch(0.6 0 0);
+	}
+
+	:root.dark .typst-card-meta {
+		color: oklch(0.55 0 0);
+	}
+</style>

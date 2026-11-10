@@ -1,0 +1,8 @@
+{
+	"title": "自然语言处理 · 理论公式与推导速查",
+	"description": "覆盖第 2–12 讲的形式化定义、公式、推导步骤、算法递推与实现细节，附推导模板与高频易错点",
+	"published": "2026-10-23",
+	"tags": ["NLP", "review", "theory", "cheatsheet"],
+	"category": "review",
+	"order": 4
+}
