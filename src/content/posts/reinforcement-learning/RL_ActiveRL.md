@@ -10,8 +10,6 @@ order: 4
 lang: ''
 ---
 
-## 从评价到控制
-
 被动 RL 问的是"这个策略怎么样"，主动 RL 问的是"应该采取什么策略"。二者的根本区别在于**策略是否固定**：
 
 | | 被动强化学习 | 主动强化学习 |
@@ -28,7 +26,9 @@ $$
 \pi\ \xrightarrow{\text{评价}}\ Q^\pi\ \xrightarrow{\text{贪心改进}}\ \pi'(s)=\arg\max_a Q^\pi(s,a)\ \xrightarrow{\text{评价}}\ Q^{\pi'}\ \to\ \cdots
 $$
 
-数据修正价值，价值改变策略，策略又决定下一步采集什么数据。学习目标也从固定策略的 $V^\pi$ 逐渐变成最优的 $V^*$，从 $Q^\pi$ 变成 $Q^*$。
+数据修正价值，价值改变策略，策略又决定下一步采集什么数据。
+
+一个比较自然的思路就是维护一张**动作价值表 $Q(s,a)$**，每次走一步就更新一次表格里的一个元素。这个思路有两种实现方式：**SARSA** 和 **Q-learning**。
 
 ## 探索与利用的矛盾
 
@@ -56,43 +56,57 @@ $$
 
 ## SARSA：同策略时序差分控制
 
-时序差分方法可以从状态价值函数扩展到动作价值函数,评价 $V$ 的思路从"评价"推广到"控制"：改为估计 $Q$，并在估计的同时用 $\varepsilon$-greedy 不断改进策略。
-
-SARSA 的名字来自一次更新涉及的五个量 $(S_t,A_t,R_t,S_{t+1},A_{t+1})$。在当前状态执行 $A_t$ ，再**按行为策略在下一状态实际选出** $A_{t+1}$ (如果用 $\varepsilon$-greedy 策略可能选到用于探索的动作)，用它构造目标：
+SARSA 的名字来自一次更新涉及的五个量 $(S_t,A_t,R_t,S_{t+1},A_{t+1})$。在当前状态执行 $a_t$ ，再**按行为策略在下一状态实际选出** $a_{t+1}$ (如果用 $\varepsilon$-greedy 策略可能选到用于探索的动作)，用它构造目标：
 
 $$
-Y_t^{\mathrm{SARSA}}=R_t+\gamma Q(S_{t+1},A_{t+1}),
+Y_t^{\mathrm{SARSA}}=r_t+\gamma Q(s_{t+1},a_{t+1}),
 $$
 
 $$
-Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha
-\left[Y_t^{\mathrm{SARSA}}-Q(S_t,A_t)\right].
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha
+\left[Y_t^{\mathrm{SARSA}}-Q(s_t,a_t)\right].
 $$
 
-若 $S_{t+1}$ 是终止状态，则 $Y_t^{\mathrm{SARSA}}=R_t$。
+若 $s_{t+1}$ 是终止状态，则 $Y_t^{\mathrm{SARSA}}=r_t$。
 
 **为什么是 on-policy？**
 
-SARSA 构造目标 $Y_{t}^{\mathrm{SARSA}}$ 用 **实际按行为策略选出的** $A_{t+1}$ ，执行动作的策略和被评估改进的策略是 **同一个** ，因此称为 **同策略（on-policy）** 。它学到的是"当前这个带探索的策略"的价值，风格上相对保守。
+SARSA 构造目标 $Y_{t}^{\mathrm{SARSA}}$ 用 **实际按行为策略选出的** $a_{t+1}$ ，执行动作的策略和被评估改进的策略是 **同一个** ，因此称为 **同策略（on-policy）** 。它学到的是"当前这个带探索的策略"的价值，风格上相对保守。
+
+伪代码：
+
+:::pseudo
+1: 初始化 $Q(s,a)$
+2: for episode = 1, M do
+3: &emsp;初始化状态 $s_0$，按 $\varepsilon$-greedy 策略选择动作 $a_0$
+4: &emsp;for t = 0, T-1 do
+5: &emsp;&emsp;执行动作 $a_t$，观察奖励 $r_t$ 和下一个状态 $s_{t+1}$
+6: &emsp;&emsp;按 $\varepsilon$-greedy 策略选择下一个动作 $a_{t+1}$
+7: &emsp;&emsp;计算 TD 目标 $Y_t^{\mathrm{SARSA}}=r_t+\gamma Q(s_{t+1},a_{t+1})$
+8: &emsp;&emsp;更新 $Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[Y_t^{\mathrm{SARSA}}-Q(s_t,a_t)]$
+9: &emsp;&emsp;$s_t\leftarrow s_{t+1}$，$a_t\leftarrow a_{t+1}$
+10: &emsp;end for
+11: end for
+:::
 
 ## Q-learning：离策略时序差分控制
 
 Q-learning 只把 TD 目标里的下一动作换成**贪心的最大值**：
 
 $$
-Y_t^{\mathrm{Q}}=R_t+\gamma\max_{a'\in\mathcal{A}(S_{t+1})}Q(S_{t+1},a'),
+Y_t^{\mathrm{Q}}=r_t+\gamma\max_{a'\in\mathcal{A}(s_{t+1})}Q(s_{t+1},a'),
 $$
 
 $$
-Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha
-\left[Y_t^{\mathrm{Q}}-Q(S_t,A_t)\right].
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha
+\left[Y_t^{\mathrm{Q}}-Q(s_t,a_t)\right].
 $$
 
-若下一状态为终止状态，则 $Y_t^{\mathrm{Q}}=R_t$。
+若下一状态为终止状态，则 $Y_t^{\mathrm{Q}}=r_t$。
 
 **为什么是 off-policy？**
 
-采集数据时可以用 $\varepsilon$-greedy 等带探索的**行为策略**，但目标里用的是 $\arg\max_{a'}Q(S_{t+1},a')$ 对应的**贪心目标策略**——这个动作不需要真的执行。行为策略与目标策略可以不同，所以是**离/异策略（off-policy）**。它直接逼近最优 $Q^*$，但训练中的 $\max$ 操作也可能带来 **$Q$ 值过估计**问题。
+采集数据时可以用 $\varepsilon$-greedy 等带探索的**行为策略**，但目标里用的是 $\arg\max_{a'}Q(s_{t+1},a')$ 对应的**贪心目标策略**——这个动作不需要真的执行。行为策略与目标策略可以不同，所以是**离/异策略（off-policy）**。它直接逼近最优 $Q^*$，但训练中的 $\max$ 操作也可能带来 **$Q$ 值过估计**问题。
 
 伪代码：
 
@@ -100,14 +114,15 @@ $$
 1: 初始化 $Q(s,a)$
 2: for episode = 1, M do
 4: &emsp;for t = 0, T-1 do
-5:         按 $\varepsilon$-greedy 策略选择动作 $A_t$
-6:         执行动作 $A_t$，观察奖励 $R_t$
-7:         观察下一个状态 $S_{t+1}$
-8:         计算 TD 目标 $Y_t^{\mathrm{Q}}=R_t+\gamma\max_{a'}Q(S_{t+1},a')$
-9:         更新 $Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha[Y_t^{\mathrm{Q}}-Q(S_t,A_t)]$
-10:        $S_t\leftarrow S_{t+1}$
-11:    end for
-12: end for
+5:         按 $\varepsilon$-greedy 策略选择动作 $a_t$，执行动作 $a_t$
+6:         观察奖励 $r_t$
+7:         观察下一个状态 $s_{t+1}$
+8:         计算 TD 目标 $Y_t^{\mathrm{Q}}=r_t+\gamma\max_{a'}Q(s_{t+1},a')$
+9:         更新 $Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[Y_t^{\mathrm{Q}}-Q(s_t,a_t)]$
+10:        $s_t\leftarrow s_{t+1}$
+11:        按 $\varepsilon$-greedy 策略选择下一个动作 $a_{t+1}$
+12:    end for
+13: end for
 :::
 
 ## Q:learning实例1：Cliff Walking
@@ -120,9 +135,9 @@ CliffWalking 是一个网格世界。智能体从起点出发，目标是走到�
 
 约定奖励设置：
 
-- 每走一步，奖励 $R_t=-1$；
+- 每走一步，奖励 $r_t=-1$；
 - 掉进悬崖，奖励 $-100$，并回到起点。
-- 终点回合结束，奖励 $R_t=0$。
+- 终点回合结束，奖励 $r_t=0$。
 
 ### Q表的构建
 
@@ -167,12 +182,12 @@ for episode in range(num_episodes):
 
 ## SARSA 与 Q-learning 对比
 
-两者共享同一更新骨架 $Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha[Y_t-Q(S_t,A_t)]$，唯一的区别就在 TD 目标 $Y_t$：
+两者共享同一更新骨架 $Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[Y_t-Q(s_t,a_t)]$，唯一的区别就在 TD 目标 $Y_t$：
 
 | 对比项 | SARSA | Q-learning |
 | --- | --- | --- |
-| TD 目标 | $R_t+\gamma Q(S_{t+1},A_{t+1})$ | $R_t+\gamma\max_{a'}Q(S_{t+1},a')$ |
-| $A_{t+1}$ 从哪来 | 行为策略实际采样得到 | 不必执行，直接取最大 |
+| TD 目标 | $r_t+\gamma Q(s_{t+1},a_{t+1})$ | $r_t+\gamma\max_{a'}Q(s_{t+1},a')$ |
+| $a_{t+1}$ 从哪来 | 行为策略实际采样得到 | 不必执行，直接取最大 |
 | 学的是谁的价值 | 当前实际执行的策略 | 贪心最优策略 |
 | 策略关系 | on-policy（同策略） | off-policy（异策略） |
 | 直觉 | "按我现在真实执行的策略走下去，未来收益是多少？" | "假设从下一步起永远选当前最好的动作，未来收益是多少？" |

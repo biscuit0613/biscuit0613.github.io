@@ -11,13 +11,13 @@ lang: ''
 
 ![alt text](image-reinforce.png)
 
-## 间接学习
+## 间接学习(value based，值函数学习)
 
 间接学习（如DQN），先学习一个值函数 $Q(s,a)$，再通过贪心策略 $\pi(s)=\arg\max_a Q(s,a)$ 得到策略。
 
 - 适合离散动作，但难以处理连续动作，且缺乏概率化决策。
 
-## 直接学习: 参数化策略（策略网络）
+## 直接学习(policy based，策略学习): 参数化策略（策略网络）
 
 直接学习：直接学习一个**参数化的策略** $\pi_\theta(a|s)$，通过优化期望回报来更新参数 $\theta$。$\theta$ 是可学习的参数（如神经网络的权重）。
 
@@ -46,24 +46,28 @@ $$
 
 $$
 \begin{aligned}
-J(\theta)&=\mathbb{E}_{\tau\sim\pi_\theta}[G_0]\quad&\text{目标函数}\\
+J(\theta)&=\mathbb{E}_{\tau\sim p(\tau)}[G_0]\quad&\text{目标函数}\\
 \theta^*&=\arg\max_\theta J(\theta)\quad&\text{目标参数}\\
 \theta &\leftarrow\theta+\alpha\nabla_\theta J(\theta)\quad&\text{梯度上升}
 \end{aligned}
 
 $$
 
-- 轨迹 $\tau=(S_0,A_0,R_0,S_1,A_1,R_1,\dots,S_T)$ 是从初始状态开始按策略 $\pi_\theta$ 采样得到的状态-动作序列。
+- 轨迹 $\tau=(s_0,a_0,r_0,s_1,a_1,r_1,\dots,s_T)$ 是从初始状态开始按策略 $\pi_\theta$ 采样得到的状态-动作序列。
 
 - $G_t$ 是从时间步 $t$ 开始的 **累计回报**。有的教材里面把整条轨迹从 $t=0$ 开始的累计回报记作 $G(\tau)$ 或 $R(\tau)$。
     $$
-    R(\tau)=G_0=\sum_{t=0}^{T-1}\gamma^t R_t,\quad G_t=\sum_{k=t}^{T-1}\gamma^{k-t}R_k
+    R(\tau)=G(\tau)=G_0=\sum_{t=0}^{T-1}\gamma^t r_t
     $$
 
     注意一个小细节：$G_0$ 是整条轨迹的累计回报，$G_t$ 是从时间步 $t$ 开始的累计回报。它们之间的关系是：（后面推导策略梯度定理时会用到）
 
     $$
-    G_0 = \underbrace{(r_0+\gamma r_1+\dots+\gamma^{t-1}r_{t-1})}_{ G_{0:t-1},\ t\text{时刻之前累计奖励}} + \gamma^t \underbrace{(r_t+\gamma r_{t+1}+\dots)}_{G_t}
+    \begin{aligned}
+    G_t &=\sum_{k=t}^{T-1}\gamma^{k-t}r_k\\
+    G_0 &= \underbrace{(r_0+\gamma r_1+\dots+\gamma^{t-1}r_{t-1})}_{ G_{0:t-1},\ t\text{时刻之前累计奖励}} + \gamma^t \underbrace{(r_t+\gamma r_{t+1}+\dots)}_{G_t}
+    \end{aligned}
+
     $$
 
 - 怎么把目标函数里的期望符号给表示出来呢？可以引入 **轨迹** $\tau$ 的 **概率分布** $p(\tau)$，它是由策略 $\pi_\theta$ 和环境的转移概率 $p(s'|s,a)$ 决定的：
@@ -74,25 +78,25 @@ $$
 
   - $\rho(s_0)$ 是初始状态分布，
   - $\pi_\theta(a_t|s_t)$ 是策略给出的动作概率，这是唯一依赖于 $\theta$ 的部分，
-  - $p(s_{t+1}|s_t,a_t)$ 是环境的转移概率(这个是环境)。
+  - $p(s_{t+1}|s_t,a_t)$ 是环境的转移概率(这个是环境)，属于未知量。
 
 所以说期望就表示成了用轨迹概率 $p(\tau)$ 对累计回报 $G_0$ 的加权平均：
 
 $$
 \boxed{
-J(\theta)=\mathbb{E}_{\tau\sim\pi_\theta}[G_0]=\sum_\tau p(\tau)G_0}
+J(\theta)=\mathbb{E}_{\tau\sim p(\tau)}[G_0]=\sum_\tau p(\tau)G_0}
 \quad \text{目标函数（引入轨迹分布）}
 $$
 
 ### 策略梯度定理
 
-回看梯度上升式子里面的 $\nabla_\theta J(\theta)$，它是目标函数对策略 **参数** $\theta$ 的梯度。直接对 $J(\theta)$ 求导会很麻烦，因为 $p(\tau)$ 里有 $\pi_\theta$，而且还在乘积里面。于是要用**对数梯度技巧** $\nabla_x f(x)=f(x)\nabla_x\log f(x)$：
+回看梯度上升式子里面的 $\nabla_\theta J(\theta)$，它是目标函数对策略 **参数** $\theta$ 的梯度。直接对 $J(\theta)$ 求导会很麻烦，因为累加符号在梯度外面，需要找到所有的轨迹求梯度并累加。于是要用**对数梯度技巧** $\nabla_x f(x)=f(x)\nabla_x\log f(x)$：
 
 $$
 \begin{aligned}
 \nabla_\theta J(\theta)&=\sum_\tau \nabla_\theta p(\tau)G_0\\
 &=\sum_\tau p(\tau)G_0\nabla_\theta\log p(\tau)\\
-\nabla_\theta J(\theta)&=\mathbb{E}_{\tau\sim\pi_\theta}[G_0\nabla_\theta\log p(\tau)]\quad\text{按概率加权等价于期望}\\
+\nabla_\theta J(\theta)&=\mathbb{E}_{\tau\sim p(\tau)}[G_0\nabla_\theta\log p(\tau)]\quad\text{按概率加权等价于期望}\\
 \end{aligned}
 $$
 
@@ -159,20 +163,21 @@ $$
 - $G_t$ 版本只保留 $a_t$ 能影响到的那部分回报，砍掉了无关项，方差更小。
 - 这和后面 Baseline 降方差是同一个思路——凡与动作无关的加权项，期望下为零，去掉会更稳。
 
-### 拆开理解
+### 结合蒙特卡洛采样思想
 
-外面的 $\mathbb{E}_{\tau\sim\pi_\theta}$ 是对多条轨迹的期望，里面的 $\sum_{t=0}^{T-1}$ 是对轨迹上每个时间步的求和。
+求期望可以用多条轨迹的平均来近似
 
-对于一条轨迹 $\tau=(s_0,a_0,r_0,s_1,a_1,r_1,\dots,s_T)$，在每个时间步 $t$，计算 $\nabla_\theta\log \pi_\theta(A_t|S_t)$，然后乘上从 $t$ 开始的累计回报 $G_t$，这就是 **该时间步的梯度贡献**。
+$$
+\nabla_\theta J(\theta)\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^{T-1}G_t^{(i)}\nabla_\theta\log \pi_\theta(a_t^{(i)}|s_t^{(i)})
+$$
+
+### 直观理解
+
+对于一条轨迹 $\tau=(s_0,a_0,r_0,s_1,a_1,r_1,\dots,s_T)$，在每个时间步 $t$，log是单调增函数 $\nabla_\theta\log \pi_\theta(a_t|s_t)$ 的方向就是让 $\pi_\theta(a_t|s_t)$ 增大的方向，也就是增加在 $s_t$ 状态下选择 $a_t$ 动作的概率，然后乘上从 $t$ 开始的累计回报 $G_t$，可以看作一个缩放系数，如果 $G_t$ 为正，那么这个缩放系数就是正的，这会增加 $\pi_\theta(a_t|s_t)$ 的概率，并且 $G_t$ 越大，增加的幅度越大；如果 $G_t$ 为负，那么这个缩放系数就是负的，这会减少 $\pi_\theta(a_t|s_t)$ 的概率，并且 $G_t$ 越小，减少的幅度越大。
 
 $$
 \nabla_\theta J^{(t)}(\theta) = G_t\nabla_\theta\log \pi_\theta(a_t|s_t)\\
-
 $$
-
-再对轨迹上所有时间步求和，得到 **该轨迹的梯度贡献**。
-
-最后对很多轨迹的梯度贡献取平均，就得到了 $\nabla_\theta J(\theta)$。从均值上来说，这是无偏估计，但是方差大，会导致训练震荡。
 
 ### 训练震荡的原因
 
@@ -252,8 +257,6 @@ $$
 $$
 
 ## REINFORCE算法
-
-REINFORCE 是把"学策略"变成一个可以直接用梯度上升优化的随机优化问题的最小完整方案:不学值函数、不需要模型，只用"采样 → 打分 → 调概率"这一个循环。
 
 :::tip[REINFORCE算法]
 
