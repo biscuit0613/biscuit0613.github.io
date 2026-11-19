@@ -1,7 +1,7 @@
 ---
 title: '强化学习课程复习索引：课件与博客对应关系'
 published: 2026-11-10
-description: '按课程讲次整理强化学习博客文章：MDP 与贝尔曼、MC/TD、SARSA/Q-learning、DQN、策略梯度、Actor-Critic/PPO、模型学习、探索与内在奖励、VLA 与图强化学习'
+description: '按课程讲次整理强化学习博客文章：MDP 与贝尔曼、MC/TD、SARSA/Q-learning、DQN、策略梯度、Actor-Critic/PPO、模型学习、探索与内在奖励、VLA 与图强化学习，另附 AlphaGo Zero 搜索与自我对弈'
 image: ''
 tags: [RL, Course, Index]
 category: '11-强化学习'
@@ -55,6 +55,10 @@ lang: ''
 ### 策略梯度主线
 
 [策略学习与 REINFORCE](/posts/reinforcement-learning/rl_policylearning/) → Actor-Critic、A2C 与 A3C（草稿） → [PPO](/posts/reinforcement-learning/ppo/) → [GRPO](/posts/reinforcement-learning/grpo/)
+
+### 搜索与自我对弈（扩展）
+
+[探索机制与内在奖励](/posts/reinforcement-learning/rl_exploration/)（UCB 的探索项）→ [AlphaGo Zero 与 MCTS](/posts/reinforcement-learning/rl_alphago/)：把 UCB 换成带先验的 PUCT，网络提供先验与胜率估计，自我对弈与搜索互相供数。这条线不属于强化学习课程讲次，但它是"探索 + 值函数 + 策略学习"三条线的合成案例。
 
 ### 已补齐但尚未发布的草稿
 

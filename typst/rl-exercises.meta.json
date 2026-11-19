@@ -1,0 +1,8 @@
+{
+	"title": "强化学习 · 练习题题解（一）（二）",
+	"description": "两份课程练习题的完整题解：选择题逐项分析并附公式依据，判断题给出反例说明，九道简答题覆盖策略梯度、A2C/A3C/PPO、MBRL 与误差累积",
+	"published": "2026-11-13",
+	"tags": ["RL", "review", "exercise", "exam"],
+	"category": "review",
+	"order": 7
+}

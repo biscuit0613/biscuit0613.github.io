@@ -189,6 +189,8 @@ $$
 
 经典 UCB 公式最自然地适用于 MAB。在一般 MDP 中，动作价值受状态转移和长期回报影响，还要考虑状态—动作访问次数或更复杂的置信边界，不能把老虎机公式直接当成通用解。
 
+模型已知的大规模搜索有一个著名变体：AlphaGo Zero 的 PUCT 把探索项改为 $c_{\text{puct}}P(s,a)\dfrac{\sqrt{\sum_b N(s,b)}}{1+N(s,a)}$，用策略网络的先验 $P$ 加权，推导与用途见 [AlphaGo Zero 与 MCTS](/posts/reinforcement-learning/rl_alphago/)。
+
 ## Thompson Sampling：从后验分布采样
 
 ### 伯努利奖励与 Beta 先验

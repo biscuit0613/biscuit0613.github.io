@@ -1,0 +1,8 @@
+{
+	"title": "强化学习 · 考点问答与题解",
+	"description": "82 道概念/分析/推导/计算题：覆盖课件加粗与标红问题、Q 表与 DQN 手算、策略梯度完整推导、PPO 裁剪四情形、MBRL 误差传播、UCB/Thompson 与内在奖励，附课件页码",
+	"published": "2026-11-13",
+	"tags": ["RL", "review", "QA", "exam", "cheatsheet"],
+	"category": "review",
+	"order": 6
+}

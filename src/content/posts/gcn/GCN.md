@@ -25,24 +25,62 @@ lang: ''
 
 通过迭代的方式，让每个节点聚合其邻居节点的信息，从而学习到节点的表示（Embedding）
 
+一层传递通常聚合邻居节点的信息（一跳），多层就有更大的感受野（多跳），可以融合更广范围的邻居信息。
+
+一般分为三个步骤：
+
+1. Message：邻居节点生成并发送消息。
+2. Aggregate：聚合所有邻居的消息。
+3. Update：结合自身特征，更新节点表示。
+
+$$
+m_{u\rightarrow v}^{(k)}
+=
+M^{(k)}(h_u^{(k)},h_v^{(k)},e_{uv})
+$$
+
+$$
+m_v^{(k)}
+=
+\operatorname{AGG}
+\left(
+\{m_{u\rightarrow v}^{(k)}:u\in N(v)\}
+\right)
+$$
+
+$$
+h_v^{(k+1)}
+=
+U^{(k)}(h_v^{(k)},m_v^{(k)})
+$$
+
+$h_v^{(k)}$：节点 $v$ 在第 $k$ 层的特征。
+
+$N(v)$：节点 $v$ 的邻居集合。
+
+$M$：消息生成函数。
+
+AGG：聚合函数，如 sum、mean、max、attention 等。
+
+$U$：更新函数，大多包含concat拼接和非线性激活函数。
+
 ### 典型模型
 
-- DeepWalk模型（深度优先）
-- LINE模型（宽度优先）
-- 图卷积神经网络GCN
-- 图注意力网络GAT
-- GraphSAGE
+- 浅层图嵌入（Shallow Embedding）
+  - DeepWalk模型（深度优先）
+  - LINE模型（宽度优先）
+- 深层图神经网络（Deep GNN）
+  - 图卷积神经网络GCN
+  - 图注意力网络GAT
+  - GraphSAGE
 
-## DeepWalk 模型：基于深度优先的随机游走
+## 浅层图嵌入（Shallow Embedding）
 
-序列采样方法：**随机游走**（Random Walk）
+### DeepWalk 模型：基于深度优先的随机游走
 
-从一个起点节点出发，每一步都随机选择一个相邻节点走过去，重复若干步，得到一条节点序列
+序列采样方法：**随机游走**（Random Walk）：
 
-优势：
-
-- 并行化。随机游走发生在网络的局部区域，因而可以同时以图中不同节点为起点进行随机游走以获得采样序列，效率较高；
-- 适应性。由于游走的局部性，对于较大的图，即使网络中个别点或边发生变化，也只会影响到个别随机游走序列，因而不一定需要对整个图重新进行随机游走处理
+从一个起点节点出发，每一步都随机选择一个相邻节点走过去，重复若干步，得到一条节点序列。然后用 skip-gram 模型学习节点的嵌入式向量表示，使得在随机游走中相邻的节点在嵌入空间中也接近。
 
 算法步骤：
 
@@ -55,19 +93,42 @@ lang: ''
 
 伪代码：
 
-:::pseudo[算法 1：DeepWalk]
-1: 先初始化所有节点的嵌入向量 $\Phi$，维度为 $d$
-2: 对于每个节点 $v \in V$，执行以下步骤：
-&emsp;2.1 从节点 $v$ 开始进行随机游走，得到长度为 $l$ 的节点序列
-&emsp;2.2 使用 skip-gram 模型更新节点表征矩阵 $\Phi$
-3: 返回更新后的节点表征矩阵 $\Phi$
-:::
+$$
+\boxed{
+    \begin{aligned}
+       &\Phi=\mathcal{U}^{|V| \times d}(-1,1) \quad \text{初始化节点嵌入向量}
+       \\
+       &V\to T\text{节点集合构造二叉树用于层次softmax}\\
+        &\text{for} i=1 \text{ to } \gamma \text{ do}
+        \\
+        &\quad \mathcal{O}=\operatorname{shuffle}(V) \quad \text{打乱节点顺序}
+        \\
+        &\quad\text{for} v \in \mathcal{O} \text{ do}
+        \\
+        &\quad\quad\text{随机游走} \quad \text{walk}=\operatorname{RandomWalk}(G,v,l)
+        \\
+        &\quad\quad\text{for} j=1 \text{ to } l \text{ do}
+        \\
+        &\quad\quad\quad\text{for} k=\max(0,j-w) \text{ to } \min(l,j+w) \text{ do}
+        \\
+        &\quad\quad\quad\text{if } k \neq j \text{ then}
+        \\
+        &\quad\quad\quad\text{更新节点嵌入向量} \quad \Phi[\text{walk}[j]] \leftarrow \Phi[\text{walk}[j]] - \eta \nabla_{\Phi[\text{walk}[j]]} \log P(\text{walk}[k] \mid \Phi[\text{walk}[j]])
+    \end{aligned}
+}
+$$
 
-## LINE 模型：基于宽度优先的邻域相似度
+优势：
+
+- 并行化。随机游走发生在网络的局部区域，因而可以同时以图中不同节点为起点进行随机游走以获得采样序列，效率较高；
+- 适应性。由于游走的局部性，对于较大的图，即使网络中个别点或边发生变化，也只会影响到个别随机游走序列，因而不一定需要对整个图重新进行随机游走处理
+
+### LINE 模型：基于宽度优先的邻域相似度
 
 基本思想：在图中距离较小（或相似度较高）的点，在新的低维嵌入空间中也应尽可能接近。
 
-一阶相似度：每条边$(u,v)$的权重 $w_{uv}$，表示节点 $u$ 和节点 $v$ 的一阶相似度，无直连的点的一阶相似度为 0
+- 一阶相似度：每条边$(u,v)$的权重 $w_{uv}$，表示节点 $u$ 和节点 $v$ 的一阶相似度，无直连的点的一阶相似度为 0
+- 二阶邻近性（Second-order Proximity）：两个节点是否拥有相似的邻居
 
 - 对于加权图，可以直接用权
 - 对于无权图，$w_{uv}=1$，表示节点 $u$ 和节点 $v$ 之间有一条边相连
@@ -148,7 +209,7 @@ GAT用注意力机制对一阶邻域节点做加权求和，让模型学习对�
 对于节点 $i$ 的每个邻居节点 $j$：
 
 $$
-e_{ij} = \mathbf{a}[W \mathbf{h_i} || W \mathbf{h_j}]
+e_{ij} = \sigma(\mathbf{a}[W \mathbf{h_i} || W \mathbf{h_j}])
 $$
 
 然后用 softmax 函数归一化，得到注意力系数：
@@ -157,10 +218,10 @@ $$
 \alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in N(i)} \exp(e_{ik})}
 $$
 
-- 先对节点 $i,j$ 的特征向量 $\mathbf{h_i}, \mathbf{h_j}$ 做线性变换 $W$
+- 先对节点 $i,j$ 的特征向量 $\mathbf{h_i}, \mathbf{h_j}$ 做线性变换 $W$ 投影到隐藏层维度 $d$
 - 然后拼接 $[\cdot||\cdot]$，维度 $\mathbb{R}^d\rightarrow\mathbb{R}^{2d}$
 - 再用一个共享的注意力向量 $\mathbf{a}$ 得到注意力系数 $e_{ij}$
-- 有时候exp里面会用 LeakyReLU 激活函数，防止梯度消失
+- 有时候exp里面会用$\sigma=$ LeakyReLU 激活函数，防止梯度消失
 
 ### 节点特征向量更新（aggregate）
 

@@ -1,0 +1,8 @@
+{
+	"title": "强化学习 · 期末复习指南",
+	"description": "按复习要点 15 个专题整理：MDP 与 Bellman、DP/MC/TD、SARSA 与 Q-learning、DQN、策略梯度、Actor-Critic 与 PPO、MBRL、探索与内在奖励，附 Q 表手算模板与公式速查",
+	"published": "2026-11-13",
+	"tags": ["RL", "review", "exam", "cheatsheet"],
+	"category": "review",
+	"order": 5
+}
