@@ -229,7 +229,7 @@ $]
 #ex[读图写转移矩阵][
   4 状态图：$s_1$ 自环 0.1、$s_1 -> s_2$ 0.2、$s_1 -> s_4$ 0.7；$s_2 -> s_1$ 1；$s_4$ 自环 0.5、$s_4 -> s_2$ 0.3、$s_4 -> s_3$ 0.2；$s_3 -> s_2$ 1。
   $
-    bold(P) = mat(0.1, 0.2, 0, 0.7; 1, 0, 0, 0; 0, 1, 0, 0; 0, 0.3, 0.2, 0.5, delim: "(")
+    bold(P) = mat(delim: "(", 0.1, 0.2, 0, 0.7; 1, 0, 0, 0; 0, 1, 0, 0; 0, 0.3, 0.2, 0.5)
   $
   逐行检查：$0.1 + 0.2 + 0.7 = 1$，$0.5 + 0.3 + 0.2 = 1$。*给描述能写矩阵；给矩阵能读轨迹概率（连乘）。*
 ]
@@ -705,7 +705,7 @@ $]
 
 #eq[$
   "clip"(rho, 1 - epsilon.alt, 1 + epsilon.alt) =
-  mat(1 - epsilon.alt, "若" rho < 1 - epsilon.alt; rho, "若" 1 - epsilon.alt <= rho <= 1 + epsilon.alt; 1 + epsilon.alt, "若" rho > 1 + epsilon.alt, delim: "{")
+  mat(delim: "{", 1 - epsilon.alt, "若" rho < 1 - epsilon.alt; rho, "若" 1 - epsilon.alt <= rho <= 1 + epsilon.alt; 1 + epsilon.alt, "若" rho > 1 + epsilon.alt)
 $]
 
 *为什么取 min*：这是*悲观/保守*目标。只有"改进且尚未越界"才被奖励；一旦越界，梯度为 0，不再给继续变化的动机。
@@ -868,7 +868,7 @@ $]
 == ε-greedy（必须会算）
 
 #eq[$
-  a_t = mat("随机选一个动作", "概率" epsilon; arg max_a Q(s_t,a), "概率" 1 - epsilon, delim: "{")
+  a_t = mat(delim: "{", "随机选一个动作", "概率" epsilon; arg max_a Q(s_t,a), "概率" 1 - epsilon)
 $]
 
 *关键*：$epsilon$ 是"*进入随机模式的概率*"，不是"选某个非贪心动作的概率"。$|cal(A)|$ 个动作时：
